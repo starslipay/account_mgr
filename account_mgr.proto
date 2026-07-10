@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package account_mgr;
+// 相对路径;包名
+option go_package = "./account_mgr_pb";
+
+// 创建账户Req
+message CreateAccountReq {
+    int64 uid = 1;
+    string user_id = 2;
+    int32 cur_type = 3;
+}
+
+// 创建账户Rsp
+message CreateAccountRsp {
+    int64 uid = 1;
+    string user_id = 2;
+    bool is_repeat = 3;
+}
+
+// 获取账户余额Req
+message GetBalanceInfoReq {
+    int64 uid = 1;
+    int32 qry_mode = 2;  // 1-查从库 2-查主库
+}
+
+// 获取账户余额Rsp
+message GetBalanceInfoRsp {
+    int64 uid = 1;
+    string user_id = 2;
+    int64 balance = 3;
+    int32 cur_type = 4;
+}
+
+// 转账Req
+message C2cTransferReq {
+    string transfer_id = 1;
+    int64 buyer_uid = 2;
+    string buyer_user_id = 3;
+    int64 seller_uid = 4;
+    string seller_user_id = 5;
+    int64 amount = 6;
+    int32 cur_type = 7;
+    string transfer_desc = 8;
+}
+
+// 转账Rsp
+message C2cTransferRsp {
+    string transfer_id = 1;
+    int64 buyer_uid = 2;
+    string buyer_user_id = 3;
+    int64 seller_uid = 4;
+    string seller_user_id = 5;
+    string transfer_time = 6;
+    int32 is_repeat = 7;
+}
+
+service AccountMgr {
+    rpc CreateAccount(CreateAccountReq) returns (CreateAccountRsp);
+    rpc GetBalanceInfo(GetBalanceInfoReq) returns (GetBalanceInfoRsp);
+    rpc C2cTransfer(C2cTransferReq) returns (C2cTransferRsp);
+}
+
+/*
+生成项目框架
+goctl rpc protoc account_mgr.proto --go_out=. --go-grpc_out=. --zrpc_out=.
+*/
