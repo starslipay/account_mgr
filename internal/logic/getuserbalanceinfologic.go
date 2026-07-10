@@ -16,21 +16,21 @@ const (
 	QryModeMaster = 2 // 主库查询
 )
 
-type GetBalanceInfoLogic struct {
+type GetUserBalanceInfoLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetBalanceInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetBalanceInfoLogic {
-	return &GetBalanceInfoLogic{
+func NewGetUserBalanceInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserBalanceInfoLogic {
+	return &GetUserBalanceInfoLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetBalanceInfoLogic) GetBalanceInfo(in *account_mgr_pb.GetBalanceInfoReq) (*account_mgr_pb.GetBalanceInfoRsp, error) {
+func (l *GetUserBalanceInfoLogic) GetUserBalanceInfo(in *account_mgr_pb.GetUserBalanceInfoReq) (*account_mgr_pb.GetUserBalanceInfoRsp, error) {
 	var model mysql.TCAccountModel
 	if QryModeSlave == in.QryMode {
 		model = l.svcCtx.TCAccountModelSlave
@@ -44,7 +44,7 @@ func (l *GetBalanceInfoLogic) GetBalanceInfo(in *account_mgr_pb.GetBalanceInfoRe
 	if err != nil {
 		return nil, err
 	}
-	return &account_mgr_pb.GetBalanceInfoRsp{
+	return &account_mgr_pb.GetUserBalanceInfoRsp{
 		Uid:     account.Uid,
 		UserId:  account.UserId,
 		Balance: account.Balance,

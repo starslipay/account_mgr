@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AccountMgr_CreateAccount_FullMethodName  = "/account_mgr.AccountMgr/CreateAccount"
-	AccountMgr_GetBalanceInfo_FullMethodName = "/account_mgr.AccountMgr/GetBalanceInfo"
-	AccountMgr_C2CTransfer_FullMethodName    = "/account_mgr.AccountMgr/C2cTransfer"
+	AccountMgr_CreateAccount_FullMethodName      = "/account_mgr.AccountMgr/CreateAccount"
+	AccountMgr_GetUserBalanceInfo_FullMethodName = "/account_mgr.AccountMgr/GetUserBalanceInfo"
+	AccountMgr_C2CTransfer_FullMethodName        = "/account_mgr.AccountMgr/C2cTransfer"
 )
 
 // AccountMgrClient is the client API for AccountMgr service.
@@ -29,7 +29,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AccountMgrClient interface {
 	CreateAccount(ctx context.Context, in *CreateAccountReq, opts ...grpc.CallOption) (*CreateAccountRsp, error)
-	GetBalanceInfo(ctx context.Context, in *GetBalanceInfoReq, opts ...grpc.CallOption) (*GetBalanceInfoRsp, error)
+	GetUserBalanceInfo(ctx context.Context, in *GetUserBalanceInfoReq, opts ...grpc.CallOption) (*GetUserBalanceInfoRsp, error)
 	C2CTransfer(ctx context.Context, in *C2CTransferReq, opts ...grpc.CallOption) (*C2CTransferRsp, error)
 }
 
@@ -51,10 +51,10 @@ func (c *accountMgrClient) CreateAccount(ctx context.Context, in *CreateAccountR
 	return out, nil
 }
 
-func (c *accountMgrClient) GetBalanceInfo(ctx context.Context, in *GetBalanceInfoReq, opts ...grpc.CallOption) (*GetBalanceInfoRsp, error) {
+func (c *accountMgrClient) GetUserBalanceInfo(ctx context.Context, in *GetUserBalanceInfoReq, opts ...grpc.CallOption) (*GetUserBalanceInfoRsp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetBalanceInfoRsp)
-	err := c.cc.Invoke(ctx, AccountMgr_GetBalanceInfo_FullMethodName, in, out, cOpts...)
+	out := new(GetUserBalanceInfoRsp)
+	err := c.cc.Invoke(ctx, AccountMgr_GetUserBalanceInfo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (c *accountMgrClient) C2CTransfer(ctx context.Context, in *C2CTransferReq, 
 // for forward compatibility.
 type AccountMgrServer interface {
 	CreateAccount(context.Context, *CreateAccountReq) (*CreateAccountRsp, error)
-	GetBalanceInfo(context.Context, *GetBalanceInfoReq) (*GetBalanceInfoRsp, error)
+	GetUserBalanceInfo(context.Context, *GetUserBalanceInfoReq) (*GetUserBalanceInfoRsp, error)
 	C2CTransfer(context.Context, *C2CTransferReq) (*C2CTransferRsp, error)
 	mustEmbedUnimplementedAccountMgrServer()
 }
@@ -91,8 +91,8 @@ type UnimplementedAccountMgrServer struct{}
 func (UnimplementedAccountMgrServer) CreateAccount(context.Context, *CreateAccountReq) (*CreateAccountRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateAccount not implemented")
 }
-func (UnimplementedAccountMgrServer) GetBalanceInfo(context.Context, *GetBalanceInfoReq) (*GetBalanceInfoRsp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetBalanceInfo not implemented")
+func (UnimplementedAccountMgrServer) GetUserBalanceInfo(context.Context, *GetUserBalanceInfoReq) (*GetUserBalanceInfoRsp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUserBalanceInfo not implemented")
 }
 func (UnimplementedAccountMgrServer) C2CTransfer(context.Context, *C2CTransferReq) (*C2CTransferRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method C2CTransfer not implemented")
@@ -136,20 +136,20 @@ func _AccountMgr_CreateAccount_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AccountMgr_GetBalanceInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetBalanceInfoReq)
+func _AccountMgr_GetUserBalanceInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserBalanceInfoReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccountMgrServer).GetBalanceInfo(ctx, in)
+		return srv.(AccountMgrServer).GetUserBalanceInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AccountMgr_GetBalanceInfo_FullMethodName,
+		FullMethod: AccountMgr_GetUserBalanceInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountMgrServer).GetBalanceInfo(ctx, req.(*GetBalanceInfoReq))
+		return srv.(AccountMgrServer).GetUserBalanceInfo(ctx, req.(*GetUserBalanceInfoReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -184,8 +184,8 @@ var AccountMgr_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AccountMgr_CreateAccount_Handler,
 		},
 		{
-			MethodName: "GetBalanceInfo",
-			Handler:    _AccountMgr_GetBalanceInfo_Handler,
+			MethodName: "GetUserBalanceInfo",
+			Handler:    _AccountMgr_GetUserBalanceInfo_Handler,
 		},
 		{
 			MethodName: "C2cTransfer",

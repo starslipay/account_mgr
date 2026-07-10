@@ -28,9 +28,9 @@ func (s *AccountMgrServer) CreateAccount(ctx context.Context, in *account_mgr_pb
 	return l.CreateAccount(in)
 }
 
-func (s *AccountMgrServer) GetBalanceInfo(ctx context.Context, in *account_mgr_pb.GetBalanceInfoReq) (*account_mgr_pb.GetBalanceInfoRsp, error) {
-	l := logic.NewGetBalanceInfoLogic(ctx, s.svcCtx)
-	return l.GetBalanceInfo(in)
+func (s *AccountMgrServer) GetUserBalanceInfo(ctx context.Context, in *account_mgr_pb.GetUserBalanceInfoReq) (*account_mgr_pb.GetUserBalanceInfoRsp, error) {
+	l := logic.NewGetUserBalanceInfoLogic(ctx, s.svcCtx)
+	return l.GetUserBalanceInfo(in)
 }
 
 func (s *AccountMgrServer) C2CTransfer(ctx context.Context, in *account_mgr_pb.C2CTransferReq) (*account_mgr_pb.C2CTransferRsp, error) {

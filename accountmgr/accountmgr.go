@@ -14,16 +14,16 @@ import (
 )
 
 type (
-	C2CTransferReq    = account_mgr_pb.C2CTransferReq
-	C2CTransferRsp    = account_mgr_pb.C2CTransferRsp
-	CreateAccountReq  = account_mgr_pb.CreateAccountReq
-	CreateAccountRsp  = account_mgr_pb.CreateAccountRsp
-	GetBalanceInfoReq = account_mgr_pb.GetBalanceInfoReq
-	GetBalanceInfoRsp = account_mgr_pb.GetBalanceInfoRsp
+	C2CTransferReq        = account_mgr_pb.C2CTransferReq
+	C2CTransferRsp        = account_mgr_pb.C2CTransferRsp
+	CreateAccountReq      = account_mgr_pb.CreateAccountReq
+	CreateAccountRsp      = account_mgr_pb.CreateAccountRsp
+	GetUserBalanceInfoReq = account_mgr_pb.GetUserBalanceInfoReq
+	GetUserBalanceInfoRsp = account_mgr_pb.GetUserBalanceInfoRsp
 
 	AccountMgr interface {
 		CreateAccount(ctx context.Context, in *CreateAccountReq, opts ...grpc.CallOption) (*CreateAccountRsp, error)
-		GetBalanceInfo(ctx context.Context, in *GetBalanceInfoReq, opts ...grpc.CallOption) (*GetBalanceInfoRsp, error)
+		GetUserBalanceInfo(ctx context.Context, in *GetUserBalanceInfoReq, opts ...grpc.CallOption) (*GetUserBalanceInfoRsp, error)
 		C2CTransfer(ctx context.Context, in *C2CTransferReq, opts ...grpc.CallOption) (*C2CTransferRsp, error)
 	}
 
@@ -43,9 +43,9 @@ func (m *defaultAccountMgr) CreateAccount(ctx context.Context, in *CreateAccount
 	return client.CreateAccount(ctx, in, opts...)
 }
 
-func (m *defaultAccountMgr) GetBalanceInfo(ctx context.Context, in *GetBalanceInfoReq, opts ...grpc.CallOption) (*GetBalanceInfoRsp, error) {
+func (m *defaultAccountMgr) GetUserBalanceInfo(ctx context.Context, in *GetUserBalanceInfoReq, opts ...grpc.CallOption) (*GetUserBalanceInfoRsp, error) {
 	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
-	return client.GetBalanceInfo(ctx, in, opts...)
+	return client.GetUserBalanceInfo(ctx, in, opts...)
 }
 
 func (m *defaultAccountMgr) C2CTransfer(ctx context.Context, in *C2CTransferReq, opts ...grpc.CallOption) (*C2CTransferRsp, error) {

@@ -144,7 +144,7 @@ func (x *CreateAccountRsp) GetIsRepeat() bool {
 }
 
 // 获取账户余额Req
-type GetBalanceInfoReq struct {
+type GetUserBalanceInfoReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uid           int64                  `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
 	QryMode       int32                  `protobuf:"varint,2,opt,name=qry_mode,json=qryMode,proto3" json:"qry_mode,omitempty"` // 1-查从库 2-查主库
@@ -152,20 +152,20 @@ type GetBalanceInfoReq struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetBalanceInfoReq) Reset() {
-	*x = GetBalanceInfoReq{}
+func (x *GetUserBalanceInfoReq) Reset() {
+	*x = GetUserBalanceInfoReq{}
 	mi := &file_account_mgr_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetBalanceInfoReq) String() string {
+func (x *GetUserBalanceInfoReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetBalanceInfoReq) ProtoMessage() {}
+func (*GetUserBalanceInfoReq) ProtoMessage() {}
 
-func (x *GetBalanceInfoReq) ProtoReflect() protoreflect.Message {
+func (x *GetUserBalanceInfoReq) ProtoReflect() protoreflect.Message {
 	mi := &file_account_mgr_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -177,19 +177,19 @@ func (x *GetBalanceInfoReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetBalanceInfoReq.ProtoReflect.Descriptor instead.
-func (*GetBalanceInfoReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserBalanceInfoReq.ProtoReflect.Descriptor instead.
+func (*GetUserBalanceInfoReq) Descriptor() ([]byte, []int) {
 	return file_account_mgr_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetBalanceInfoReq) GetUid() int64 {
+func (x *GetUserBalanceInfoReq) GetUid() int64 {
 	if x != nil {
 		return x.Uid
 	}
 	return 0
 }
 
-func (x *GetBalanceInfoReq) GetQryMode() int32 {
+func (x *GetUserBalanceInfoReq) GetQryMode() int32 {
 	if x != nil {
 		return x.QryMode
 	}
@@ -197,7 +197,7 @@ func (x *GetBalanceInfoReq) GetQryMode() int32 {
 }
 
 // 获取账户余额Rsp
-type GetBalanceInfoRsp struct {
+type GetUserBalanceInfoRsp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uid           int64                  `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
 	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -207,20 +207,20 @@ type GetBalanceInfoRsp struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetBalanceInfoRsp) Reset() {
-	*x = GetBalanceInfoRsp{}
+func (x *GetUserBalanceInfoRsp) Reset() {
+	*x = GetUserBalanceInfoRsp{}
 	mi := &file_account_mgr_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetBalanceInfoRsp) String() string {
+func (x *GetUserBalanceInfoRsp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetBalanceInfoRsp) ProtoMessage() {}
+func (*GetUserBalanceInfoRsp) ProtoMessage() {}
 
-func (x *GetBalanceInfoRsp) ProtoReflect() protoreflect.Message {
+func (x *GetUserBalanceInfoRsp) ProtoReflect() protoreflect.Message {
 	mi := &file_account_mgr_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -232,33 +232,33 @@ func (x *GetBalanceInfoRsp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetBalanceInfoRsp.ProtoReflect.Descriptor instead.
-func (*GetBalanceInfoRsp) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserBalanceInfoRsp.ProtoReflect.Descriptor instead.
+func (*GetUserBalanceInfoRsp) Descriptor() ([]byte, []int) {
 	return file_account_mgr_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetBalanceInfoRsp) GetUid() int64 {
+func (x *GetUserBalanceInfoRsp) GetUid() int64 {
 	if x != nil {
 		return x.Uid
 	}
 	return 0
 }
 
-func (x *GetBalanceInfoRsp) GetUserId() string {
+func (x *GetUserBalanceInfoRsp) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
 	return ""
 }
 
-func (x *GetBalanceInfoRsp) GetBalance() int64 {
+func (x *GetUserBalanceInfoRsp) GetBalance() int64 {
 	if x != nil {
 		return x.Balance
 	}
 	return 0
 }
 
-func (x *GetBalanceInfoRsp) GetCurType() int32 {
+func (x *GetUserBalanceInfoRsp) GetCurType() int32 {
 	if x != nil {
 		return x.CurType
 	}
@@ -471,11 +471,11 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\x10CreateAccountRsp\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\x03R\x03uid\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x1b\n" +
-	"\tis_repeat\x18\x03 \x01(\bR\bisRepeat\"@\n" +
-	"\x11GetBalanceInfoReq\x12\x10\n" +
+	"\tis_repeat\x18\x03 \x01(\bR\bisRepeat\"D\n" +
+	"\x15GetUserBalanceInfoReq\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\x03R\x03uid\x12\x19\n" +
-	"\bqry_mode\x18\x02 \x01(\x05R\aqryMode\"s\n" +
-	"\x11GetBalanceInfoRsp\x12\x10\n" +
+	"\bqry_mode\x18\x02 \x01(\x05R\aqryMode\"w\n" +
+	"\x15GetUserBalanceInfoRsp\x12\x10\n" +
 	"\x03uid\x18\x01 \x01(\x03R\x03uid\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x18\n" +
 	"\abalance\x18\x03 \x01(\x03R\abalance\x12\x19\n" +
@@ -500,11 +500,11 @@ const file_account_mgr_proto_rawDesc = "" +
 	"seller_uid\x18\x04 \x01(\x03R\tsellerUid\x12$\n" +
 	"\x0eseller_user_id\x18\x05 \x01(\tR\fsellerUserId\x12#\n" +
 	"\rtransfer_time\x18\x06 \x01(\tR\ftransferTime\x12\x1b\n" +
-	"\tis_repeat\x18\a \x01(\x05R\bisRepeat2\xf6\x01\n" +
+	"\tis_repeat\x18\a \x01(\x05R\bisRepeat2\x82\x02\n" +
 	"\n" +
 	"AccountMgr\x12M\n" +
-	"\rCreateAccount\x12\x1d.account_mgr.CreateAccountReq\x1a\x1d.account_mgr.CreateAccountRsp\x12P\n" +
-	"\x0eGetBalanceInfo\x12\x1e.account_mgr.GetBalanceInfoReq\x1a\x1e.account_mgr.GetBalanceInfoRsp\x12G\n" +
+	"\rCreateAccount\x12\x1d.account_mgr.CreateAccountReq\x1a\x1d.account_mgr.CreateAccountRsp\x12\\\n" +
+	"\x12GetUserBalanceInfo\x12\".account_mgr.GetUserBalanceInfoReq\x1a\".account_mgr.GetUserBalanceInfoRsp\x12G\n" +
 	"\vC2cTransfer\x12\x1b.account_mgr.C2cTransferReq\x1a\x1b.account_mgr.C2cTransferRspB\x12Z\x10./account_mgr_pbb\x06proto3"
 
 var (
@@ -521,19 +521,19 @@ func file_account_mgr_proto_rawDescGZIP() []byte {
 
 var file_account_mgr_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_account_mgr_proto_goTypes = []any{
-	(*CreateAccountReq)(nil),  // 0: account_mgr.CreateAccountReq
-	(*CreateAccountRsp)(nil),  // 1: account_mgr.CreateAccountRsp
-	(*GetBalanceInfoReq)(nil), // 2: account_mgr.GetBalanceInfoReq
-	(*GetBalanceInfoRsp)(nil), // 3: account_mgr.GetBalanceInfoRsp
-	(*C2CTransferReq)(nil),    // 4: account_mgr.C2cTransferReq
-	(*C2CTransferRsp)(nil),    // 5: account_mgr.C2cTransferRsp
+	(*CreateAccountReq)(nil),      // 0: account_mgr.CreateAccountReq
+	(*CreateAccountRsp)(nil),      // 1: account_mgr.CreateAccountRsp
+	(*GetUserBalanceInfoReq)(nil), // 2: account_mgr.GetUserBalanceInfoReq
+	(*GetUserBalanceInfoRsp)(nil), // 3: account_mgr.GetUserBalanceInfoRsp
+	(*C2CTransferReq)(nil),        // 4: account_mgr.C2cTransferReq
+	(*C2CTransferRsp)(nil),        // 5: account_mgr.C2cTransferRsp
 }
 var file_account_mgr_proto_depIdxs = []int32{
 	0, // 0: account_mgr.AccountMgr.CreateAccount:input_type -> account_mgr.CreateAccountReq
-	2, // 1: account_mgr.AccountMgr.GetBalanceInfo:input_type -> account_mgr.GetBalanceInfoReq
+	2, // 1: account_mgr.AccountMgr.GetUserBalanceInfo:input_type -> account_mgr.GetUserBalanceInfoReq
 	4, // 2: account_mgr.AccountMgr.C2cTransfer:input_type -> account_mgr.C2cTransferReq
 	1, // 3: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
-	3, // 4: account_mgr.AccountMgr.GetBalanceInfo:output_type -> account_mgr.GetBalanceInfoRsp
+	3, // 4: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
 	5, // 5: account_mgr.AccountMgr.C2cTransfer:output_type -> account_mgr.C2cTransferRsp
 	3, // [3:6] is the sub-list for method output_type
 	0, // [0:3] is the sub-list for method input_type

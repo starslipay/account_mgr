@@ -19,13 +19,13 @@ message CreateAccountRsp {
 }
 
 // 获取账户余额Req
-message GetBalanceInfoReq {
+message GetUserBalanceInfoReq {
     int64 uid = 1;
     int32 qry_mode = 2;  // 1-查从库 2-查主库
 }
 
 // 获取账户余额Rsp
-message GetBalanceInfoRsp {
+message GetUserBalanceInfoRsp {
     int64 uid = 1;
     string user_id = 2;
     int64 balance = 3;
@@ -57,7 +57,7 @@ message C2cTransferRsp {
 
 service AccountMgr {
     rpc CreateAccount(CreateAccountReq) returns (CreateAccountRsp);
-    rpc GetBalanceInfo(GetBalanceInfoReq) returns (GetBalanceInfoRsp);
+    rpc GetUserBalanceInfo(GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp);
     rpc C2cTransfer(C2cTransferReq) returns (C2cTransferRsp);
 }
 
