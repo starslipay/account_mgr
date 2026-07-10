@@ -5,9 +5,9 @@ import (
 	"errors"
 	"math"
 
-	"account_mgr/account_mgr_pb"
-	"account_mgr/internal/svc"
-	"account_mgr/model/mysql"
+	"github.com/starslipay/account_mgr/account_mgr_pb"
+	"github.com/starslipay/account_mgr/internal/svc"
+	"github.com/starslipay/account_mgr/model/mysql"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

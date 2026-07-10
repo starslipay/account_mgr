@@ -7,9 +7,9 @@ package server
 import (
 	"context"
 
-	"account_mgr/account_mgr_pb"
-	"account_mgr/internal/logic"
-	"account_mgr/internal/svc"
+	"github.com/starslipay/account_mgr/account_mgr_pb"
+	"github.com/starslipay/account_mgr/internal/logic"
+	"github.com/starslipay/account_mgr/internal/svc"
 )
 
 type AccountMgrServer struct {

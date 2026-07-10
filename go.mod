@@ -1,4 +1,4 @@
-module account_mgr
+module github.com/starslipay/account_mgr
 
 go 1.25.4
 

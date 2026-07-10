@@ -7,7 +7,7 @@ package accountmgr
 import (
 	"context"
 
-	"account_mgr/account_mgr_pb"
+	"github.com/starslipay/account_mgr/account_mgr_pb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

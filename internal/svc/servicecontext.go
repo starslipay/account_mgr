@@ -1,8 +1,8 @@
 package svc
 
 import (
-	"account_mgr/internal/config"
-	"account_mgr/model/mysql"
+	"github.com/starslipay/account_mgr/internal/config"
+	"github.com/starslipay/account_mgr/model/mysql"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
