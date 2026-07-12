@@ -71,7 +71,7 @@ CREATE TABLE `t_b_account` (
   INDEX `idx_create_time` (`create_time`),
   INDEX `idx_update_time` (`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
--- linux:  mysql -h 127.0.0.1 -P 3307 -u root -p123456 < account_init.sql
--- windows: Get-Content -Encoding UTF8 account_init.sql | mysql -h 127.0.0.1 -P 3307 -u root -p123456
+-- linux:  mysql -h 127.0.0.1 -P 3307 -u root -proot123456 < account_init.sql
+-- windows: Get-Content -Encoding UTF8 account_init.sql | mysql -h 127.0.0.1 -P 3307 -u root -proot123456
 -- 只读权限 multipass exec master1 -- sudo kubectl exec -it -n pay-ns mysql-0 -- mysql -ustarslipay -ppayClipayA2026
 -- root权限 multipass exec master1 -- sudo kubectl exec -it -n pay-ns mysql-0 -- mysql -uroot -proot123456

@@ -2,11 +2,11 @@ package logic
 
 import (
 	"context"
-	"errors"
 	"math"
 
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/account_mgr/internal/svc"
+	"github.com/starslipay/account_mgr/internal/xerr"
 	"github.com/starslipay/account_mgr/model/mysql"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -28,7 +28,7 @@ func NewCreateAccountLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 
 func (l *CreateAccountLogic) CreateAccount(in *account_mgr_pb.CreateAccountReq) (*account_mgr_pb.CreateAccountRsp, error) {
 	if in.Uid < 1 || in.Uid > (math.MaxInt64-1) {
-		return nil, errors.New("Uid is invalid, must be [1, int64.max-1]")
+		return nil, xerr.NewParamError("Uid is invalid, must be [1, int64.max-1]")
 	}
 
 	isAccountExist := true
@@ -37,17 +37,17 @@ func (l *CreateAccountLogic) CreateAccount(in *account_mgr_pb.CreateAccountReq) 
 		if err == mysql.ErrNotFound {
 			isAccountExist = false
 		} else {
-			return nil, err
+			return nil, xerr.NewDBError(err.Error())
 		}
 	}
 	if isAccountExist {
 		// 判断重入前，校验关键字段一致性
 		if account.UserId != in.UserId {
-			return nil, errors.New("user id not match")
+			return nil, xerr.NewParamError("user id not match")
 		}
 
 		if account.CurType != int64(in.CurType) {
-			return nil, errors.New("cur type not match")
+			return nil, xerr.NewParamError("cur type not match")
 		}
 
 		return &account_mgr_pb.CreateAccountRsp{
@@ -64,7 +64,7 @@ func (l *CreateAccountLogic) CreateAccount(in *account_mgr_pb.CreateAccountReq) 
 		Balance: 0,
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerr.NewDBError(err.Error())
 	}
 
 	return &account_mgr_pb.CreateAccountRsp{
