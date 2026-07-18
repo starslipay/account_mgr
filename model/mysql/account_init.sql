@@ -21,9 +21,9 @@ CREATE TABLE `t_c_account` (
   INDEX `idx_update_time` (`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS `t_c2c_transfer_order`;
+DROP TABLE IF EXISTS `t_c2c_order`;
 -- c2c转账订单表
-CREATE TABLE `t_c2c_transfer_order` (
+CREATE TABLE `t_c2c_order` (
   `transaction_id` VARCHAR(64) NOT NULL COMMENT '订单ID',
   `buyer_uid` BIGINT NOT NULL COMMENT '买家用户UID',
   `seller_uid` BIGINT NOT NULL COMMENT '卖家用户UID',
@@ -31,6 +31,7 @@ CREATE TABLE `t_c2c_transfer_order` (
   `seller_user_id` VARCHAR(64) NOT NULL COMMENT '卖家用户ID',
   `amount` BIGINT NOT NULL COMMENT '金额',
   `biz_type` INTEGER NOT NULL COMMENT '业务类型',
+  `desc` VARCHAR(256) NOT NULL COMMENT '转账描述',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`transaction_id`),
@@ -38,6 +39,7 @@ CREATE TABLE `t_c2c_transfer_order` (
   INDEX `idx_update_time` (`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 DROP TABLE IF EXISTS `t_c_account_log`;
+
 -- 用户流水日志表
 CREATE TABLE `t_c_account_log` (
   `id` BIGINT AUTO_INCREMENT COMMENT '主键',
@@ -58,6 +60,22 @@ CREATE TABLE `t_c_account_log` (
   INDEX `idx_update_time` (`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `t_bank2c_order`;
+-- 银行充值bank2c订单表
+CREATE TABLE `t_bank2c_order` (
+  `transaction_id` VARCHAR(64) NOT NULL COMMENT '订单ID',
+  `uid` BIGINT NOT NULL COMMENT '用户UID',
+  `user_id` VARCHAR(64) NOT NULL COMMENT '用户ID',
+  `bank_type` VARCHAR(64) NOT NULL COMMENT '银行类型',
+  `amount` BIGINT NOT NULL COMMENT '金额',
+  `desc` VARCHAR(256) NOT NULL COMMENT '充值描述',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`transaction_id`),
+  INDEX `idx_create_time` (`create_time`),
+  INDEX `idx_update_time` (`update_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 DROP TABLE IF EXISTS `t_b_account`;
 -- b账户表(商户)
 CREATE TABLE `t_b_account` (
@@ -71,6 +89,7 @@ CREATE TABLE `t_b_account` (
   INDEX `idx_create_time` (`create_time`),
   INDEX `idx_update_time` (`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- linux:  mysql -h 127.0.0.1 -P 3306 -u root -proot123456 < account_init.sql
 -- windows: Get-Content -Encoding UTF8 account_init.sql | mysql -h 127.0.0.1 -P 3306 -u root -proot123456
 -- 只读权限 multipass exec master1 -- sudo kubectl exec -it -n pay-ns mysql-0 -- mysql -ustarslipay -ppayClipayA2026

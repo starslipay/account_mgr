@@ -3,7 +3,6 @@ package svc
 import (
 	"github.com/starslipay/account_mgr/internal/config"
 	"github.com/starslipay/account_mgr/model/mysql"
-
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
@@ -15,8 +14,8 @@ type ServiceContext struct {
 	TCAccountLogModelMaster mysql.TCAccountLogModel
 	TCAccountLogModelSlave  mysql.TCAccountLogModel
 
-	TC2cTransferOrderMaster mysql.TC2cTransferOrderModel
-	TC2cTransferOrderSlave  mysql.TC2cTransferOrderModel
+	TC2crOrderMaster mysql.TC2cOrderModel
+	TC2cOrderSlave   mysql.TC2cOrderModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -28,7 +27,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		TCAccountModelSlave:     mysql.NewTCAccountModel(SqlSlaveConn),
 		TCAccountLogModelMaster: mysql.NewTCAccountLogModel(SqlMasterConn),
 		TCAccountLogModelSlave:  mysql.NewTCAccountLogModel(SqlSlaveConn),
-		TC2cTransferOrderMaster: mysql.NewTC2cTransferOrderModel(SqlMasterConn),
-		TC2cTransferOrderSlave:  mysql.NewTC2cTransferOrderModel(SqlSlaveConn),
+		TC2crOrderMaster:        mysql.NewTC2cOrderModel(SqlMasterConn),
+		TC2cOrderSlave:          mysql.NewTC2cOrderModel(SqlSlaveConn),
 	}
 }

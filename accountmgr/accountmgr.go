@@ -14,17 +14,20 @@ import (
 )
 
 type (
-	C2CTransferReq        = account_mgr_pb.C2CTransferReq
-	C2CTransferRsp        = account_mgr_pb.C2CTransferRsp
+	Bank2CReq             = account_mgr_pb.Bank2CReq
+	Bank2CRsp             = account_mgr_pb.Bank2CRsp
+	C2CReq                = account_mgr_pb.C2CReq
+	C2CRsp                = account_mgr_pb.C2CRsp
 	CreateAccountReq      = account_mgr_pb.CreateAccountReq
 	CreateAccountRsp      = account_mgr_pb.CreateAccountRsp
 	GetUserBalanceInfoReq = account_mgr_pb.GetUserBalanceInfoReq
 	GetUserBalanceInfoRsp = account_mgr_pb.GetUserBalanceInfoRsp
 
 	AccountMgr interface {
+		Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error)
 		CreateAccount(ctx context.Context, in *CreateAccountReq, opts ...grpc.CallOption) (*CreateAccountRsp, error)
 		GetUserBalanceInfo(ctx context.Context, in *GetUserBalanceInfoReq, opts ...grpc.CallOption) (*GetUserBalanceInfoRsp, error)
-		C2CTransfer(ctx context.Context, in *C2CTransferReq, opts ...grpc.CallOption) (*C2CTransferRsp, error)
+		C2C(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 	}
 
 	defaultAccountMgr struct {
@@ -38,6 +41,11 @@ func NewAccountMgr(cli zrpc.Client) AccountMgr {
 	}
 }
 
+func (m *defaultAccountMgr) Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error) {
+	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
+	return client.Bank2C(ctx, in, opts...)
+}
+
 func (m *defaultAccountMgr) CreateAccount(ctx context.Context, in *CreateAccountReq, opts ...grpc.CallOption) (*CreateAccountRsp, error) {
 	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
 	return client.CreateAccount(ctx, in, opts...)
@@ -48,7 +56,7 @@ func (m *defaultAccountMgr) GetUserBalanceInfo(ctx context.Context, in *GetUserB
 	return client.GetUserBalanceInfo(ctx, in, opts...)
 }
 
-func (m *defaultAccountMgr) C2CTransfer(ctx context.Context, in *C2CTransferReq, opts ...grpc.CallOption) (*C2CTransferRsp, error) {
+func (m *defaultAccountMgr) C2C(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
 	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
-	return client.C2CTransfer(ctx, in, opts...)
+	return client.C2C(ctx, in, opts...)
 }

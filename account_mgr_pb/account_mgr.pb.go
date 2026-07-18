@@ -265,35 +265,33 @@ func (x *GetUserBalanceInfoRsp) GetCurType() int32 {
 	return 0
 }
 
-// 转账Req
-type C2CTransferReq struct {
+type Bank2CReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TransferId    string                 `protobuf:"bytes,1,opt,name=transfer_id,json=transferId,proto3" json:"transfer_id,omitempty"`
-	BuyerUid      int64                  `protobuf:"varint,2,opt,name=buyer_uid,json=buyerUid,proto3" json:"buyer_uid,omitempty"`
-	BuyerUserId   string                 `protobuf:"bytes,3,opt,name=buyer_user_id,json=buyerUserId,proto3" json:"buyer_user_id,omitempty"`
-	SellerUid     int64                  `protobuf:"varint,4,opt,name=seller_uid,json=sellerUid,proto3" json:"seller_uid,omitempty"`
-	SellerUserId  string                 `protobuf:"bytes,5,opt,name=seller_user_id,json=sellerUserId,proto3" json:"seller_user_id,omitempty"`
-	Amount        int64                  `protobuf:"varint,6,opt,name=amount,proto3" json:"amount,omitempty"`
-	CurType       int32                  `protobuf:"varint,7,opt,name=cur_type,json=curType,proto3" json:"cur_type,omitempty"`
-	TransferDesc  string                 `protobuf:"bytes,8,opt,name=transfer_desc,json=transferDesc,proto3" json:"transfer_desc,omitempty"`
+	TransactionId string                 `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Uid           int64                  `protobuf:"varint,3,opt,name=uid,proto3" json:"uid,omitempty"`
+	BankType      int32                  `protobuf:"varint,4,opt,name=bank_type,json=bankType,proto3" json:"bank_type,omitempty"`
+	Amount        int64                  `protobuf:"varint,5,opt,name=amount,proto3" json:"amount,omitempty"`
+	CurType       int32                  `protobuf:"varint,6,opt,name=cur_type,json=curType,proto3" json:"cur_type,omitempty"`
+	Desc          string                 `protobuf:"bytes,7,opt,name=desc,proto3" json:"desc,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *C2CTransferReq) Reset() {
-	*x = C2CTransferReq{}
+func (x *Bank2CReq) Reset() {
+	*x = Bank2CReq{}
 	mi := &file_account_mgr_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *C2CTransferReq) String() string {
+func (x *Bank2CReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*C2CTransferReq) ProtoMessage() {}
+func (*Bank2CReq) ProtoMessage() {}
 
-func (x *C2CTransferReq) ProtoReflect() protoreflect.Message {
+func (x *Bank2CReq) ProtoReflect() protoreflect.Message {
 	mi := &file_account_mgr_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -305,71 +303,217 @@ func (x *C2CTransferReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use C2CTransferReq.ProtoReflect.Descriptor instead.
-func (*C2CTransferReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use Bank2CReq.ProtoReflect.Descriptor instead.
+func (*Bank2CReq) Descriptor() ([]byte, []int) {
 	return file_account_mgr_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *C2CTransferReq) GetTransferId() string {
+func (x *Bank2CReq) GetTransactionId() string {
 	if x != nil {
-		return x.TransferId
+		return x.TransactionId
 	}
 	return ""
 }
 
-func (x *C2CTransferReq) GetBuyerUid() int64 {
+func (x *Bank2CReq) GetUserId() string {
 	if x != nil {
-		return x.BuyerUid
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *Bank2CReq) GetUid() int64 {
+	if x != nil {
+		return x.Uid
 	}
 	return 0
 }
 
-func (x *C2CTransferReq) GetBuyerUserId() string {
+func (x *Bank2CReq) GetBankType() int32 {
 	if x != nil {
-		return x.BuyerUserId
-	}
-	return ""
-}
-
-func (x *C2CTransferReq) GetSellerUid() int64 {
-	if x != nil {
-		return x.SellerUid
+		return x.BankType
 	}
 	return 0
 }
 
-func (x *C2CTransferReq) GetSellerUserId() string {
-	if x != nil {
-		return x.SellerUserId
-	}
-	return ""
-}
-
-func (x *C2CTransferReq) GetAmount() int64 {
+func (x *Bank2CReq) GetAmount() int64 {
 	if x != nil {
 		return x.Amount
 	}
 	return 0
 }
 
-func (x *C2CTransferReq) GetCurType() int32 {
+func (x *Bank2CReq) GetCurType() int32 {
 	if x != nil {
 		return x.CurType
 	}
 	return 0
 }
 
-func (x *C2CTransferReq) GetTransferDesc() string {
+func (x *Bank2CReq) GetDesc() string {
 	if x != nil {
-		return x.TransferDesc
+		return x.Desc
+	}
+	return ""
+}
+
+type Bank2CRsp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TransactionId string                 `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Bank2CRsp) Reset() {
+	*x = Bank2CRsp{}
+	mi := &file_account_mgr_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Bank2CRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Bank2CRsp) ProtoMessage() {}
+
+func (x *Bank2CRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_account_mgr_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Bank2CRsp.ProtoReflect.Descriptor instead.
+func (*Bank2CRsp) Descriptor() ([]byte, []int) {
+	return file_account_mgr_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Bank2CRsp) GetTransactionId() string {
+	if x != nil {
+		return x.TransactionId
+	}
+	return ""
+}
+
+func (x *Bank2CRsp) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+// 转账Req
+type C2CReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TransactionId string                 `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	BuyerUid      int64                  `protobuf:"varint,2,opt,name=buyer_uid,json=buyerUid,proto3" json:"buyer_uid,omitempty"`
+	BuyerUserId   string                 `protobuf:"bytes,3,opt,name=buyer_user_id,json=buyerUserId,proto3" json:"buyer_user_id,omitempty"`
+	SellerUid     int64                  `protobuf:"varint,4,opt,name=seller_uid,json=sellerUid,proto3" json:"seller_uid,omitempty"`
+	SellerUserId  string                 `protobuf:"bytes,5,opt,name=seller_user_id,json=sellerUserId,proto3" json:"seller_user_id,omitempty"`
+	Amount        int64                  `protobuf:"varint,6,opt,name=amount,proto3" json:"amount,omitempty"`
+	CurType       int32                  `protobuf:"varint,7,opt,name=cur_type,json=curType,proto3" json:"cur_type,omitempty"`
+	Desc          string                 `protobuf:"bytes,8,opt,name=desc,proto3" json:"desc,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *C2CReq) Reset() {
+	*x = C2CReq{}
+	mi := &file_account_mgr_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *C2CReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*C2CReq) ProtoMessage() {}
+
+func (x *C2CReq) ProtoReflect() protoreflect.Message {
+	mi := &file_account_mgr_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use C2CReq.ProtoReflect.Descriptor instead.
+func (*C2CReq) Descriptor() ([]byte, []int) {
+	return file_account_mgr_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *C2CReq) GetTransactionId() string {
+	if x != nil {
+		return x.TransactionId
+	}
+	return ""
+}
+
+func (x *C2CReq) GetBuyerUid() int64 {
+	if x != nil {
+		return x.BuyerUid
+	}
+	return 0
+}
+
+func (x *C2CReq) GetBuyerUserId() string {
+	if x != nil {
+		return x.BuyerUserId
+	}
+	return ""
+}
+
+func (x *C2CReq) GetSellerUid() int64 {
+	if x != nil {
+		return x.SellerUid
+	}
+	return 0
+}
+
+func (x *C2CReq) GetSellerUserId() string {
+	if x != nil {
+		return x.SellerUserId
+	}
+	return ""
+}
+
+func (x *C2CReq) GetAmount() int64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *C2CReq) GetCurType() int32 {
+	if x != nil {
+		return x.CurType
+	}
+	return 0
+}
+
+func (x *C2CReq) GetDesc() string {
+	if x != nil {
+		return x.Desc
 	}
 	return ""
 }
 
 // 转账Rsp
-type C2CTransferRsp struct {
+type C2CRsp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TransferId    string                 `protobuf:"bytes,1,opt,name=transfer_id,json=transferId,proto3" json:"transfer_id,omitempty"`
+	TransactionId string                 `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
 	BuyerUid      int64                  `protobuf:"varint,2,opt,name=buyer_uid,json=buyerUid,proto3" json:"buyer_uid,omitempty"`
 	BuyerUserId   string                 `protobuf:"bytes,3,opt,name=buyer_user_id,json=buyerUserId,proto3" json:"buyer_user_id,omitempty"`
 	SellerUid     int64                  `protobuf:"varint,4,opt,name=seller_uid,json=sellerUid,proto3" json:"seller_uid,omitempty"`
@@ -380,21 +524,21 @@ type C2CTransferRsp struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *C2CTransferRsp) Reset() {
-	*x = C2CTransferRsp{}
-	mi := &file_account_mgr_proto_msgTypes[5]
+func (x *C2CRsp) Reset() {
+	*x = C2CRsp{}
+	mi := &file_account_mgr_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *C2CTransferRsp) String() string {
+func (x *C2CRsp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*C2CTransferRsp) ProtoMessage() {}
+func (*C2CRsp) ProtoMessage() {}
 
-func (x *C2CTransferRsp) ProtoReflect() protoreflect.Message {
-	mi := &file_account_mgr_proto_msgTypes[5]
+func (x *C2CRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_account_mgr_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -405,54 +549,54 @@ func (x *C2CTransferRsp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use C2CTransferRsp.ProtoReflect.Descriptor instead.
-func (*C2CTransferRsp) Descriptor() ([]byte, []int) {
-	return file_account_mgr_proto_rawDescGZIP(), []int{5}
+// Deprecated: Use C2CRsp.ProtoReflect.Descriptor instead.
+func (*C2CRsp) Descriptor() ([]byte, []int) {
+	return file_account_mgr_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *C2CTransferRsp) GetTransferId() string {
+func (x *C2CRsp) GetTransactionId() string {
 	if x != nil {
-		return x.TransferId
+		return x.TransactionId
 	}
 	return ""
 }
 
-func (x *C2CTransferRsp) GetBuyerUid() int64 {
+func (x *C2CRsp) GetBuyerUid() int64 {
 	if x != nil {
 		return x.BuyerUid
 	}
 	return 0
 }
 
-func (x *C2CTransferRsp) GetBuyerUserId() string {
+func (x *C2CRsp) GetBuyerUserId() string {
 	if x != nil {
 		return x.BuyerUserId
 	}
 	return ""
 }
 
-func (x *C2CTransferRsp) GetSellerUid() int64 {
+func (x *C2CRsp) GetSellerUid() int64 {
 	if x != nil {
 		return x.SellerUid
 	}
 	return 0
 }
 
-func (x *C2CTransferRsp) GetSellerUserId() string {
+func (x *C2CRsp) GetSellerUserId() string {
 	if x != nil {
 		return x.SellerUserId
 	}
 	return ""
 }
 
-func (x *C2CTransferRsp) GetTransferTime() string {
+func (x *C2CRsp) GetTransferTime() string {
 	if x != nil {
 		return x.TransferTime
 	}
 	return ""
 }
 
-func (x *C2CTransferRsp) GetIsRepeat() int32 {
+func (x *C2CRsp) GetIsRepeat() int32 {
 	if x != nil {
 		return x.IsRepeat
 	}
@@ -479,33 +623,43 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\x03uid\x18\x01 \x01(\x03R\x03uid\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x18\n" +
 	"\abalance\x18\x03 \x01(\x03R\abalance\x12\x19\n" +
-	"\bcur_type\x18\x04 \x01(\x05R\acurType\"\x8f\x02\n" +
-	"\x0eC2cTransferReq\x12\x1f\n" +
-	"\vtransfer_id\x18\x01 \x01(\tR\n" +
-	"transferId\x12\x1b\n" +
+	"\bcur_type\x18\x04 \x01(\x05R\acurType\"\xc1\x01\n" +
+	"\tBank2CReq\x12%\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x10\n" +
+	"\x03uid\x18\x03 \x01(\x03R\x03uid\x12\x1b\n" +
+	"\tbank_type\x18\x04 \x01(\x05R\bbankType\x12\x16\n" +
+	"\x06amount\x18\x05 \x01(\x03R\x06amount\x12\x19\n" +
+	"\bcur_type\x18\x06 \x01(\x05R\acurType\x12\x12\n" +
+	"\x04desc\x18\a \x01(\tR\x04desc\"K\n" +
+	"\tBank2CRsp\x12%\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\"\xfc\x01\n" +
+	"\x06C2cReq\x12%\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x1b\n" +
 	"\tbuyer_uid\x18\x02 \x01(\x03R\bbuyerUid\x12\"\n" +
 	"\rbuyer_user_id\x18\x03 \x01(\tR\vbuyerUserId\x12\x1d\n" +
 	"\n" +
 	"seller_uid\x18\x04 \x01(\x03R\tsellerUid\x12$\n" +
 	"\x0eseller_user_id\x18\x05 \x01(\tR\fsellerUserId\x12\x16\n" +
 	"\x06amount\x18\x06 \x01(\x03R\x06amount\x12\x19\n" +
-	"\bcur_type\x18\a \x01(\x05R\acurType\x12#\n" +
-	"\rtransfer_desc\x18\b \x01(\tR\ftransferDesc\"\xf9\x01\n" +
-	"\x0eC2cTransferRsp\x12\x1f\n" +
-	"\vtransfer_id\x18\x01 \x01(\tR\n" +
-	"transferId\x12\x1b\n" +
+	"\bcur_type\x18\a \x01(\x05R\acurType\x12\x12\n" +
+	"\x04desc\x18\b \x01(\tR\x04desc\"\xf7\x01\n" +
+	"\x06C2cRsp\x12%\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x1b\n" +
 	"\tbuyer_uid\x18\x02 \x01(\x03R\bbuyerUid\x12\"\n" +
 	"\rbuyer_user_id\x18\x03 \x01(\tR\vbuyerUserId\x12\x1d\n" +
 	"\n" +
 	"seller_uid\x18\x04 \x01(\x03R\tsellerUid\x12$\n" +
 	"\x0eseller_user_id\x18\x05 \x01(\tR\fsellerUserId\x12#\n" +
 	"\rtransfer_time\x18\x06 \x01(\tR\ftransferTime\x12\x1b\n" +
-	"\tis_repeat\x18\a \x01(\x05R\bisRepeat2\x82\x02\n" +
+	"\tis_repeat\x18\a \x01(\x05R\bisRepeat2\xa4\x02\n" +
 	"\n" +
-	"AccountMgr\x12M\n" +
+	"AccountMgr\x128\n" +
+	"\x06Bank2C\x12\x16.account_mgr.Bank2CReq\x1a\x16.account_mgr.Bank2CRsp\x12M\n" +
 	"\rCreateAccount\x12\x1d.account_mgr.CreateAccountReq\x1a\x1d.account_mgr.CreateAccountRsp\x12\\\n" +
-	"\x12GetUserBalanceInfo\x12\".account_mgr.GetUserBalanceInfoReq\x1a\".account_mgr.GetUserBalanceInfoRsp\x12G\n" +
-	"\vC2cTransfer\x12\x1b.account_mgr.C2cTransferReq\x1a\x1b.account_mgr.C2cTransferRspB\x12Z\x10./account_mgr_pbb\x06proto3"
+	"\x12GetUserBalanceInfo\x12\".account_mgr.GetUserBalanceInfoReq\x1a\".account_mgr.GetUserBalanceInfoRsp\x12/\n" +
+	"\x03C2c\x12\x13.account_mgr.C2cReq\x1a\x13.account_mgr.C2cRspB\x12Z\x10./account_mgr_pbb\x06proto3"
 
 var (
 	file_account_mgr_proto_rawDescOnce sync.Once
@@ -519,24 +673,28 @@ func file_account_mgr_proto_rawDescGZIP() []byte {
 	return file_account_mgr_proto_rawDescData
 }
 
-var file_account_mgr_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_account_mgr_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_account_mgr_proto_goTypes = []any{
 	(*CreateAccountReq)(nil),      // 0: account_mgr.CreateAccountReq
 	(*CreateAccountRsp)(nil),      // 1: account_mgr.CreateAccountRsp
 	(*GetUserBalanceInfoReq)(nil), // 2: account_mgr.GetUserBalanceInfoReq
 	(*GetUserBalanceInfoRsp)(nil), // 3: account_mgr.GetUserBalanceInfoRsp
-	(*C2CTransferReq)(nil),        // 4: account_mgr.C2cTransferReq
-	(*C2CTransferRsp)(nil),        // 5: account_mgr.C2cTransferRsp
+	(*Bank2CReq)(nil),             // 4: account_mgr.Bank2CReq
+	(*Bank2CRsp)(nil),             // 5: account_mgr.Bank2CRsp
+	(*C2CReq)(nil),                // 6: account_mgr.C2cReq
+	(*C2CRsp)(nil),                // 7: account_mgr.C2cRsp
 }
 var file_account_mgr_proto_depIdxs = []int32{
-	0, // 0: account_mgr.AccountMgr.CreateAccount:input_type -> account_mgr.CreateAccountReq
-	2, // 1: account_mgr.AccountMgr.GetUserBalanceInfo:input_type -> account_mgr.GetUserBalanceInfoReq
-	4, // 2: account_mgr.AccountMgr.C2cTransfer:input_type -> account_mgr.C2cTransferReq
-	1, // 3: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
-	3, // 4: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
-	5, // 5: account_mgr.AccountMgr.C2cTransfer:output_type -> account_mgr.C2cTransferRsp
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	4, // 0: account_mgr.AccountMgr.Bank2C:input_type -> account_mgr.Bank2CReq
+	0, // 1: account_mgr.AccountMgr.CreateAccount:input_type -> account_mgr.CreateAccountReq
+	2, // 2: account_mgr.AccountMgr.GetUserBalanceInfo:input_type -> account_mgr.GetUserBalanceInfoReq
+	6, // 3: account_mgr.AccountMgr.C2c:input_type -> account_mgr.C2cReq
+	5, // 4: account_mgr.AccountMgr.Bank2C:output_type -> account_mgr.Bank2CRsp
+	1, // 5: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
+	3, // 6: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
+	7, // 7: account_mgr.AccountMgr.C2c:output_type -> account_mgr.C2cRsp
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -553,7 +711,7 @@ func file_account_mgr_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_account_mgr_proto_rawDesc), len(file_account_mgr_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

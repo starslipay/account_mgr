@@ -32,21 +32,36 @@ message GetUserBalanceInfoRsp {
     int32 cur_type = 4;
 }
 
+message Bank2CReq {
+    string transaction_id = 1;
+    string user_id = 2;
+    int64 uid = 3;
+    int32 bank_type = 4;
+    int64 amount = 5;
+    int32 cur_type = 6;
+    string desc = 7;
+}
+
+message Bank2CRsp {
+    string transaction_id = 1;
+    string user_id = 2;
+}
+
 // 转账Req
-message C2cTransferReq {
-    string transfer_id = 1;
+message C2cReq {
+    string transaction_id = 1;
     int64 buyer_uid = 2;
     string buyer_user_id = 3;
     int64 seller_uid = 4;
     string seller_user_id = 5;
     int64 amount = 6;
     int32 cur_type = 7;
-    string transfer_desc = 8;
+    string desc = 8;
 }
 
 // 转账Rsp
-message C2cTransferRsp {
-    string transfer_id = 1;
+message C2cRsp {
+    string transaction_id = 1;
     int64 buyer_uid = 2;
     string buyer_user_id = 3;
     int64 seller_uid = 4;
@@ -56,9 +71,10 @@ message C2cTransferRsp {
 }
 
 service AccountMgr {
+    rpc Bank2C(Bank2CReq) returns (Bank2CRsp);
     rpc CreateAccount(CreateAccountReq) returns (CreateAccountRsp);
     rpc GetUserBalanceInfo(GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp);
-    rpc C2cTransfer(C2cTransferReq) returns (C2cTransferRsp);
+    rpc C2c(C2cReq) returns (C2cRsp);
 }
 
 /*
