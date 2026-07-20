@@ -71,9 +71,10 @@ message C2cRsp {
 }
 
 service AccountMgr {
-    rpc Bank2C(Bank2CReq) returns (Bank2CRsp);
     rpc CreateAccount(CreateAccountReq) returns (CreateAccountRsp);
     rpc GetUserBalanceInfo(GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp);
+
+    rpc Bank2C(Bank2CReq) returns (Bank2CRsp);
     rpc C2cLocal(C2cReq) returns (C2cRsp);  // 本地事务转账
     rpc C2cStrong(C2cReq) returns (C2cRsp);  // 分布式强一致性转账
     rpc C2cFinal(C2cReq) returns (C2cRsp);  // 分布式最终一致性转账
