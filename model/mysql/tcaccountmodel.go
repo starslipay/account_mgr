@@ -1,6 +1,11 @@
 package mysql
 
-import "github.com/zeromicro/go-zero/core/stores/sqlx"
+import (
+	"context"
+	"fmt"
+
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+)
 
 var _ TCAccountModel = (*customTCAccountModel)(nil)
 
@@ -10,6 +15,7 @@ type (
 	TCAccountModel interface {
 		tCAccountModel
 		withSession(session sqlx.Session) TCAccountModel
+		AddBalance(ctx context.Context, uid int64, amount int64) error
 	}
 
 	customTCAccountModel struct {
@@ -26,4 +32,10 @@ func NewTCAccountModel(conn sqlx.SqlConn) TCAccountModel {
 
 func (m *customTCAccountModel) withSession(session sqlx.Session) TCAccountModel {
 	return NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
+}
+
+func (m *customTCAccountModel) AddBalance(ctx context.Context, uid int64, amount int64) error {
+	query := fmt.Sprintf("update %s set `balance` = `balance` + ? where `uid` = ?", m.table)
+	_, err := m.conn.ExecCtx(ctx, query, amount, uid)
+	return err
 }

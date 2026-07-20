@@ -27,7 +27,9 @@ type (
 		Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error)
 		CreateAccount(ctx context.Context, in *CreateAccountReq, opts ...grpc.CallOption) (*CreateAccountRsp, error)
 		GetUserBalanceInfo(ctx context.Context, in *GetUserBalanceInfoReq, opts ...grpc.CallOption) (*GetUserBalanceInfoRsp, error)
-		C2C(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
+		C2CLocal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
+		C2CStrong(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
+		C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 	}
 
 	defaultAccountMgr struct {
@@ -56,7 +58,17 @@ func (m *defaultAccountMgr) GetUserBalanceInfo(ctx context.Context, in *GetUserB
 	return client.GetUserBalanceInfo(ctx, in, opts...)
 }
 
-func (m *defaultAccountMgr) C2C(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
+func (m *defaultAccountMgr) C2CLocal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
 	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
-	return client.C2C(ctx, in, opts...)
+	return client.C2CLocal(ctx, in, opts...)
+}
+
+func (m *defaultAccountMgr) C2CStrong(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
+	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
+	return client.C2CStrong(ctx, in, opts...)
+}
+
+func (m *defaultAccountMgr) C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
+	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
+	return client.C2CFinal(ctx, in, opts...)
 }

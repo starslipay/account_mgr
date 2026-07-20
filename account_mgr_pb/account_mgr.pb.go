@@ -653,13 +653,15 @@ const file_account_mgr_proto_rawDesc = "" +
 	"seller_uid\x18\x04 \x01(\x03R\tsellerUid\x12$\n" +
 	"\x0eseller_user_id\x18\x05 \x01(\tR\fsellerUserId\x12#\n" +
 	"\rtransfer_time\x18\x06 \x01(\tR\ftransferTime\x12\x1b\n" +
-	"\tis_repeat\x18\a \x01(\x05R\bisRepeat2\xa4\x02\n" +
+	"\tis_repeat\x18\a \x01(\x05R\bisRepeat2\x96\x03\n" +
 	"\n" +
 	"AccountMgr\x128\n" +
 	"\x06Bank2C\x12\x16.account_mgr.Bank2CReq\x1a\x16.account_mgr.Bank2CRsp\x12M\n" +
 	"\rCreateAccount\x12\x1d.account_mgr.CreateAccountReq\x1a\x1d.account_mgr.CreateAccountRsp\x12\\\n" +
-	"\x12GetUserBalanceInfo\x12\".account_mgr.GetUserBalanceInfoReq\x1a\".account_mgr.GetUserBalanceInfoRsp\x12/\n" +
-	"\x03C2c\x12\x13.account_mgr.C2cReq\x1a\x13.account_mgr.C2cRspB\x12Z\x10./account_mgr_pbb\x06proto3"
+	"\x12GetUserBalanceInfo\x12\".account_mgr.GetUserBalanceInfoReq\x1a\".account_mgr.GetUserBalanceInfoRsp\x124\n" +
+	"\bC2cLocal\x12\x13.account_mgr.C2cReq\x1a\x13.account_mgr.C2cRsp\x125\n" +
+	"\tC2cStrong\x12\x13.account_mgr.C2cReq\x1a\x13.account_mgr.C2cRsp\x124\n" +
+	"\bC2cFinal\x12\x13.account_mgr.C2cReq\x1a\x13.account_mgr.C2cRspB\x12Z\x10./account_mgr_pbb\x06proto3"
 
 var (
 	file_account_mgr_proto_rawDescOnce sync.Once
@@ -688,13 +690,17 @@ var file_account_mgr_proto_depIdxs = []int32{
 	4, // 0: account_mgr.AccountMgr.Bank2C:input_type -> account_mgr.Bank2CReq
 	0, // 1: account_mgr.AccountMgr.CreateAccount:input_type -> account_mgr.CreateAccountReq
 	2, // 2: account_mgr.AccountMgr.GetUserBalanceInfo:input_type -> account_mgr.GetUserBalanceInfoReq
-	6, // 3: account_mgr.AccountMgr.C2c:input_type -> account_mgr.C2cReq
-	5, // 4: account_mgr.AccountMgr.Bank2C:output_type -> account_mgr.Bank2CRsp
-	1, // 5: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
-	3, // 6: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
-	7, // 7: account_mgr.AccountMgr.C2c:output_type -> account_mgr.C2cRsp
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	6, // 3: account_mgr.AccountMgr.C2cLocal:input_type -> account_mgr.C2cReq
+	6, // 4: account_mgr.AccountMgr.C2cStrong:input_type -> account_mgr.C2cReq
+	6, // 5: account_mgr.AccountMgr.C2cFinal:input_type -> account_mgr.C2cReq
+	5, // 6: account_mgr.AccountMgr.Bank2C:output_type -> account_mgr.Bank2CRsp
+	1, // 7: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
+	3, // 8: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
+	7, // 9: account_mgr.AccountMgr.C2cLocal:output_type -> account_mgr.C2cRsp
+	7, // 10: account_mgr.AccountMgr.C2cStrong:output_type -> account_mgr.C2cRsp
+	7, // 11: account_mgr.AccountMgr.C2cFinal:output_type -> account_mgr.C2cRsp
+	6, // [6:12] is the sub-list for method output_type
+	0, // [0:6] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

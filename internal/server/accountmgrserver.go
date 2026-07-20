@@ -38,7 +38,17 @@ func (s *AccountMgrServer) GetUserBalanceInfo(ctx context.Context, in *account_m
 	return l.GetUserBalanceInfo(in)
 }
 
-func (s *AccountMgrServer) C2C(ctx context.Context, in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
-	l := logic.NewC2cLogic(ctx, s.svcCtx)
-	return l.C2C(in)
+func (s *AccountMgrServer) C2CLocal(ctx context.Context, in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
+	l := logic.NewC2cLocalLogic(ctx, s.svcCtx)
+	return l.C2CLocal(in)
+}
+
+func (s *AccountMgrServer) C2CStrong(ctx context.Context, in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
+	l := logic.NewC2cStrongLogic(ctx, s.svcCtx)
+	return l.C2CStrong(in)
+}
+
+func (s *AccountMgrServer) C2CFinal(ctx context.Context, in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
+	l := logic.NewC2cFinalLogic(ctx, s.svcCtx)
+	return l.C2CFinal(in)
 }

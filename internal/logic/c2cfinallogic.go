@@ -9,22 +9,20 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type C2cLogic struct {
+type C2cFinalLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewC2cLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C2cLogic {
-	return &C2cLogic{
+func NewC2cFinalLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C2cFinalLogic {
+	return &C2cFinalLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *C2cLogic) C2C(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
-	// todo: add your logic here and delete this line
-
+func (l *C2cFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
 	return &account_mgr_pb.C2CRsp{}, nil
 }

@@ -8,6 +8,8 @@ import (
 
 type ServiceContext struct {
 	Config               config.Config
+	SqlMasterConn        sqlx.SqlConn
+	SqlSlaveConn         sqlx.SqlConn
 	TCAccountModelMaster mysql.TCAccountModel
 	TCAccountModelSlave  mysql.TCAccountModel
 
@@ -16,6 +18,9 @@ type ServiceContext struct {
 
 	TC2crOrderMaster mysql.TC2cOrderModel
 	TC2cOrderSlave   mysql.TC2cOrderModel
+
+	TSaveBillModelMaster mysql.TSaveBillModel
+	TSaveBillModelSlave  mysql.TSaveBillModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -23,11 +28,15 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	SqlSlaveConn := sqlx.NewMysql(c.SlaveDBConfig.DataSource)
 	return &ServiceContext{
 		Config:                  c,
+		SqlMasterConn:           SqlMasterConn,
+		SqlSlaveConn:            SqlSlaveConn,
 		TCAccountModelMaster:    mysql.NewTCAccountModel(SqlMasterConn),
 		TCAccountModelSlave:     mysql.NewTCAccountModel(SqlSlaveConn),
 		TCAccountLogModelMaster: mysql.NewTCAccountLogModel(SqlMasterConn),
 		TCAccountLogModelSlave:  mysql.NewTCAccountLogModel(SqlSlaveConn),
 		TC2crOrderMaster:        mysql.NewTC2cOrderModel(SqlMasterConn),
 		TC2cOrderSlave:          mysql.NewTC2cOrderModel(SqlSlaveConn),
+		TSaveBillModelMaster:    mysql.NewTSaveBillModel(SqlMasterConn),
+		TSaveBillModelSlave:     mysql.NewTSaveBillModel(SqlSlaveConn),
 	}
 }
