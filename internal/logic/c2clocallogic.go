@@ -56,8 +56,10 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		tcAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
 		tc2cBillModel := mysql.NewTC2cBillModel(sqlx.NewSqlConnFromSession(session))
 
+		var buyerAccount *mysql.TCAccount
+		var err error
 		if in.BuyerUid < in.SellerUid {
-			_, err := tcAccountModel.FindOneForUpdate(ctx, in.BuyerUid)
+			buyerAccount, err = tcAccountModel.FindOneForUpdate(ctx, in.BuyerUid)
 			if err != nil {
 				return err
 			}
@@ -66,22 +68,27 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 				return err
 			}
 		} else {
-			_, err := tcAccountModel.FindOneForUpdate(ctx, in.SellerUid)
+			_, err = tcAccountModel.FindOneForUpdate(ctx, in.SellerUid)
 			if err != nil {
 				return err
 			}
-			_, err = tcAccountModel.FindOneForUpdate(ctx, in.BuyerUid)
+			buyerAccount, err = tcAccountModel.FindOneForUpdate(ctx, in.BuyerUid)
 			if err != nil {
 				return err
 			}
 		}
 
-		err := tcAccountModel.AddBalance(ctx, in.BuyerUid, in.Amount)
+		_ = buyerAccount
+		if buyerAccount.Balance < in.Amount {
+			return xerr.ErrBalanceNotEnough
+		}
+
+		err = tcAccountModel.SubBalance(ctx, in.BuyerUid, in.Amount)
 		if err != nil {
 			return err
 		}
 
-		err = tcAccountModel.SubBalance(ctx, in.SellerUid, in.Amount)
+		err = tcAccountModel.AddBalance(ctx, in.SellerUid, in.Amount)
 		if err != nil {
 			return err
 		}
