@@ -21,6 +21,9 @@ type ServiceContext struct {
 
 	TSaveBillModelMaster mysql.TSaveBillModel
 	TSaveBillModelSlave  mysql.TSaveBillModel
+
+	TC2cBillModelMaster mysql.TC2cBillModel
+	TC2cBillModelSlave  mysql.TC2cBillModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -38,5 +41,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		TC2cOrderSlave:          mysql.NewTC2cOrderModel(SqlSlaveConn),
 		TSaveBillModelMaster:    mysql.NewTSaveBillModel(SqlMasterConn),
 		TSaveBillModelSlave:     mysql.NewTSaveBillModel(SqlSlaveConn),
+		TC2cBillModelMaster:     mysql.NewTC2cBillModel(SqlMasterConn),
+		TC2cBillModelSlave:      mysql.NewTC2cBillModel(SqlSlaveConn),
 	}
 }

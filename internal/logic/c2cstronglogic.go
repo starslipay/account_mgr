@@ -24,7 +24,6 @@ func NewC2cStrongLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C2cStro
 }
 
 func (l *C2cStrongLogic) C2CStrong(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
-	// todo: add your logic here and delete this line
 
 	return &account_mgr_pb.C2CRsp{}, nil
 }

@@ -16,6 +16,7 @@ import (
 
 const (
 	InoutTypeIn     = 1 // 资金方向：入
+	InoutTypeOut    = 2 // 资金方向：出
 	BizTypeBank2C   = 1 // 银行充值
 	SaveBillStateOK = 1 // 充值单状态：成功
 )

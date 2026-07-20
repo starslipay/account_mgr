@@ -16,6 +16,8 @@ type (
 		tCAccountModel
 		withSession(session sqlx.Session) TCAccountModel
 		AddBalance(ctx context.Context, uid int64, amount int64) error
+		SubBalance(ctx context.Context, uid int64, amount int64) error
+		FindOneForUpdate(ctx context.Context, uid int64) (*TCAccount, error)
 	}
 
 	customTCAccountModel struct {
@@ -38,4 +40,24 @@ func (m *customTCAccountModel) AddBalance(ctx context.Context, uid int64, amount
 	query := fmt.Sprintf("update %s set `balance` = `balance` + ? where `uid` = ?", m.table)
 	_, err := m.conn.ExecCtx(ctx, query, amount, uid)
 	return err
+}
+
+func (m *customTCAccountModel) SubBalance(ctx context.Context, uid int64, amount int64) error {
+	query := fmt.Sprintf("update %s set `balance` = `balance` - ? where `uid` = ? and `balance` >= ?", m.table)
+	_, err := m.conn.ExecCtx(ctx, query, amount, uid, amount)
+	return err
+}
+
+func (m *customTCAccountModel) FindOneForUpdate(ctx context.Context, uid int64) (*TCAccount, error) {
+	query := fmt.Sprintf("select %s from %s where `uid` = ? for update", tCAccountRows, m.table)
+	var resp TCAccount
+	err := m.conn.QueryRowCtx(ctx, &resp, query, uid)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlx.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }
