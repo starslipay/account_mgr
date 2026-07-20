@@ -32,6 +32,7 @@ CREATE TABLE `t_c_account_log` (
   `transaction_id` VARCHAR(64) NOT NULL COMMENT '交易ID',
   `inout_type` TINYINT NOT NULL COMMENT '出入金类型',
   `biz_type` INTEGER NOT NULL COMMENT '业务类型',
+  `balance` BIGINT NOT NULL COMMENT '余额',
   `amount` BIGINT NOT NULL COMMENT '金额',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

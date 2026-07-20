@@ -56,19 +56,19 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		tcAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
 		tc2cBillModel := mysql.NewTC2cBillModel(sqlx.NewSqlConnFromSession(session))
 
-		var buyerAccount *mysql.TCAccount
+		var buyerAccount, sellerAccount *mysql.TCAccount
 		var err error
 		if in.BuyerUid < in.SellerUid {
 			buyerAccount, err = tcAccountModel.FindOneForUpdate(ctx, in.BuyerUid)
 			if err != nil {
 				return err
 			}
-			_, err = tcAccountModel.FindOneForUpdate(ctx, in.SellerUid)
+			sellerAccount, err = tcAccountModel.FindOneForUpdate(ctx, in.SellerUid)
 			if err != nil {
 				return err
 			}
 		} else {
-			_, err = tcAccountModel.FindOneForUpdate(ctx, in.SellerUid)
+			sellerAccount, err = tcAccountModel.FindOneForUpdate(ctx, in.SellerUid)
 			if err != nil {
 				return err
 			}
@@ -102,6 +102,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			InoutType:          InoutTypeIn,
 			BizType:            BizTypeC2cLocal,
 			Amount:             in.Amount,
+			Balance:            buyerAccount.Balance - in.Amount,
 		})
 		if err != nil {
 			return err
@@ -116,6 +117,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			InoutType:          InoutTypeOut,
 			BizType:            BizTypeC2cLocal,
 			Amount:             in.Amount,
+			Balance:            sellerAccount.Balance + in.Amount,
 		})
 		if err != nil {
 			return err
