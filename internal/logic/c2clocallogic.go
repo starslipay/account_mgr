@@ -15,8 +15,7 @@ import (
 )
 
 const (
-	C2cBillStateOK  = 1
-	BizTypeC2cLocal = 2
+	C2cBillStateOK = 1
 )
 
 type C2cLocalLogic struct {
@@ -99,7 +98,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			CounterpartyUserId: in.SellerUserId,
 			CounterpartyUid:    in.SellerUid,
 			TransactionId:      in.TransactionId,
-			InoutType:          InoutTypeIn,
+			InoutType:          InoutTypeOut,
 			BizType:            BizTypeC2cLocal,
 			Amount:             in.Amount,
 			Balance:            buyerAccount.Balance - in.Amount,
@@ -115,7 +114,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			CounterpartyUserId: in.BuyerUserId,
 			CounterpartyUid:    in.BuyerUid,
 			TransactionId:      in.TransactionId,
-			InoutType:          InoutTypeOut,
+			InoutType:          InoutTypeIn,
 			BizType:            BizTypeC2cLocal,
 			Amount:             in.Amount,
 			Balance:            sellerAccount.Balance + in.Amount,
