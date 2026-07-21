@@ -47,16 +47,16 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 	}
 
 	err := l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
-		tcAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
-		tcAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
+		tCAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
+		tCAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
 		tSaveBillModel := mysql.NewTSaveBillModel(sqlx.NewSqlConnFromSession(session))
 
-		err := tcAccountModel.AddBalance(ctx, in.Uid, in.Amount)
+		err := tCAccountModel.AddBalance(ctx, in.Uid, in.Amount)
 		if err != nil {
 			return err
 		}
 
-		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
+		_, err = tCAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
 			Uid:                in.Uid,
 			UserId:             in.UserId,
 			CounterpartyUserId: strconv.Itoa(int(in.BankType)),
@@ -65,6 +65,7 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 			InoutType:          InoutTypeIn,
 			BizType:            BizTypeBank2C,
 			Amount:             in.Amount,
+			Desc:               in.Desc,
 		})
 		if err != nil {
 			return err

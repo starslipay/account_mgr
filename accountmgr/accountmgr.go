@@ -22,11 +22,15 @@ type (
 	CreateAccountRsp      = account_mgr_pb.CreateAccountRsp
 	GetUserBalanceInfoReq = account_mgr_pb.GetUserBalanceInfoReq
 	GetUserBalanceInfoRsp = account_mgr_pb.GetUserBalanceInfoRsp
+	GetUserFlowReq        = account_mgr_pb.GetUserFlowReq
+	GetUserFlowRsp        = account_mgr_pb.GetUserFlowRsp
+	UserFlow              = account_mgr_pb.UserFlow
 
 	AccountMgr interface {
-		Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error)
 		CreateAccount(ctx context.Context, in *CreateAccountReq, opts ...grpc.CallOption) (*CreateAccountRsp, error)
 		GetUserBalanceInfo(ctx context.Context, in *GetUserBalanceInfoReq, opts ...grpc.CallOption) (*GetUserBalanceInfoRsp, error)
+		GetUserFlow(ctx context.Context, in *GetUserFlowReq, opts ...grpc.CallOption) (*GetUserFlowRsp, error)
+		Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error)
 		C2CLocal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 		C2CStrong(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 		C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
@@ -43,11 +47,6 @@ func NewAccountMgr(cli zrpc.Client) AccountMgr {
 	}
 }
 
-func (m *defaultAccountMgr) Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error) {
-	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
-	return client.Bank2C(ctx, in, opts...)
-}
-
 func (m *defaultAccountMgr) CreateAccount(ctx context.Context, in *CreateAccountReq, opts ...grpc.CallOption) (*CreateAccountRsp, error) {
 	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
 	return client.CreateAccount(ctx, in, opts...)
@@ -56,6 +55,16 @@ func (m *defaultAccountMgr) CreateAccount(ctx context.Context, in *CreateAccount
 func (m *defaultAccountMgr) GetUserBalanceInfo(ctx context.Context, in *GetUserBalanceInfoReq, opts ...grpc.CallOption) (*GetUserBalanceInfoRsp, error) {
 	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
 	return client.GetUserBalanceInfo(ctx, in, opts...)
+}
+
+func (m *defaultAccountMgr) GetUserFlow(ctx context.Context, in *GetUserFlowReq, opts ...grpc.CallOption) (*GetUserFlowRsp, error) {
+	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
+	return client.GetUserFlow(ctx, in, opts...)
+}
+
+func (m *defaultAccountMgr) Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error) {
+	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
+	return client.Bank2C(ctx, in, opts...)
 }
 
 func (m *defaultAccountMgr) C2CLocal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {

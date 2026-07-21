@@ -32,6 +32,34 @@ message GetUserBalanceInfoRsp {
     int32 cur_type = 4;
 }
 
+// 获取账户流水Req
+message GetUserFlowReq {
+    int64 uid = 1;
+    int32 offset = 2;  // 偏移量
+    int32 limit = 3;  // 限制数量
+}
+
+// 获取账户流水Rsp
+message GetUserFlowRsp {
+    int64 uid = 1;
+    string user_id = 2;
+    int32 next_offset = 3;  // 下一页偏移量
+    int32 end_flag = 4;  // 是否是最后一页
+    repeated UserFlow UserFlowList = 5;  // 账户流水列表
+}
+
+message UserFlow {
+    string transaction_id = 1;
+    string user_id = 2;
+    string counterparty_user_id = 3;
+    int32 inout_type = 4;
+    int32 biz_type = 5;
+    int64 balance = 7;
+    int64 amount = 6;
+    string desc = 8;
+    string create_time = 9;
+}
+
 message Bank2CReq {
     string transaction_id = 1;
     string user_id = 2;
@@ -73,6 +101,8 @@ message C2cRsp {
 service AccountMgr {
     rpc CreateAccount(CreateAccountReq) returns (CreateAccountRsp);
     rpc GetUserBalanceInfo(GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp);
+
+    rpc GetUserFlow(GetUserFlowReq) returns (GetUserFlowRsp);
 
     rpc Bank2C(Bank2CReq) returns (Bank2CRsp);
     rpc C2cLocal(C2cReq) returns (C2cRsp);  // 本地事务转账

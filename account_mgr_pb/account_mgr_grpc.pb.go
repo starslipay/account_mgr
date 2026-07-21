@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AccountMgr_Bank2C_FullMethodName             = "/account_mgr.AccountMgr/Bank2C"
 	AccountMgr_CreateAccount_FullMethodName      = "/account_mgr.AccountMgr/CreateAccount"
 	AccountMgr_GetUserBalanceInfo_FullMethodName = "/account_mgr.AccountMgr/GetUserBalanceInfo"
+	AccountMgr_GetUserFlow_FullMethodName        = "/account_mgr.AccountMgr/GetUserFlow"
+	AccountMgr_Bank2C_FullMethodName             = "/account_mgr.AccountMgr/Bank2C"
 	AccountMgr_C2CLocal_FullMethodName           = "/account_mgr.AccountMgr/C2cLocal"
 	AccountMgr_C2CStrong_FullMethodName          = "/account_mgr.AccountMgr/C2cStrong"
 	AccountMgr_C2CFinal_FullMethodName           = "/account_mgr.AccountMgr/C2cFinal"
@@ -31,9 +32,10 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AccountMgrClient interface {
-	Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error)
 	CreateAccount(ctx context.Context, in *CreateAccountReq, opts ...grpc.CallOption) (*CreateAccountRsp, error)
 	GetUserBalanceInfo(ctx context.Context, in *GetUserBalanceInfoReq, opts ...grpc.CallOption) (*GetUserBalanceInfoRsp, error)
+	GetUserFlow(ctx context.Context, in *GetUserFlowReq, opts ...grpc.CallOption) (*GetUserFlowRsp, error)
+	Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error)
 	C2CLocal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 	C2CStrong(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 	C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
@@ -45,16 +47,6 @@ type accountMgrClient struct {
 
 func NewAccountMgrClient(cc grpc.ClientConnInterface) AccountMgrClient {
 	return &accountMgrClient{cc}
-}
-
-func (c *accountMgrClient) Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Bank2CRsp)
-	err := c.cc.Invoke(ctx, AccountMgr_Bank2C_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *accountMgrClient) CreateAccount(ctx context.Context, in *CreateAccountReq, opts ...grpc.CallOption) (*CreateAccountRsp, error) {
@@ -71,6 +63,26 @@ func (c *accountMgrClient) GetUserBalanceInfo(ctx context.Context, in *GetUserBa
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserBalanceInfoRsp)
 	err := c.cc.Invoke(ctx, AccountMgr_GetUserBalanceInfo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountMgrClient) GetUserFlow(ctx context.Context, in *GetUserFlowReq, opts ...grpc.CallOption) (*GetUserFlowRsp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserFlowRsp)
+	err := c.cc.Invoke(ctx, AccountMgr_GetUserFlow_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountMgrClient) Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Bank2CRsp)
+	err := c.cc.Invoke(ctx, AccountMgr_Bank2C_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -111,9 +123,10 @@ func (c *accountMgrClient) C2CFinal(ctx context.Context, in *C2CReq, opts ...grp
 // All implementations must embed UnimplementedAccountMgrServer
 // for forward compatibility.
 type AccountMgrServer interface {
-	Bank2C(context.Context, *Bank2CReq) (*Bank2CRsp, error)
 	CreateAccount(context.Context, *CreateAccountReq) (*CreateAccountRsp, error)
 	GetUserBalanceInfo(context.Context, *GetUserBalanceInfoReq) (*GetUserBalanceInfoRsp, error)
+	GetUserFlow(context.Context, *GetUserFlowReq) (*GetUserFlowRsp, error)
+	Bank2C(context.Context, *Bank2CReq) (*Bank2CRsp, error)
 	C2CLocal(context.Context, *C2CReq) (*C2CRsp, error)
 	C2CStrong(context.Context, *C2CReq) (*C2CRsp, error)
 	C2CFinal(context.Context, *C2CReq) (*C2CRsp, error)
@@ -127,14 +140,17 @@ type AccountMgrServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAccountMgrServer struct{}
 
-func (UnimplementedAccountMgrServer) Bank2C(context.Context, *Bank2CReq) (*Bank2CRsp, error) {
-	return nil, status.Error(codes.Unimplemented, "method Bank2C not implemented")
-}
 func (UnimplementedAccountMgrServer) CreateAccount(context.Context, *CreateAccountReq) (*CreateAccountRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateAccount not implemented")
 }
 func (UnimplementedAccountMgrServer) GetUserBalanceInfo(context.Context, *GetUserBalanceInfoReq) (*GetUserBalanceInfoRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserBalanceInfo not implemented")
+}
+func (UnimplementedAccountMgrServer) GetUserFlow(context.Context, *GetUserFlowReq) (*GetUserFlowRsp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUserFlow not implemented")
+}
+func (UnimplementedAccountMgrServer) Bank2C(context.Context, *Bank2CReq) (*Bank2CRsp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Bank2C not implemented")
 }
 func (UnimplementedAccountMgrServer) C2CLocal(context.Context, *C2CReq) (*C2CRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method C2CLocal not implemented")
@@ -164,24 +180,6 @@ func RegisterAccountMgrServer(s grpc.ServiceRegistrar, srv AccountMgrServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&AccountMgr_ServiceDesc, srv)
-}
-
-func _AccountMgr_Bank2C_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Bank2CReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AccountMgrServer).Bank2C(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AccountMgr_Bank2C_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountMgrServer).Bank2C(ctx, req.(*Bank2CReq))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _AccountMgr_CreateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -216,6 +214,42 @@ func _AccountMgr_GetUserBalanceInfo_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AccountMgrServer).GetUserBalanceInfo(ctx, req.(*GetUserBalanceInfoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountMgr_GetUserFlow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserFlowReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountMgrServer).GetUserFlow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountMgr_GetUserFlow_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountMgrServer).GetUserFlow(ctx, req.(*GetUserFlowReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountMgr_Bank2C_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Bank2CReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountMgrServer).Bank2C(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountMgr_Bank2C_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountMgrServer).Bank2C(ctx, req.(*Bank2CReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -282,16 +316,20 @@ var AccountMgr_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AccountMgrServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Bank2C",
-			Handler:    _AccountMgr_Bank2C_Handler,
-		},
-		{
 			MethodName: "CreateAccount",
 			Handler:    _AccountMgr_CreateAccount_Handler,
 		},
 		{
 			MethodName: "GetUserBalanceInfo",
 			Handler:    _AccountMgr_GetUserBalanceInfo_Handler,
+		},
+		{
+			MethodName: "GetUserFlow",
+			Handler:    _AccountMgr_GetUserFlow_Handler,
+		},
+		{
+			MethodName: "Bank2C",
+			Handler:    _AccountMgr_Bank2C_Handler,
 		},
 		{
 			MethodName: "C2cLocal",

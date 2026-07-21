@@ -103,6 +103,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			BizType:            BizTypeC2cLocal,
 			Amount:             in.Amount,
 			Balance:            buyerAccount.Balance - in.Amount,
+			Desc:               in.Desc,
 		})
 		if err != nil {
 			return err
@@ -118,6 +119,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			BizType:            BizTypeC2cLocal,
 			Amount:             in.Amount,
 			Balance:            sellerAccount.Balance + in.Amount,
+			Desc:               in.Desc,
 		})
 		if err != nil {
 			return err

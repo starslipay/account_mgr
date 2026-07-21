@@ -23,11 +23,6 @@ func NewAccountMgrServer(svcCtx *svc.ServiceContext) *AccountMgrServer {
 	}
 }
 
-func (s *AccountMgrServer) Bank2C(ctx context.Context, in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank2CRsp, error) {
-	l := logic.NewBank2CLogic(ctx, s.svcCtx)
-	return l.Bank2C(in)
-}
-
 func (s *AccountMgrServer) CreateAccount(ctx context.Context, in *account_mgr_pb.CreateAccountReq) (*account_mgr_pb.CreateAccountRsp, error) {
 	l := logic.NewCreateAccountLogic(ctx, s.svcCtx)
 	return l.CreateAccount(in)
@@ -36,6 +31,16 @@ func (s *AccountMgrServer) CreateAccount(ctx context.Context, in *account_mgr_pb
 func (s *AccountMgrServer) GetUserBalanceInfo(ctx context.Context, in *account_mgr_pb.GetUserBalanceInfoReq) (*account_mgr_pb.GetUserBalanceInfoRsp, error) {
 	l := logic.NewGetUserBalanceInfoLogic(ctx, s.svcCtx)
 	return l.GetUserBalanceInfo(in)
+}
+
+func (s *AccountMgrServer) GetUserFlow(ctx context.Context, in *account_mgr_pb.GetUserFlowReq) (*account_mgr_pb.GetUserFlowRsp, error) {
+	l := logic.NewGetUserFlowLogic(ctx, s.svcCtx)
+	return l.GetUserFlow(in)
+}
+
+func (s *AccountMgrServer) Bank2C(ctx context.Context, in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank2CRsp, error) {
+	l := logic.NewBank2CLogic(ctx, s.svcCtx)
+	return l.Bank2C(in)
 }
 
 func (s *AccountMgrServer) C2CLocal(ctx context.Context, in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
