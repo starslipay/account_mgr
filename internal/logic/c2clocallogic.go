@@ -62,20 +62,20 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		if in.BuyerUid < in.SellerUid {
 			buyerAccount, err = tcAccountModel.FindOneForUpdate(ctx, in.BuyerUid)
 			if err != nil {
-				return err
+				return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find account failed: %v", err))
 			}
 			sellerAccount, err = tcAccountModel.FindOneForUpdate(ctx, in.SellerUid)
 			if err != nil {
-				return err
+				return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find account failed: %v", err))
 			}
 		} else {
 			sellerAccount, err = tcAccountModel.FindOneForUpdate(ctx, in.SellerUid)
 			if err != nil {
-				return err
+				return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find account failed: %v", err))
 			}
 			buyerAccount, err = tcAccountModel.FindOneForUpdate(ctx, in.BuyerUid)
 			if err != nil {
-				return err
+				return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find account failed: %v", err))
 			}
 		}
 
@@ -86,12 +86,12 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 
 		err = tcAccountModel.SubBalance(ctx, in.BuyerUid, in.Amount)
 		if err != nil {
-			return err
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("sub balance failed: %v", err))
 		}
 
 		err = tcAccountModel.AddBalance(ctx, in.SellerUid, in.Amount)
 		if err != nil {
-			return err
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("add balance failed: %v", err))
 		}
 
 		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
@@ -107,7 +107,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			Desc:               in.Desc,
 		})
 		if err != nil {
-			return err
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))
 		}
 
 		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
@@ -123,7 +123,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			Desc:               in.Desc,
 		})
 		if err != nil {
-			return err
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))
 		}
 
 		_, err = tc2cBillModel.Insert(ctx, &mysql.TC2cBill{
@@ -138,7 +138,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			Desc:          in.Desc,
 		})
 		if err != nil {
-			return err
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert c2c bill failed: %v", err))
 		}
 
 		result = &account_mgr_pb.C2CRsp{
@@ -156,7 +156,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 
 	if err != nil {
 		l.Errorf("C2CLocal transaction failed: %v", err)
-		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("c2c local failed: %v", err))
+		return nil, err
 	}
 
 	return result, nil
