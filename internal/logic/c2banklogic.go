@@ -16,36 +16,21 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
-const (
-	InoutTypeIn  = 1 // 资金方向：入
-	InoutTypeOut = 2 // 资金方向：出
-)
-
-const (
-	BizTypeBank2C   = 1 // 银行充值
-	BizTypeC2cLocal = 2 // c2c充值
-	BizTypeC2Bank   = 3 // 银行提现
-)
-
-const (
-	SaveBillStateOK = 1 // 充值单状态：成功
-)
-
-type Bank2CLogic struct {
+type C2BankLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewBank2CLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Bank2CLogic {
-	return &Bank2CLogic{
+func NewC2BankLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C2BankLogic {
+	return &C2BankLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank2CRsp, error) {
+func (l *C2BankLogic) C2Bank(in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2BankRsp, error) {
 	if in.Uid <= 0 {
 		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "uid is invalid")
 	}
@@ -61,7 +46,16 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 		tCAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
 		tSaveBillModel := mysql.NewTSaveBillModel(sqlx.NewSqlConnFromSession(session))
 
-		err := tCAccountModel.AddBalance(ctx, in.Uid, in.Amount)
+		account, err := tCAccountModel.FindOneForUpdate(ctx, in.Uid)
+		if err != nil {
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find account failed: %v", err))
+		}
+
+		if account.Balance < in.Amount {
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeBalanceNotEnough, "balance is not enough")
+		}
+
+		err = tCAccountModel.SubBalance(ctx, in.Uid, in.Amount)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("add balance failed: %v", err))
 		}
@@ -72,8 +66,8 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 			CounterpartyUserId: strconv.Itoa(int(in.BankType)),
 			CounterpartyUid:    int64(in.BankType),
 			TransactionId:      in.TransactionId,
-			InoutType:          InoutTypeIn,
-			BizType:            BizTypeBank2C,
+			InoutType:          InoutTypeOut,
+			BizType:            BizTypeC2Bank,
 			Amount:             in.Amount,
 			Desc:               in.Desc,
 		})
@@ -98,11 +92,11 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 	})
 
 	if err != nil {
-		l.Errorf("Bank2C transaction failed: %v", err)
+		l.Errorf("C2Bank transaction failed: %v", err)
 		return nil, err
 	}
 
-	return &account_mgr_pb.Bank2CRsp{
+	return &account_mgr_pb.C2BankRsp{
 		TransactionId: in.TransactionId,
 		UserId:        in.UserId,
 	}, nil

@@ -14,10 +14,6 @@ var (
 	ErrCodeServerInternal = ModuleErrorBase + 1
 
 	// 业务错误码 1000-1999
-	ErrCodeParam                                   = ModuleErrorBase + 1000
-	ErrCodeUserNotExist                            = ModuleErrorBase + 1001
-	ErrCodePasswordWrong                           = ModuleErrorBase + 1002
-	ErrCodeUserAlreadyRegistered                   = ModuleErrorBase + 1003
-	ErrCodeRelationStateNotRegisteringOrRegistered = ModuleErrorBase + 1004
-	ErrCodeBalanceNotEnough                        = ModuleErrorBase + 1005
+	ErrCodeParam            = ModuleErrorBase + 1000
+	ErrCodeBalanceNotEnough = ModuleErrorBase + 1001
 )

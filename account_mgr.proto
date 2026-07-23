@@ -75,6 +75,21 @@ message Bank2CRsp {
     string user_id = 2;
 }
 
+message C2BankReq {
+    string transaction_id = 1;
+    string user_id = 2;
+    int64 uid = 3;
+    int32 bank_type = 4;
+    int64 amount = 5;
+    int32 cur_type = 6;
+    string desc = 7;
+}
+
+message C2BankRsp {
+    string transaction_id = 1;
+    string user_id = 2;
+}
+
 // 转账Req
 message C2cReq {
     string transaction_id = 1;
@@ -105,6 +120,7 @@ service AccountMgr {
     rpc GetUserFlow(GetUserFlowReq) returns (GetUserFlowRsp);
 
     rpc Bank2C(Bank2CReq) returns (Bank2CRsp);
+    rpc C2Bank(C2BankReq) returns (C2BankRsp);
     rpc C2cLocal(C2cReq) returns (C2cRsp);  // 本地事务转账
     rpc C2cStrong(C2cReq) returns (C2cRsp);  // 分布式强一致性转账
     rpc C2cFinal(C2cReq) returns (C2cRsp);  // 分布式最终一致性转账

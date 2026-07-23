@@ -23,6 +23,7 @@ const (
 	AccountMgr_GetUserBalanceInfo_FullMethodName = "/account_mgr.AccountMgr/GetUserBalanceInfo"
 	AccountMgr_GetUserFlow_FullMethodName        = "/account_mgr.AccountMgr/GetUserFlow"
 	AccountMgr_Bank2C_FullMethodName             = "/account_mgr.AccountMgr/Bank2C"
+	AccountMgr_C2Bank_FullMethodName             = "/account_mgr.AccountMgr/C2Bank"
 	AccountMgr_C2CLocal_FullMethodName           = "/account_mgr.AccountMgr/C2cLocal"
 	AccountMgr_C2CStrong_FullMethodName          = "/account_mgr.AccountMgr/C2cStrong"
 	AccountMgr_C2CFinal_FullMethodName           = "/account_mgr.AccountMgr/C2cFinal"
@@ -36,6 +37,7 @@ type AccountMgrClient interface {
 	GetUserBalanceInfo(ctx context.Context, in *GetUserBalanceInfoReq, opts ...grpc.CallOption) (*GetUserBalanceInfoRsp, error)
 	GetUserFlow(ctx context.Context, in *GetUserFlowReq, opts ...grpc.CallOption) (*GetUserFlowRsp, error)
 	Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error)
+	C2Bank(ctx context.Context, in *C2BankReq, opts ...grpc.CallOption) (*C2BankRsp, error)
 	C2CLocal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 	C2CStrong(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 	C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
@@ -89,6 +91,16 @@ func (c *accountMgrClient) Bank2C(ctx context.Context, in *Bank2CReq, opts ...gr
 	return out, nil
 }
 
+func (c *accountMgrClient) C2Bank(ctx context.Context, in *C2BankReq, opts ...grpc.CallOption) (*C2BankRsp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(C2BankRsp)
+	err := c.cc.Invoke(ctx, AccountMgr_C2Bank_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *accountMgrClient) C2CLocal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(C2CRsp)
@@ -127,6 +139,7 @@ type AccountMgrServer interface {
 	GetUserBalanceInfo(context.Context, *GetUserBalanceInfoReq) (*GetUserBalanceInfoRsp, error)
 	GetUserFlow(context.Context, *GetUserFlowReq) (*GetUserFlowRsp, error)
 	Bank2C(context.Context, *Bank2CReq) (*Bank2CRsp, error)
+	C2Bank(context.Context, *C2BankReq) (*C2BankRsp, error)
 	C2CLocal(context.Context, *C2CReq) (*C2CRsp, error)
 	C2CStrong(context.Context, *C2CReq) (*C2CRsp, error)
 	C2CFinal(context.Context, *C2CReq) (*C2CRsp, error)
@@ -151,6 +164,9 @@ func (UnimplementedAccountMgrServer) GetUserFlow(context.Context, *GetUserFlowRe
 }
 func (UnimplementedAccountMgrServer) Bank2C(context.Context, *Bank2CReq) (*Bank2CRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Bank2C not implemented")
+}
+func (UnimplementedAccountMgrServer) C2Bank(context.Context, *C2BankReq) (*C2BankRsp, error) {
+	return nil, status.Error(codes.Unimplemented, "method C2Bank not implemented")
 }
 func (UnimplementedAccountMgrServer) C2CLocal(context.Context, *C2CReq) (*C2CRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method C2CLocal not implemented")
@@ -254,6 +270,24 @@ func _AccountMgr_Bank2C_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountMgr_C2Bank_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(C2BankReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountMgrServer).C2Bank(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountMgr_C2Bank_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountMgrServer).C2Bank(ctx, req.(*C2BankReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AccountMgr_C2CLocal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(C2CReq)
 	if err := dec(in); err != nil {
@@ -330,6 +364,10 @@ var AccountMgr_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Bank2C",
 			Handler:    _AccountMgr_Bank2C_Handler,
+		},
+		{
+			MethodName: "C2Bank",
+			Handler:    _AccountMgr_C2Bank_Handler,
 		},
 		{
 			MethodName: "C2cLocal",

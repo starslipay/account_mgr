@@ -655,6 +655,150 @@ func (x *Bank2CRsp) GetUserId() string {
 	return ""
 }
 
+type C2BankReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TransactionId string                 `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Uid           int64                  `protobuf:"varint,3,opt,name=uid,proto3" json:"uid,omitempty"`
+	BankType      int32                  `protobuf:"varint,4,opt,name=bank_type,json=bankType,proto3" json:"bank_type,omitempty"`
+	Amount        int64                  `protobuf:"varint,5,opt,name=amount,proto3" json:"amount,omitempty"`
+	CurType       int32                  `protobuf:"varint,6,opt,name=cur_type,json=curType,proto3" json:"cur_type,omitempty"`
+	Desc          string                 `protobuf:"bytes,7,opt,name=desc,proto3" json:"desc,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *C2BankReq) Reset() {
+	*x = C2BankReq{}
+	mi := &file_account_mgr_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *C2BankReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*C2BankReq) ProtoMessage() {}
+
+func (x *C2BankReq) ProtoReflect() protoreflect.Message {
+	mi := &file_account_mgr_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use C2BankReq.ProtoReflect.Descriptor instead.
+func (*C2BankReq) Descriptor() ([]byte, []int) {
+	return file_account_mgr_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *C2BankReq) GetTransactionId() string {
+	if x != nil {
+		return x.TransactionId
+	}
+	return ""
+}
+
+func (x *C2BankReq) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *C2BankReq) GetUid() int64 {
+	if x != nil {
+		return x.Uid
+	}
+	return 0
+}
+
+func (x *C2BankReq) GetBankType() int32 {
+	if x != nil {
+		return x.BankType
+	}
+	return 0
+}
+
+func (x *C2BankReq) GetAmount() int64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *C2BankReq) GetCurType() int32 {
+	if x != nil {
+		return x.CurType
+	}
+	return 0
+}
+
+func (x *C2BankReq) GetDesc() string {
+	if x != nil {
+		return x.Desc
+	}
+	return ""
+}
+
+type C2BankRsp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TransactionId string                 `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *C2BankRsp) Reset() {
+	*x = C2BankRsp{}
+	mi := &file_account_mgr_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *C2BankRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*C2BankRsp) ProtoMessage() {}
+
+func (x *C2BankRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_account_mgr_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use C2BankRsp.ProtoReflect.Descriptor instead.
+func (*C2BankRsp) Descriptor() ([]byte, []int) {
+	return file_account_mgr_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *C2BankRsp) GetTransactionId() string {
+	if x != nil {
+		return x.TransactionId
+	}
+	return ""
+}
+
+func (x *C2BankRsp) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
 // 转账Req
 type C2CReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -672,7 +816,7 @@ type C2CReq struct {
 
 func (x *C2CReq) Reset() {
 	*x = C2CReq{}
-	mi := &file_account_mgr_proto_msgTypes[9]
+	mi := &file_account_mgr_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -684,7 +828,7 @@ func (x *C2CReq) String() string {
 func (*C2CReq) ProtoMessage() {}
 
 func (x *C2CReq) ProtoReflect() protoreflect.Message {
-	mi := &file_account_mgr_proto_msgTypes[9]
+	mi := &file_account_mgr_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -697,7 +841,7 @@ func (x *C2CReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use C2CReq.ProtoReflect.Descriptor instead.
 func (*C2CReq) Descriptor() ([]byte, []int) {
-	return file_account_mgr_proto_rawDescGZIP(), []int{9}
+	return file_account_mgr_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *C2CReq) GetTransactionId() string {
@@ -772,7 +916,7 @@ type C2CRsp struct {
 
 func (x *C2CRsp) Reset() {
 	*x = C2CRsp{}
-	mi := &file_account_mgr_proto_msgTypes[10]
+	mi := &file_account_mgr_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -784,7 +928,7 @@ func (x *C2CRsp) String() string {
 func (*C2CRsp) ProtoMessage() {}
 
 func (x *C2CRsp) ProtoReflect() protoreflect.Message {
-	mi := &file_account_mgr_proto_msgTypes[10]
+	mi := &file_account_mgr_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -797,7 +941,7 @@ func (x *C2CRsp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use C2CRsp.ProtoReflect.Descriptor instead.
 func (*C2CRsp) Descriptor() ([]byte, []int) {
-	return file_account_mgr_proto_rawDescGZIP(), []int{10}
+	return file_account_mgr_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *C2CRsp) GetTransactionId() string {
@@ -903,6 +1047,17 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\x04desc\x18\a \x01(\tR\x04desc\"K\n" +
 	"\tBank2CRsp\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\"\xc1\x01\n" +
+	"\tC2BankReq\x12%\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x10\n" +
+	"\x03uid\x18\x03 \x01(\x03R\x03uid\x12\x1b\n" +
+	"\tbank_type\x18\x04 \x01(\x05R\bbankType\x12\x16\n" +
+	"\x06amount\x18\x05 \x01(\x03R\x06amount\x12\x19\n" +
+	"\bcur_type\x18\x06 \x01(\x05R\acurType\x12\x12\n" +
+	"\x04desc\x18\a \x01(\tR\x04desc\"K\n" +
+	"\tC2BankRsp\x12%\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\"\xfc\x01\n" +
 	"\x06C2cReq\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x1b\n" +
@@ -922,13 +1077,14 @@ const file_account_mgr_proto_rawDesc = "" +
 	"seller_uid\x18\x04 \x01(\x03R\tsellerUid\x12$\n" +
 	"\x0eseller_user_id\x18\x05 \x01(\tR\fsellerUserId\x12#\n" +
 	"\rtransfer_time\x18\x06 \x01(\tR\ftransferTime\x12\x1b\n" +
-	"\tis_repeat\x18\a \x01(\x05R\bisRepeat2\xdf\x03\n" +
+	"\tis_repeat\x18\a \x01(\x05R\bisRepeat2\x99\x04\n" +
 	"\n" +
 	"AccountMgr\x12M\n" +
 	"\rCreateAccount\x12\x1d.account_mgr.CreateAccountReq\x1a\x1d.account_mgr.CreateAccountRsp\x12\\\n" +
 	"\x12GetUserBalanceInfo\x12\".account_mgr.GetUserBalanceInfoReq\x1a\".account_mgr.GetUserBalanceInfoRsp\x12G\n" +
 	"\vGetUserFlow\x12\x1b.account_mgr.GetUserFlowReq\x1a\x1b.account_mgr.GetUserFlowRsp\x128\n" +
-	"\x06Bank2C\x12\x16.account_mgr.Bank2CReq\x1a\x16.account_mgr.Bank2CRsp\x124\n" +
+	"\x06Bank2C\x12\x16.account_mgr.Bank2CReq\x1a\x16.account_mgr.Bank2CRsp\x128\n" +
+	"\x06C2Bank\x12\x16.account_mgr.C2BankReq\x1a\x16.account_mgr.C2BankRsp\x124\n" +
 	"\bC2cLocal\x12\x13.account_mgr.C2cReq\x1a\x13.account_mgr.C2cRsp\x125\n" +
 	"\tC2cStrong\x12\x13.account_mgr.C2cReq\x1a\x13.account_mgr.C2cRsp\x124\n" +
 	"\bC2cFinal\x12\x13.account_mgr.C2cReq\x1a\x13.account_mgr.C2cRspB\x12Z\x10./account_mgr_pbb\x06proto3"
@@ -945,7 +1101,7 @@ func file_account_mgr_proto_rawDescGZIP() []byte {
 	return file_account_mgr_proto_rawDescData
 }
 
-var file_account_mgr_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_account_mgr_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_account_mgr_proto_goTypes = []any{
 	(*CreateAccountReq)(nil),      // 0: account_mgr.CreateAccountReq
 	(*CreateAccountRsp)(nil),      // 1: account_mgr.CreateAccountRsp
@@ -956,8 +1112,10 @@ var file_account_mgr_proto_goTypes = []any{
 	(*UserFlow)(nil),              // 6: account_mgr.UserFlow
 	(*Bank2CReq)(nil),             // 7: account_mgr.Bank2CReq
 	(*Bank2CRsp)(nil),             // 8: account_mgr.Bank2CRsp
-	(*C2CReq)(nil),                // 9: account_mgr.C2cReq
-	(*C2CRsp)(nil),                // 10: account_mgr.C2cRsp
+	(*C2BankReq)(nil),             // 9: account_mgr.C2BankReq
+	(*C2BankRsp)(nil),             // 10: account_mgr.C2BankRsp
+	(*C2CReq)(nil),                // 11: account_mgr.C2cReq
+	(*C2CRsp)(nil),                // 12: account_mgr.C2cRsp
 }
 var file_account_mgr_proto_depIdxs = []int32{
 	6,  // 0: account_mgr.GetUserFlowRsp.UserFlowList:type_name -> account_mgr.UserFlow
@@ -965,18 +1123,20 @@ var file_account_mgr_proto_depIdxs = []int32{
 	2,  // 2: account_mgr.AccountMgr.GetUserBalanceInfo:input_type -> account_mgr.GetUserBalanceInfoReq
 	4,  // 3: account_mgr.AccountMgr.GetUserFlow:input_type -> account_mgr.GetUserFlowReq
 	7,  // 4: account_mgr.AccountMgr.Bank2C:input_type -> account_mgr.Bank2CReq
-	9,  // 5: account_mgr.AccountMgr.C2cLocal:input_type -> account_mgr.C2cReq
-	9,  // 6: account_mgr.AccountMgr.C2cStrong:input_type -> account_mgr.C2cReq
-	9,  // 7: account_mgr.AccountMgr.C2cFinal:input_type -> account_mgr.C2cReq
-	1,  // 8: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
-	3,  // 9: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
-	5,  // 10: account_mgr.AccountMgr.GetUserFlow:output_type -> account_mgr.GetUserFlowRsp
-	8,  // 11: account_mgr.AccountMgr.Bank2C:output_type -> account_mgr.Bank2CRsp
-	10, // 12: account_mgr.AccountMgr.C2cLocal:output_type -> account_mgr.C2cRsp
-	10, // 13: account_mgr.AccountMgr.C2cStrong:output_type -> account_mgr.C2cRsp
-	10, // 14: account_mgr.AccountMgr.C2cFinal:output_type -> account_mgr.C2cRsp
-	8,  // [8:15] is the sub-list for method output_type
-	1,  // [1:8] is the sub-list for method input_type
+	9,  // 5: account_mgr.AccountMgr.C2Bank:input_type -> account_mgr.C2BankReq
+	11, // 6: account_mgr.AccountMgr.C2cLocal:input_type -> account_mgr.C2cReq
+	11, // 7: account_mgr.AccountMgr.C2cStrong:input_type -> account_mgr.C2cReq
+	11, // 8: account_mgr.AccountMgr.C2cFinal:input_type -> account_mgr.C2cReq
+	1,  // 9: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
+	3,  // 10: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
+	5,  // 11: account_mgr.AccountMgr.GetUserFlow:output_type -> account_mgr.GetUserFlowRsp
+	8,  // 12: account_mgr.AccountMgr.Bank2C:output_type -> account_mgr.Bank2CRsp
+	10, // 13: account_mgr.AccountMgr.C2Bank:output_type -> account_mgr.C2BankRsp
+	12, // 14: account_mgr.AccountMgr.C2cLocal:output_type -> account_mgr.C2cRsp
+	12, // 15: account_mgr.AccountMgr.C2cStrong:output_type -> account_mgr.C2cRsp
+	12, // 16: account_mgr.AccountMgr.C2cFinal:output_type -> account_mgr.C2cRsp
+	9,  // [9:17] is the sub-list for method output_type
+	1,  // [1:9] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name
 	1,  // [1:1] is the sub-list for extension extendee
 	0,  // [0:1] is the sub-list for field type_name
@@ -993,7 +1153,7 @@ func file_account_mgr_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_account_mgr_proto_rawDesc), len(file_account_mgr_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

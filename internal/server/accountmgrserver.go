@@ -43,6 +43,11 @@ func (s *AccountMgrServer) Bank2C(ctx context.Context, in *account_mgr_pb.Bank2C
 	return l.Bank2C(in)
 }
 
+func (s *AccountMgrServer) C2Bank(ctx context.Context, in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2BankRsp, error) {
+	l := logic.NewC2BankLogic(ctx, s.svcCtx)
+	return l.C2Bank(in)
+}
+
 func (s *AccountMgrServer) C2CLocal(ctx context.Context, in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
 	l := logic.NewC2cLocalLogic(ctx, s.svcCtx)
 	return l.C2CLocal(in)
