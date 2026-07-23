@@ -7,6 +7,8 @@ import (
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/account_mgr/internal/svc"
 	"github.com/starslipay/account_mgr/internal/xerr"
+	"github.com/starslipay/paycomm/xerror"
+	"google.golang.org/grpc/codes"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +29,7 @@ func NewGetUserFlowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 
 func (l *GetUserFlowLogic) GetUserFlow(in *account_mgr_pb.GetUserFlowReq) (*account_mgr_pb.GetUserFlowRsp, error) {
 	if in.Uid <= 0 {
-		return nil, xerr.NewParamError("uid is invalid")
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "uid is invalid")
 	}
 	if in.Limit <= 0 {
 		in.Limit = 20
@@ -35,13 +37,13 @@ func (l *GetUserFlowLogic) GetUserFlow(in *account_mgr_pb.GetUserFlowReq) (*acco
 
 	account, err := l.svcCtx.TCAccountModelSlave.FindOne(l.ctx, in.Uid)
 	if err != nil {
-		return nil, xerr.NewDBError(fmt.Sprintf("find account failed: %v", err))
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find account failed: %v", err))
 	}
 
 	// 为了判断是否还有下一页，所以这里查询的limit+1
 	flows, err := l.svcCtx.TCAccountLogModelSlave.ListByUid(l.ctx, in.Uid, int(in.Offset), int(in.Limit)+1)
 	if err != nil {
-		return nil, xerr.NewDBError(fmt.Sprintf("list flow failed: %v", err))
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("list flow failed: %v", err))
 	}
 
 	var userFlowList []*account_mgr_pb.UserFlow

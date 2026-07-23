@@ -7,6 +7,8 @@ import (
 	"github.com/starslipay/account_mgr/internal/svc"
 	"github.com/starslipay/account_mgr/internal/xerr"
 	"github.com/starslipay/account_mgr/model/mysql"
+	"github.com/starslipay/paycomm/xerror"
+	"google.golang.org/grpc/codes"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -37,12 +39,12 @@ func (l *GetUserBalanceInfoLogic) GetUserBalanceInfo(in *account_mgr_pb.GetUserB
 	} else if QryModeMaster == in.QryMode {
 		model = l.svcCtx.TCAccountModelMaster
 	} else {
-		return nil, xerr.NewParamError("QryMode is invalid, must be 1 or 2")
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "QryMode is invalid, must be 1 or 2")
 	}
 
 	account, err := model.FindOne(l.ctx, in.Uid)
 	if err != nil {
-		return nil, xerr.NewDBError(err.Error())
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, err.Error())
 	}
 	return &account_mgr_pb.GetUserBalanceInfoRsp{
 		Uid:     account.Uid,

@@ -9,6 +9,8 @@ import (
 	"github.com/starslipay/account_mgr/internal/svc"
 	"github.com/starslipay/account_mgr/internal/xerr"
 	"github.com/starslipay/account_mgr/model/mysql"
+	"github.com/starslipay/paycomm/xerror"
+	"google.golang.org/grpc/codes"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -44,13 +46,13 @@ func NewBank2CLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Bank2CLogi
 
 func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank2CRsp, error) {
 	if in.Uid <= 0 {
-		return nil, xerr.NewParamError("uid is invalid")
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "uid is invalid")
 	}
 	if in.Amount <= 0 {
-		return nil, xerr.NewParamError("amount must be positive")
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "amount must be positive")
 	}
 	if in.TransactionId == "" {
-		return nil, xerr.NewParamError("transaction_id is required")
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "transaction_id is required")
 	}
 
 	err := l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
@@ -96,7 +98,7 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 
 	if err != nil {
 		l.Errorf("Bank2C transaction failed: %v", err)
-		return nil, xerr.NewDBError(fmt.Sprintf("transaction failed: %v", err))
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("bank2c failed: %v", err))
 	}
 
 	return &account_mgr_pb.Bank2CRsp{

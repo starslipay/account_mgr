@@ -9,6 +9,8 @@ import (
 	"github.com/starslipay/account_mgr/internal/svc"
 	"github.com/starslipay/account_mgr/internal/xerr"
 	"github.com/starslipay/account_mgr/model/mysql"
+	"github.com/starslipay/paycomm/xerror"
+	"google.golang.org/grpc/codes"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -34,19 +36,19 @@ func NewC2cLocalLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C2cLocal
 
 func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
 	if in.BuyerUid <= 0 {
-		return nil, xerr.NewParamError("buyer_uid is invalid")
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "buyer_uid is invalid")
 	}
 	if in.SellerUid <= 0 {
-		return nil, xerr.NewParamError("seller_uid is invalid")
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "seller_uid is invalid")
 	}
 	if in.BuyerUid == in.SellerUid {
-		return nil, xerr.NewParamError("buyer and seller cannot be the same")
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "buyer and seller cannot be the same")
 	}
 	if in.Amount <= 0 {
-		return nil, xerr.NewParamError("amount must be positive")
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "amount must be positive")
 	}
 	if in.TransactionId == "" {
-		return nil, xerr.NewParamError("transaction_id is required")
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "transaction_id is required")
 	}
 
 	var result *account_mgr_pb.C2CRsp
@@ -79,7 +81,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 
 		_ = buyerAccount
 		if buyerAccount.Balance < in.Amount {
-			return xerr.ErrBalanceNotEnough
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeBalanceNotEnough, "balance not enough")
 		}
 
 		err = tcAccountModel.SubBalance(ctx, in.BuyerUid, in.Amount)
@@ -154,7 +156,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 
 	if err != nil {
 		l.Errorf("C2CLocal transaction failed: %v", err)
-		return nil, xerr.NewDBError(fmt.Sprintf("transaction failed: %v", err))
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("c2c local failed: %v", err))
 	}
 
 	return result, nil
