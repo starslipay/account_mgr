@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/starslipay/account_mgr/account_mgr_pb"
+	"github.com/starslipay/account_mgr/internal/consts"
 	"github.com/starslipay/account_mgr/internal/svc"
 	"github.com/starslipay/account_mgr/internal/xerr"
 	"github.com/starslipay/account_mgr/model/mysql"
@@ -14,21 +15,6 @@ import (
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
-)
-
-const (
-	InoutTypeIn  = 1 // 资金方向：入
-	InoutTypeOut = 2 // 资金方向：出
-)
-
-const (
-	BizTypeBank2C   = 1 // 银行充值
-	BizTypeC2cLocal = 2 // c2c充值
-	BizTypeC2Bank   = 3 // 银行提现
-)
-
-const (
-	SaveBillStateOK = 1 // 充值单状态：成功
 )
 
 type Bank2CLogic struct {
@@ -72,8 +58,8 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 			CounterpartyUserId: strconv.Itoa(int(in.BankType)),
 			CounterpartyUid:    int64(in.BankType),
 			TransactionId:      in.TransactionId,
-			InoutType:          InoutTypeIn,
-			BizType:            BizTypeBank2C,
+			InoutType:          consts.InoutTypeIn,
+			BizType:            consts.BizTypeBank2C,
 			Amount:             in.Amount,
 			Desc:               in.Desc,
 		})
@@ -87,7 +73,7 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 			UserId:        in.UserId,
 			BankType:      strconv.Itoa(int(in.BankType)),
 			Amount:        in.Amount,
-			State:         SaveBillStateOK,
+			State:         consts.SaveBillStateOK,
 			Desc:          in.Desc,
 		})
 		if err != nil {

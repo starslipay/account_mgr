@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/starslipay/account_mgr/account_mgr_pb"
+	"github.com/starslipay/account_mgr/internal/consts"
 	"github.com/starslipay/account_mgr/internal/svc"
 	"github.com/starslipay/account_mgr/internal/xerr"
 	"github.com/starslipay/account_mgr/model/mysql"
@@ -66,8 +67,8 @@ func (l *C2BankLogic) C2Bank(in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2Ba
 			CounterpartyUserId: strconv.Itoa(int(in.BankType)),
 			CounterpartyUid:    int64(in.BankType),
 			TransactionId:      in.TransactionId,
-			InoutType:          InoutTypeOut,
-			BizType:            BizTypeC2Bank,
+			InoutType:          consts.InoutTypeOut,
+			BizType:            consts.BizTypeC2Bank,
 			Amount:             in.Amount,
 			Desc:               in.Desc,
 		})
@@ -81,7 +82,7 @@ func (l *C2BankLogic) C2Bank(in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2Ba
 			UserId:        in.UserId,
 			BankType:      strconv.Itoa(int(in.BankType)),
 			Amount:        in.Amount,
-			State:         SaveBillStateOK,
+			State:         consts.SaveBillStateOK,
 			Desc:          in.Desc,
 		})
 		if err != nil {

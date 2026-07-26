@@ -10,10 +10,12 @@ var (
 
 var (
 	// 系统错误 0000-0999
-	ErrCodeDB             = ModuleErrorBase + 0
 	ErrCodeServerInternal = ModuleErrorBase + 1
 
 	// 业务错误码 1000-1999
 	ErrCodeParam            = ModuleErrorBase + 1000
 	ErrCodeBalanceNotEnough = ModuleErrorBase + 1001
+	ErrCodeDB               = ModuleErrorBase + 1002
+	// 重入，但信息不一致
+	ErrCodeRepeatButInfoNotConsistent = ModuleErrorBase + 1003
 )

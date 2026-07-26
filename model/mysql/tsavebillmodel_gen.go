@@ -44,8 +44,8 @@ type (
 		Amount        int64     `db:"amount"`         // 金额
 		State         int64     `db:"state"`          // 单状态
 		Desc          string    `db:"desc"`           // 充值描述
-		CreateTime    time.Time `db:"create_time"`
-		UpdateTime    time.Time `db:"update_time"`
+		CreateTime    time.Time `db:"create_time"`    // 创建时间
+		UpdateTime    time.Time `db:"update_time"`    // 更新时间
 	}
 )
 

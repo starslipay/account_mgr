@@ -10,4 +10,8 @@ type Config struct {
 	SlaveDBConfig struct {
 		DataSource string
 	}
+	Kafka struct {
+		BrokerAddrs []string
+		Topic       string
+	}
 }

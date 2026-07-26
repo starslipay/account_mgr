@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/starslipay/account_mgr/account_mgr_pb"
+	"github.com/starslipay/account_mgr/internal/consts"
 	"github.com/starslipay/account_mgr/internal/svc"
 	"github.com/starslipay/account_mgr/internal/xerr"
 	"github.com/starslipay/account_mgr/model/mysql"
@@ -14,10 +15,6 @@ import (
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
-)
-
-const (
-	C2cBillStateOK = 1
 )
 
 type C2cLocalLogic struct {
@@ -34,25 +31,54 @@ func NewC2cLocalLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C2cLocal
 	}
 }
 
-func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
+func (l *C2cLocalLogic) CheckInputParams(in *account_mgr_pb.C2CReq) error {
 	if in.BuyerUid <= 0 {
-		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "buyer_uid is invalid")
+		return xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "buyer_uid is invalid")
 	}
 	if in.SellerUid <= 0 {
-		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "seller_uid is invalid")
+		return xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "seller_uid is invalid")
 	}
 	if in.BuyerUid == in.SellerUid {
-		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "buyer and seller cannot be the same")
+		return xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "buyer and seller cannot be the same")
 	}
 	if in.Amount <= 0 {
-		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "amount must be positive")
+		return xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "amount must be positive")
 	}
 	if in.TransactionId == "" {
-		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "transaction_id is required")
+		return xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "transaction_id is required")
+	}
+	return nil
+}
+
+func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
+	err := l.CheckInputParams(in)
+	if err != nil {
+		return nil, err
+	}
+
+	// 检查是否是重入
+	bill, err := l.svcCtx.TC2cBillModelMaster.FindOne(l.ctx, in.TransactionId)
+	if err == nil {
+		if bill.BuyerUid != in.BuyerUid ||
+			bill.SellerUid != in.SellerUid ||
+			bill.BuyerUserId != in.BuyerUserId ||
+			bill.SellerUserId != in.SellerUserId ||
+			bill.Amount != in.Amount {
+			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeRepeatButInfoNotConsistent, "repeat but info not consistent")
+		}
+		return &account_mgr_pb.C2CRsp{
+			TransactionId: in.TransactionId,
+			BuyerUid:      in.BuyerUid,
+			BuyerUserId:   in.BuyerUserId,
+			SellerUid:     in.SellerUid,
+			SellerUserId:  in.SellerUserId,
+			TransferTime:  bill.PayTime.Format("2006-01-02 15:04:05"),
+			IsRepeat:      1,
+		}, nil
 	}
 
 	var result *account_mgr_pb.C2CRsp
-	err := l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
+	err = l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
 		tcAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
 		tcAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
 		tc2cBillModel := mysql.NewTC2cBillModel(sqlx.NewSqlConnFromSession(session))
@@ -84,6 +110,9 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeBalanceNotEnough, "balance not enough")
 		}
 
+		// 支付时间
+		payTime := time.Now()
+
 		err = tcAccountModel.SubBalance(ctx, in.BuyerUid, in.Amount)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("sub balance failed: %v", err))
@@ -100,8 +129,8 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			CounterpartyUserId: in.SellerUserId,
 			CounterpartyUid:    in.SellerUid,
 			TransactionId:      in.TransactionId,
-			InoutType:          InoutTypeOut,
-			BizType:            BizTypeC2cLocal,
+			InoutType:          consts.InoutTypeOut,
+			BizType:            consts.BizTypeC2C,
 			Amount:             in.Amount,
 			Balance:            buyerAccount.Balance - in.Amount,
 			Desc:               in.Desc,
@@ -116,8 +145,8 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			CounterpartyUserId: in.BuyerUserId,
 			CounterpartyUid:    in.BuyerUid,
 			TransactionId:      in.TransactionId,
-			InoutType:          InoutTypeIn,
-			BizType:            BizTypeC2cLocal,
+			InoutType:          consts.InoutTypeIn,
+			BizType:            consts.BizTypeC2C,
 			Amount:             in.Amount,
 			Balance:            sellerAccount.Balance + in.Amount,
 			Desc:               in.Desc,
@@ -133,9 +162,10 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			BuyerUserId:   in.BuyerUserId,
 			SellerUserId:  in.SellerUserId,
 			Amount:        in.Amount,
-			State:         C2cBillStateOK,
-			BizType:       BizTypeC2cLocal,
+			State:         consts.C2CBillStateOK,
+			BizType:       consts.BizTypeC2C,
 			Desc:          in.Desc,
+			PayTime:       payTime,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert c2c bill failed: %v", err))
@@ -147,7 +177,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			BuyerUserId:   in.BuyerUserId,
 			SellerUid:     in.SellerUid,
 			SellerUserId:  in.SellerUserId,
-			TransferTime:  time.Now().Format("2006-01-02 15:04:05"),
+			TransferTime:  payTime.Format("2006-01-02 15:04:05"),
 			IsRepeat:      0,
 		}
 

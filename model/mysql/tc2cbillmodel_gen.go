@@ -37,7 +37,7 @@ type (
 	}
 
 	TC2cBill struct {
-		TransactionId string    `db:"transaction_id"` // 订单ID
+		TransactionId string    `db:"transaction_id"` // 交易ID
 		BuyerUid      int64     `db:"buyer_uid"`      // 买家用户UID
 		SellerUid     int64     `db:"seller_uid"`     // 卖家用户UID
 		BuyerUserId   string    `db:"buyer_user_id"`  // 买家用户ID
@@ -46,8 +46,9 @@ type (
 		State         int64     `db:"state"`          // 单状态
 		BizType       int64     `db:"biz_type"`       // 业务类型
 		Desc          string    `db:"desc"`           // 转账描述
-		CreateTime    time.Time `db:"create_time"`
-		UpdateTime    time.Time `db:"update_time"`
+		PayTime       time.Time `db:"pay_time"`       // 支付时间
+		CreateTime    time.Time `db:"create_time"`    // 创建时间
+		UpdateTime    time.Time `db:"update_time"`    // 更新时间
 	}
 )
 
@@ -79,14 +80,14 @@ func (m *defaultTC2cBillModel) FindOne(ctx context.Context, transactionId string
 }
 
 func (m *defaultTC2cBillModel) Insert(ctx context.Context, data *TC2cBill) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tC2cBillRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.BizType, data.Desc)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tC2cBillRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.BizType, data.Desc, data.PayTime)
 	return ret, err
 }
 
 func (m *defaultTC2cBillModel) Update(ctx context.Context, data *TC2cBill) error {
 	query := fmt.Sprintf("update %s set %s where `transaction_id` = ?", m.table, tC2cBillRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.BizType, data.Desc, data.TransactionId)
+	_, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.BizType, data.Desc, data.PayTime, data.TransactionId)
 	return err
 }
 
