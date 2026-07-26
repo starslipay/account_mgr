@@ -60,6 +60,21 @@ message UserFlow {
     string create_time = 9;
 }
 
+message GetC2CBillReq {
+    string transaction_id = 1;
+}
+
+message GetC2CBillRsp {
+    string transaction_id = 1;
+    int64 buyer_uid = 2;
+    string buyer_user_id = 3;
+    int64 seller_uid = 4;
+    string seller_user_id = 5;
+    string pay_time = 6;
+    int64 amount = 7;
+    string desc = 8;
+}
+
 message Bank2CReq {
     string transaction_id = 1;
     string user_id = 2;
@@ -113,30 +128,17 @@ message C2CRsp {
     int32 is_repeat = 7;
 }
 
-message QueryC2CBillReq {
-    string transaction_id = 1;
-}
-
-message QueryC2CBillRsp {
-    string transaction_id = 1;
-    int64 buyer_uid = 2;
-    string buyer_user_id = 3;
-    int64 seller_uid = 4;
-    string seller_user_id = 5;
-    string pay_time = 6;
-}
-
 service AccountMgr {
     rpc CreateAccount(CreateAccountReq) returns (CreateAccountRsp);
     rpc GetUserBalanceInfo(GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp);
 
     rpc GetUserFlow(GetUserFlowReq) returns (GetUserFlowRsp);
+    rpc GetC2CBill(GetC2CBillReq) returns (GetC2CBillRsp);  // 查询C2C单据
 
     rpc Bank2C(Bank2CReq) returns (Bank2CRsp);
     rpc C2Bank(C2BankReq) returns (C2BankRsp);
     rpc C2CLocal(C2CReq) returns (C2CRsp);  // 本地事务转账
     rpc C2CFinal(C2CReq) returns (C2CRsp);  // 分布式最终一致性转账
-    rpc QueryC2CBill(QueryC2CBillReq) returns (QueryC2CBillRsp);  // 查询C2C单据
 }
 
 /*

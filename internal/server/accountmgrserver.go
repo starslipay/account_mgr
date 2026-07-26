@@ -38,6 +38,11 @@ func (s *AccountMgrServer) GetUserFlow(ctx context.Context, in *account_mgr_pb.G
 	return l.GetUserFlow(in)
 }
 
+func (s *AccountMgrServer) GetC2CBill(ctx context.Context, in *account_mgr_pb.GetC2CBillReq) (*account_mgr_pb.GetC2CBillRsp, error) {
+	l := logic.NewGetC2CBillLogic(ctx, s.svcCtx)
+	return l.GetC2CBill(in)
+}
+
 func (s *AccountMgrServer) Bank2C(ctx context.Context, in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank2CRsp, error) {
 	l := logic.NewBank2CLogic(ctx, s.svcCtx)
 	return l.Bank2C(in)
@@ -56,9 +61,4 @@ func (s *AccountMgrServer) C2CLocal(ctx context.Context, in *account_mgr_pb.C2CR
 func (s *AccountMgrServer) C2CFinal(ctx context.Context, in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
 	l := logic.NewC2CFinalLogic(ctx, s.svcCtx)
 	return l.C2CFinal(in)
-}
-
-func (s *AccountMgrServer) QueryC2CBill(ctx context.Context, in *account_mgr_pb.QueryC2CBillReq) (*account_mgr_pb.QueryC2CBillRsp, error) {
-	l := logic.NewQueryC2CBillLogic(ctx, s.svcCtx)
-	return l.QueryC2CBill(in)
 }
