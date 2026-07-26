@@ -97,32 +97,32 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		tc2cBillModel := mysql.NewTC2cBillModel(sqlx.NewSqlConnFromSession(session))
 		tLocalMessageModel := mysql.NewTLocalMessageModel(sqlx.NewSqlConnFromSession(session))
 
-		sellerAccount, err := tcAccountModel.FindOne(ctx, in.SellerUid)
+		buyerAccount, err := tcAccountModel.FindOne(ctx, in.BuyerUid)
 		if err != nil {
-			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find seller account failed: %v", err))
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find buyer account failed: %v", err))
 		}
 
-		if sellerAccount.Balance < in.Amount {
+		if buyerAccount.Balance < in.Amount {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeBalanceNotEnough, "balance not enough")
 		}
 
 		payTime := time.Now()
 
-		err = tcAccountModel.SubBalance(ctx, in.SellerUid, in.Amount)
+		err = tcAccountModel.SubBalance(ctx, in.BuyerUid, in.Amount)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("sub balance failed: %v", err))
 		}
 
 		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
-			Uid:                in.SellerUid,
-			UserId:             in.SellerUserId,
+			Uid:                in.BuyerUid,
+			UserId:             in.BuyerUserId,
 			CounterpartyUserId: in.BuyerUserId,
 			CounterpartyUid:    in.BuyerUid,
 			TransactionId:      in.TransactionId,
 			InoutType:          consts.InoutTypeOut,
 			BizType:            consts.BizTypeC2C,
 			Amount:             in.Amount,
-			Balance:            sellerAccount.Balance - in.Amount,
+			Balance:            buyerAccount.Balance - in.Amount,
 			Desc:               in.Desc,
 		})
 		if err != nil {
