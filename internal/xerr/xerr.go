@@ -18,4 +18,6 @@ var (
 	ErrCodeDB               = ModuleErrorBase + 1002
 	// 重入，但信息不一致
 	ErrCodeRepeatButInfoNotConsistent = ModuleErrorBase + 1003
+	// 单据不存在
+	ErrCodeBillNotFound = ModuleErrorBase + 1004
 )

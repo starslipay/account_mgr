@@ -17,21 +17,21 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
-type C2cLocalLogic struct {
+type C2CLocalLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewC2cLocalLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C2cLocalLogic {
-	return &C2cLocalLogic{
+func NewC2CLocalLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C2CLocalLogic {
+	return &C2CLocalLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *C2cLocalLogic) CheckInputParams(in *account_mgr_pb.C2CReq) error {
+func (l *C2CLocalLogic) CheckInputParams(in *account_mgr_pb.C2CReq) error {
 	if in.BuyerUid <= 0 {
 		return xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "buyer_uid is invalid")
 	}
@@ -50,7 +50,7 @@ func (l *C2cLocalLogic) CheckInputParams(in *account_mgr_pb.C2CReq) error {
 	return nil
 }
 
-func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
+func (l *C2CLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
 	err := l.CheckInputParams(in)
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			BuyerUserId:   in.BuyerUserId,
 			SellerUid:     in.SellerUid,
 			SellerUserId:  in.SellerUserId,
-			TransferTime:  bill.PayTime.Format("2006-01-02 15:04:05"),
+			PayTime:       bill.PayTime.Format("2006-01-02 15:04:05"),
 			IsRepeat:      1,
 		}, nil
 	}
@@ -177,7 +177,7 @@ func (l *C2cLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			BuyerUserId:   in.BuyerUserId,
 			SellerUid:     in.SellerUid,
 			SellerUserId:  in.SellerUserId,
-			TransferTime:  payTime.Format("2006-01-02 15:04:05"),
+			PayTime:       payTime.Format("2006-01-02 15:04:05"),
 			IsRepeat:      0,
 		}
 

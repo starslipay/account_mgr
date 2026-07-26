@@ -24,9 +24,9 @@ const (
 	AccountMgr_GetUserFlow_FullMethodName        = "/account_mgr.AccountMgr/GetUserFlow"
 	AccountMgr_Bank2C_FullMethodName             = "/account_mgr.AccountMgr/Bank2C"
 	AccountMgr_C2Bank_FullMethodName             = "/account_mgr.AccountMgr/C2Bank"
-	AccountMgr_C2CLocal_FullMethodName           = "/account_mgr.AccountMgr/C2cLocal"
-	AccountMgr_C2CStrong_FullMethodName          = "/account_mgr.AccountMgr/C2cStrong"
-	AccountMgr_C2CFinal_FullMethodName           = "/account_mgr.AccountMgr/C2cFinal"
+	AccountMgr_C2CLocal_FullMethodName           = "/account_mgr.AccountMgr/C2CLocal"
+	AccountMgr_C2CFinal_FullMethodName           = "/account_mgr.AccountMgr/C2CFinal"
+	AccountMgr_QueryC2CBill_FullMethodName       = "/account_mgr.AccountMgr/QueryC2CBill"
 )
 
 // AccountMgrClient is the client API for AccountMgr service.
@@ -39,8 +39,8 @@ type AccountMgrClient interface {
 	Bank2C(ctx context.Context, in *Bank2CReq, opts ...grpc.CallOption) (*Bank2CRsp, error)
 	C2Bank(ctx context.Context, in *C2BankReq, opts ...grpc.CallOption) (*C2BankRsp, error)
 	C2CLocal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
-	C2CStrong(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 	C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
+	QueryC2CBill(ctx context.Context, in *QueryC2CBillReq, opts ...grpc.CallOption) (*QueryC2CBillRsp, error)
 }
 
 type accountMgrClient struct {
@@ -111,20 +111,20 @@ func (c *accountMgrClient) C2CLocal(ctx context.Context, in *C2CReq, opts ...grp
 	return out, nil
 }
 
-func (c *accountMgrClient) C2CStrong(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
+func (c *accountMgrClient) C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(C2CRsp)
-	err := c.cc.Invoke(ctx, AccountMgr_C2CStrong_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, AccountMgr_C2CFinal_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *accountMgrClient) C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
+func (c *accountMgrClient) QueryC2CBill(ctx context.Context, in *QueryC2CBillReq, opts ...grpc.CallOption) (*QueryC2CBillRsp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(C2CRsp)
-	err := c.cc.Invoke(ctx, AccountMgr_C2CFinal_FullMethodName, in, out, cOpts...)
+	out := new(QueryC2CBillRsp)
+	err := c.cc.Invoke(ctx, AccountMgr_QueryC2CBill_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -141,8 +141,8 @@ type AccountMgrServer interface {
 	Bank2C(context.Context, *Bank2CReq) (*Bank2CRsp, error)
 	C2Bank(context.Context, *C2BankReq) (*C2BankRsp, error)
 	C2CLocal(context.Context, *C2CReq) (*C2CRsp, error)
-	C2CStrong(context.Context, *C2CReq) (*C2CRsp, error)
 	C2CFinal(context.Context, *C2CReq) (*C2CRsp, error)
+	QueryC2CBill(context.Context, *QueryC2CBillReq) (*QueryC2CBillRsp, error)
 	mustEmbedUnimplementedAccountMgrServer()
 }
 
@@ -171,11 +171,11 @@ func (UnimplementedAccountMgrServer) C2Bank(context.Context, *C2BankReq) (*C2Ban
 func (UnimplementedAccountMgrServer) C2CLocal(context.Context, *C2CReq) (*C2CRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method C2CLocal not implemented")
 }
-func (UnimplementedAccountMgrServer) C2CStrong(context.Context, *C2CReq) (*C2CRsp, error) {
-	return nil, status.Error(codes.Unimplemented, "method C2CStrong not implemented")
-}
 func (UnimplementedAccountMgrServer) C2CFinal(context.Context, *C2CReq) (*C2CRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method C2CFinal not implemented")
+}
+func (UnimplementedAccountMgrServer) QueryC2CBill(context.Context, *QueryC2CBillReq) (*QueryC2CBillRsp, error) {
+	return nil, status.Error(codes.Unimplemented, "method QueryC2CBill not implemented")
 }
 func (UnimplementedAccountMgrServer) mustEmbedUnimplementedAccountMgrServer() {}
 func (UnimplementedAccountMgrServer) testEmbeddedByValue()                    {}
@@ -306,24 +306,6 @@ func _AccountMgr_C2CLocal_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AccountMgr_C2CStrong_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(C2CReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AccountMgrServer).C2CStrong(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AccountMgr_C2CStrong_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountMgrServer).C2CStrong(ctx, req.(*C2CReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _AccountMgr_C2CFinal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(C2CReq)
 	if err := dec(in); err != nil {
@@ -338,6 +320,24 @@ func _AccountMgr_C2CFinal_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AccountMgrServer).C2CFinal(ctx, req.(*C2CReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountMgr_QueryC2CBill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryC2CBillReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountMgrServer).QueryC2CBill(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountMgr_QueryC2CBill_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountMgrServer).QueryC2CBill(ctx, req.(*QueryC2CBillReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -370,16 +370,16 @@ var AccountMgr_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AccountMgr_C2Bank_Handler,
 		},
 		{
-			MethodName: "C2cLocal",
+			MethodName: "C2CLocal",
 			Handler:    _AccountMgr_C2CLocal_Handler,
 		},
 		{
-			MethodName: "C2cStrong",
-			Handler:    _AccountMgr_C2CStrong_Handler,
+			MethodName: "C2CFinal",
+			Handler:    _AccountMgr_C2CFinal_Handler,
 		},
 		{
-			MethodName: "C2cFinal",
-			Handler:    _AccountMgr_C2CFinal_Handler,
+			MethodName: "QueryC2CBill",
+			Handler:    _AccountMgr_QueryC2CBill_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

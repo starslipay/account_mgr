@@ -49,16 +49,16 @@ func (s *AccountMgrServer) C2Bank(ctx context.Context, in *account_mgr_pb.C2Bank
 }
 
 func (s *AccountMgrServer) C2CLocal(ctx context.Context, in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
-	l := logic.NewC2cLocalLogic(ctx, s.svcCtx)
+	l := logic.NewC2CLocalLogic(ctx, s.svcCtx)
 	return l.C2CLocal(in)
 }
 
-func (s *AccountMgrServer) C2CStrong(ctx context.Context, in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
-	l := logic.NewC2cStrongLogic(ctx, s.svcCtx)
-	return l.C2CStrong(in)
+func (s *AccountMgrServer) C2CFinal(ctx context.Context, in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
+	l := logic.NewC2CFinalLogic(ctx, s.svcCtx)
+	return l.C2CFinal(in)
 }
 
-func (s *AccountMgrServer) C2CFinal(ctx context.Context, in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
-	l := logic.NewC2cFinalLogic(ctx, s.svcCtx)
-	return l.C2CFinal(in)
+func (s *AccountMgrServer) QueryC2CBill(ctx context.Context, in *account_mgr_pb.QueryC2CBillReq) (*account_mgr_pb.QueryC2CBillRsp, error) {
+	l := logic.NewQueryC2CBillLogic(ctx, s.svcCtx)
+	return l.QueryC2CBill(in)
 }

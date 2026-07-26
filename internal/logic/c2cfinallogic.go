@@ -30,21 +30,21 @@ type C2CTransferMessage struct {
 	Desc          string `json:"desc"`
 }
 
-type C2cFinalLogic struct {
+type C2CFinalLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewC2cFinalLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C2cFinalLogic {
-	return &C2cFinalLogic{
+func NewC2CFinalLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C2CFinalLogic {
+	return &C2CFinalLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *C2cFinalLogic) CheckInputParams(in *account_mgr_pb.C2CReq) error {
+func (l *C2CFinalLogic) CheckInputParams(in *account_mgr_pb.C2CReq) error {
 	if in.BuyerUid <= 0 {
 		return xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "buyer_uid is invalid")
 	}
@@ -63,7 +63,7 @@ func (l *C2cFinalLogic) CheckInputParams(in *account_mgr_pb.C2CReq) error {
 	return nil
 }
 
-func (l *C2cFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
+func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
 	err := l.CheckInputParams(in)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func (l *C2cFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			BuyerUserId:   in.BuyerUserId,
 			SellerUid:     in.SellerUid,
 			SellerUserId:  in.SellerUserId,
-			TransferTime:  bill.PayTime.Format("2006-01-02 15:04:05"),
+			PayTime:       bill.PayTime.Format("2006-01-02 15:04:05"),
 			IsRepeat:      1,
 		}, nil
 	}
@@ -181,7 +181,7 @@ func (l *C2cFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			BuyerUserId:   in.BuyerUserId,
 			SellerUid:     in.SellerUid,
 			SellerUserId:  in.SellerUserId,
-			TransferTime:  payTime.Format("2006-01-02 15:04:05"),
+			PayTime:       payTime.Format("2006-01-02 15:04:05"),
 			IsRepeat:      0,
 		}
 
@@ -202,7 +202,7 @@ func (l *C2cFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 	return result, nil
 }
 
-func (l *C2cFinalLogic) sendKafkaMessage(transactionId string) error {
+func (l *C2CFinalLogic) sendKafkaMessage(transactionId string) error {
 	msg, err := l.svcCtx.TLocalMessageModelMaster.FindOneByTransactionId(l.ctx, transactionId)
 	if err != nil {
 		return err
