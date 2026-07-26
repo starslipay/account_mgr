@@ -29,7 +29,7 @@ func NewGetC2CBillLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetC2C
 }
 
 func (l *GetC2CBillLogic) GetC2CBill(in *account_mgr_pb.GetC2CBillReq) (*account_mgr_pb.GetC2CBillRsp, error) {
-	bill, err := l.svcCtx.TC2cBillModelMaster.FindOne(l.ctx, in.TransactionId)
+	bill, err := l.svcCtx.TC2cBillModelSlave.FindOne(l.ctx, in.TransactionId)
 	if err != nil {
 		if err == sqlx.ErrNotFound {
 			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeBillNotFound, "bill not found")
