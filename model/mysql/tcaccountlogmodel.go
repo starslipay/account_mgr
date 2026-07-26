@@ -36,7 +36,7 @@ func (m *customTCAccountLogModel) withSession(session sqlx.Session) TCAccountLog
 
 // ListByUid 按照时间最近到最远排序查询用户账户日志
 func (m *customTCAccountLogModel) ListByUid(ctx context.Context, uid int64, offset, limit int) ([]*TCAccountLog, error) {
-	query := fmt.Sprintf("select %s from %s where `uid` = ? order by `create_time` desc limit ? offset ?", tCAccountLogRows, m.table)
+	query := fmt.Sprintf("select %s from %s where `uid` = ? order by `create_time` desc, `id` desc limit ? offset ?", tCAccountLogRows, m.table)
 	var resp []*TCAccountLog
 	err := m.conn.QueryRowsCtx(ctx, &resp, query, uid, limit, offset)
 	return resp, err

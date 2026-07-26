@@ -70,8 +70,8 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 	}
 
 	// 检查是否是重入
-	bill, err := l.svcCtx.TC2cBillModelMaster.FindOne(l.ctx, in.TransactionId)
-	if err == nil {
+	bill, _ := l.svcCtx.TC2cBillModelMaster.FindOne(l.ctx, in.TransactionId)
+	if bill != nil {
 		if bill.BuyerUid != in.BuyerUid ||
 			bill.SellerUid != in.SellerUid ||
 			bill.BuyerUserId != in.BuyerUserId ||
@@ -80,11 +80,11 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeRepeatButInfoNotConsistent, "repeat but info not consistent")
 		}
 		return &account_mgr_pb.C2CRsp{
-			TransactionId: in.TransactionId,
-			BuyerUid:      in.BuyerUid,
-			BuyerUserId:   in.BuyerUserId,
-			SellerUid:     in.SellerUid,
-			SellerUserId:  in.SellerUserId,
+			TransactionId: bill.TransactionId,
+			BuyerUid:      bill.BuyerUid,
+			BuyerUserId:   bill.BuyerUserId,
+			SellerUid:     bill.SellerUid,
+			SellerUserId:  bill.SellerUserId,
 			PayTime:       bill.PayTime.Format("2006-01-02 15:04:05"),
 			IsRepeat:      1,
 		}, nil
@@ -97,7 +97,7 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		tc2cBillModel := mysql.NewTC2cBillModel(sqlx.NewSqlConnFromSession(session))
 		tLocalMessageModel := mysql.NewTLocalMessageModel(sqlx.NewSqlConnFromSession(session))
 
-		buyerAccount, err := tcAccountModel.FindOne(ctx, in.BuyerUid)
+		buyerAccount, err := tcAccountModel.FindOneForUpdate(ctx, in.BuyerUid)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find buyer account failed: %v", err))
 		}
@@ -193,11 +193,11 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		return nil, err
 	}
 
-	// 发cmq异步入账消息
-	err = l.sendKafkaMessage(in.TransactionId)
-	if err != nil {
-		l.Errorf("send kafka message failed: %v", err)
-	}
+	// TODO 发cmq异步入账消息
+	// err = l.sendKafkaMessage(in.TransactionId)
+	// if err != nil {
+	// 	l.Errorf("send kafka message failed: %v", err)
+	// }
 
 	return result, nil
 }
