@@ -92,6 +92,27 @@ CREATE TABLE `t_save_bill` (
   INDEX `idx_update_time` (`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `t_local_message`;
+CREATE TABLE `t_local_message` (
+  `id` BIGINT AUTO_INCREMENT COMMENT '主键',
+  `transaction_id` VARCHAR(64) NOT NULL COMMENT '交易ID',
+  `msg_type` TINYINT NOT NULL COMMENT '消息类型',
+  `topic` VARCHAR(128) NOT NULL COMMENT '消息主题',
+  `partition` INTEGER DEFAULT 0 COMMENT '消息分区',
+  `key` VARCHAR(128) NOT NULL COMMENT '消息key',
+  `body` TEXT NOT NULL COMMENT '消息体(JSON)',
+  `state` TINYINT NOT NULL DEFAULT 0 COMMENT '消息状态',
+  `send_count` INTEGER NOT NULL DEFAULT 0 COMMENT '消息发送次数',
+  `max_send_count` INTEGER NOT NULL DEFAULT 3 COMMENT '消息最大重试次数',
+  `next_send_time` datetime NOT NULL COMMENT '下次发送时间',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_transaction_id` (`transaction_id`),
+  INDEX `idx_state_next_send_time` (`state`, `next_send_time`),
+  INDEX `idx_create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- linux:  mysql -h 127.0.0.1 -P 3306 -u root -proot123456 < account_init.sql
 -- windows: Get-Content -Encoding UTF8 account_init.sql | mysql -h 127.0.0.1 -P 3306 -u root -proot123456
 -- 只读权限 multipass exec master1 -- sudo kubectl exec -it -n pay-ns mysql-0 -- mysql -ustarslipay -ppayClipayA2026
