@@ -115,8 +115,8 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
 			Uid:                in.BuyerUid,
 			UserId:             in.BuyerUserId,
-			CounterpartyUserId: in.BuyerUserId,
-			CounterpartyUid:    in.BuyerUid,
+			CounterpartyUserId: in.SellerUserId,
+			CounterpartyUid:    in.SellerUid,
 			TransactionId:      in.TransactionId,
 			InoutType:          consts.InoutTypeOut,
 			BizType:            consts.BizTypeC2C,
