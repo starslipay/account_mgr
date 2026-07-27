@@ -30,7 +30,7 @@ func NewC2CAsyncAccountLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 	}
 }
 
-func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2CRsp, error) {
+func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccountReq) (*account_mgr_pb.C2CAsyncAccountRsp, error) {
 	// 1. 先无锁查询t_pending_c2c_transfer，查看是否已经入账（幂等检查）
 	pendingTransfer, err := l.svcCtx.TLocalPendingC2cTransferModelSlave.FindOne(l.ctx, in.TransactionId)
 	if err != nil {
@@ -39,14 +39,7 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CReq) (*acco
 
 	// 已入账，直接返回成功（幂等）
 	if pendingTransfer.State == consts.PendingC2cTransferDone {
-		return &account_mgr_pb.C2CRsp{
-			TransactionId: pendingTransfer.TransactionId,
-			BuyerUid:      pendingTransfer.BuyerUid,
-			BuyerUserId:   pendingTransfer.BuyerUserId,
-			SellerUid:     pendingTransfer.SellerUid,
-			SellerUserId:  pendingTransfer.SellerUserId,
-			IsRepeat:      1,
-		}, nil
+		return &account_mgr_pb.C2CAsyncAccountRsp{}, nil
 	}
 
 	// 2. 加锁查询并执行入账逻辑
@@ -101,12 +94,5 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CReq) (*acco
 		return nil, err
 	}
 
-	return &account_mgr_pb.C2CRsp{
-		TransactionId: pendingTransfer.TransactionId,
-		BuyerUid:      pendingTransfer.BuyerUid,
-		BuyerUserId:   pendingTransfer.BuyerUserId,
-		SellerUid:     pendingTransfer.SellerUid,
-		SellerUserId:  pendingTransfer.SellerUserId,
-		IsRepeat:      0,
-	}, nil
+	return &account_mgr_pb.C2CAsyncAccountRsp{}, nil
 }

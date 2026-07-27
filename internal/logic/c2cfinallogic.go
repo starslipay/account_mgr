@@ -20,13 +20,6 @@ import (
 
 type PendingC2CTransferMessage struct {
 	TransactionId string `json:"transaction_id"`
-	BuyerUid      int64  `json:"buyer_uid"`
-	BuyerUserId   string `json:"buyer_user_id"`
-	SellerUid     int64  `json:"seller_uid"`
-	SellerUserId  string `json:"seller_user_id"`
-	Amount        int64  `json:"amount"`
-	BizType       int32  `json:"biz_type"`
-	Desc          string `json:"desc"`
 }
 
 type C2CFinalLogic struct {
@@ -184,13 +177,6 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 func (l *C2CFinalLogic) sendCmq(in *account_mgr_pb.C2CReq) {
 	message := &PendingC2CTransferMessage{
 		TransactionId: in.TransactionId,
-		BuyerUid:      in.BuyerUid,
-		SellerUid:     in.SellerUid,
-		BuyerUserId:   in.BuyerUserId,
-		SellerUserId:  in.SellerUserId,
-		Amount:        in.Amount,
-		BizType:       consts.BizTypeC2C,
-		Desc:          in.Desc,
 	}
 	jsonStr, err := json.Marshal(message)
 	if err != nil {

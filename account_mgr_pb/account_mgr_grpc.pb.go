@@ -42,7 +42,7 @@ type AccountMgrClient interface {
 	C2Bank(ctx context.Context, in *C2BankReq, opts ...grpc.CallOption) (*C2BankRsp, error)
 	C2CLocal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 	C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
-	C2CAsyncAccount(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
+	C2CAsyncAccount(ctx context.Context, in *C2CAsyncAccountReq, opts ...grpc.CallOption) (*C2CAsyncAccountRsp, error)
 }
 
 type accountMgrClient struct {
@@ -133,9 +133,9 @@ func (c *accountMgrClient) C2CFinal(ctx context.Context, in *C2CReq, opts ...grp
 	return out, nil
 }
 
-func (c *accountMgrClient) C2CAsyncAccount(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
+func (c *accountMgrClient) C2CAsyncAccount(ctx context.Context, in *C2CAsyncAccountReq, opts ...grpc.CallOption) (*C2CAsyncAccountRsp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(C2CRsp)
+	out := new(C2CAsyncAccountRsp)
 	err := c.cc.Invoke(ctx, AccountMgr_C2CAsyncAccount_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -155,7 +155,7 @@ type AccountMgrServer interface {
 	C2Bank(context.Context, *C2BankReq) (*C2BankRsp, error)
 	C2CLocal(context.Context, *C2CReq) (*C2CRsp, error)
 	C2CFinal(context.Context, *C2CReq) (*C2CRsp, error)
-	C2CAsyncAccount(context.Context, *C2CReq) (*C2CRsp, error)
+	C2CAsyncAccount(context.Context, *C2CAsyncAccountReq) (*C2CAsyncAccountRsp, error)
 	mustEmbedUnimplementedAccountMgrServer()
 }
 
@@ -190,7 +190,7 @@ func (UnimplementedAccountMgrServer) C2CLocal(context.Context, *C2CReq) (*C2CRsp
 func (UnimplementedAccountMgrServer) C2CFinal(context.Context, *C2CReq) (*C2CRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method C2CFinal not implemented")
 }
-func (UnimplementedAccountMgrServer) C2CAsyncAccount(context.Context, *C2CReq) (*C2CRsp, error) {
+func (UnimplementedAccountMgrServer) C2CAsyncAccount(context.Context, *C2CAsyncAccountReq) (*C2CAsyncAccountRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method C2CAsyncAccount not implemented")
 }
 func (UnimplementedAccountMgrServer) mustEmbedUnimplementedAccountMgrServer() {}
@@ -359,7 +359,7 @@ func _AccountMgr_C2CFinal_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _AccountMgr_C2CAsyncAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(C2CReq)
+	in := new(C2CAsyncAccountReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -371,7 +371,7 @@ func _AccountMgr_C2CAsyncAccount_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: AccountMgr_C2CAsyncAccount_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccountMgrServer).C2CAsyncAccount(ctx, req.(*C2CReq))
+		return srv.(AccountMgrServer).C2CAsyncAccount(ctx, req.(*C2CAsyncAccountReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

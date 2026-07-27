@@ -1137,6 +1137,86 @@ func (x *C2CRsp) GetIsRepeat() int32 {
 	return 0
 }
 
+type C2CAsyncAccountReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TransactionId string                 `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *C2CAsyncAccountReq) Reset() {
+	*x = C2CAsyncAccountReq{}
+	mi := &file_account_mgr_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *C2CAsyncAccountReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*C2CAsyncAccountReq) ProtoMessage() {}
+
+func (x *C2CAsyncAccountReq) ProtoReflect() protoreflect.Message {
+	mi := &file_account_mgr_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use C2CAsyncAccountReq.ProtoReflect.Descriptor instead.
+func (*C2CAsyncAccountReq) Descriptor() ([]byte, []int) {
+	return file_account_mgr_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *C2CAsyncAccountReq) GetTransactionId() string {
+	if x != nil {
+		return x.TransactionId
+	}
+	return ""
+}
+
+type C2CAsyncAccountRsp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *C2CAsyncAccountRsp) Reset() {
+	*x = C2CAsyncAccountRsp{}
+	mi := &file_account_mgr_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *C2CAsyncAccountRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*C2CAsyncAccountRsp) ProtoMessage() {}
+
+func (x *C2CAsyncAccountRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_account_mgr_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use C2CAsyncAccountRsp.ProtoReflect.Descriptor instead.
+func (*C2CAsyncAccountRsp) Descriptor() ([]byte, []int) {
+	return file_account_mgr_proto_rawDescGZIP(), []int{16}
+}
+
 var File_account_mgr_proto protoreflect.FileDescriptor
 
 const file_account_mgr_proto_rawDesc = "" +
@@ -1233,7 +1313,10 @@ const file_account_mgr_proto_rawDesc = "" +
 	"seller_uid\x18\x04 \x01(\x03R\tsellerUid\x12$\n" +
 	"\x0eseller_user_id\x18\x05 \x01(\tR\fsellerUserId\x12\x19\n" +
 	"\bpay_time\x18\x06 \x01(\tR\apayTime\x12\x1b\n" +
-	"\tis_repeat\x18\a \x01(\x05R\bisRepeat2\xe5\x04\n" +
+	"\tis_repeat\x18\a \x01(\x05R\bisRepeat\";\n" +
+	"\x12C2CAsyncAccountReq\x12%\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\"\x14\n" +
+	"\x12C2CAsyncAccountRsp2\xfd\x04\n" +
 	"\n" +
 	"AccountMgr\x12M\n" +
 	"\rCreateAccount\x12\x1d.account_mgr.CreateAccountReq\x1a\x1d.account_mgr.CreateAccountRsp\x12\\\n" +
@@ -1244,8 +1327,8 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\x06Bank2C\x12\x16.account_mgr.Bank2CReq\x1a\x16.account_mgr.Bank2CRsp\x128\n" +
 	"\x06C2Bank\x12\x16.account_mgr.C2BankReq\x1a\x16.account_mgr.C2BankRsp\x124\n" +
 	"\bC2CLocal\x12\x13.account_mgr.C2CReq\x1a\x13.account_mgr.C2CRsp\x124\n" +
-	"\bC2CFinal\x12\x13.account_mgr.C2CReq\x1a\x13.account_mgr.C2CRsp\x12;\n" +
-	"\x0fC2CAsyncAccount\x12\x13.account_mgr.C2CReq\x1a\x13.account_mgr.C2CRspB\x12Z\x10./account_mgr_pbb\x06proto3"
+	"\bC2CFinal\x12\x13.account_mgr.C2CReq\x1a\x13.account_mgr.C2CRsp\x12S\n" +
+	"\x0fC2CAsyncAccount\x12\x1f.account_mgr.C2CAsyncAccountReq\x1a\x1f.account_mgr.C2CAsyncAccountRspB\x12Z\x10./account_mgr_pbb\x06proto3"
 
 var (
 	file_account_mgr_proto_rawDescOnce sync.Once
@@ -1259,7 +1342,7 @@ func file_account_mgr_proto_rawDescGZIP() []byte {
 	return file_account_mgr_proto_rawDescData
 }
 
-var file_account_mgr_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_account_mgr_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_account_mgr_proto_goTypes = []any{
 	(*CreateAccountReq)(nil),      // 0: account_mgr.CreateAccountReq
 	(*CreateAccountRsp)(nil),      // 1: account_mgr.CreateAccountRsp
@@ -1276,6 +1359,8 @@ var file_account_mgr_proto_goTypes = []any{
 	(*C2BankRsp)(nil),             // 12: account_mgr.C2BankRsp
 	(*C2CReq)(nil),                // 13: account_mgr.C2CReq
 	(*C2CRsp)(nil),                // 14: account_mgr.C2CRsp
+	(*C2CAsyncAccountReq)(nil),    // 15: account_mgr.C2CAsyncAccountReq
+	(*C2CAsyncAccountRsp)(nil),    // 16: account_mgr.C2CAsyncAccountRsp
 }
 var file_account_mgr_proto_depIdxs = []int32{
 	6,  // 0: account_mgr.GetUserFlowRsp.UserFlowList:type_name -> account_mgr.UserFlow
@@ -1287,7 +1372,7 @@ var file_account_mgr_proto_depIdxs = []int32{
 	11, // 6: account_mgr.AccountMgr.C2Bank:input_type -> account_mgr.C2BankReq
 	13, // 7: account_mgr.AccountMgr.C2CLocal:input_type -> account_mgr.C2CReq
 	13, // 8: account_mgr.AccountMgr.C2CFinal:input_type -> account_mgr.C2CReq
-	13, // 9: account_mgr.AccountMgr.C2CAsyncAccount:input_type -> account_mgr.C2CReq
+	15, // 9: account_mgr.AccountMgr.C2CAsyncAccount:input_type -> account_mgr.C2CAsyncAccountReq
 	1,  // 10: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
 	3,  // 11: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
 	5,  // 12: account_mgr.AccountMgr.GetUserFlow:output_type -> account_mgr.GetUserFlowRsp
@@ -1296,7 +1381,7 @@ var file_account_mgr_proto_depIdxs = []int32{
 	12, // 15: account_mgr.AccountMgr.C2Bank:output_type -> account_mgr.C2BankRsp
 	14, // 16: account_mgr.AccountMgr.C2CLocal:output_type -> account_mgr.C2CRsp
 	14, // 17: account_mgr.AccountMgr.C2CFinal:output_type -> account_mgr.C2CRsp
-	14, // 18: account_mgr.AccountMgr.C2CAsyncAccount:output_type -> account_mgr.C2CRsp
+	16, // 18: account_mgr.AccountMgr.C2CAsyncAccount:output_type -> account_mgr.C2CAsyncAccountRsp
 	10, // [10:19] is the sub-list for method output_type
 	1,  // [1:10] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name
@@ -1315,7 +1400,7 @@ func file_account_mgr_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_account_mgr_proto_rawDesc), len(file_account_mgr_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
