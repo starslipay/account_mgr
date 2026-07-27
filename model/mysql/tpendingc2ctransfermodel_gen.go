@@ -44,7 +44,6 @@ type (
 		SellerUserId  string    `db:"seller_user_id"` // 卖家用户ID
 		Amount        int64     `db:"amount"`         // 金额
 		State         int64     `db:"state"`          // 状态
-		BizType       int64     `db:"biz_type"`       // 业务类型
 		Desc          string    `db:"desc"`           // 转账描述
 		CreateTime    time.Time `db:"create_time"`    // 创建时间
 		UpdateTime    time.Time `db:"update_time"`    // 更新时间
@@ -79,14 +78,14 @@ func (m *defaultTPendingC2cTransferModel) FindOne(ctx context.Context, transacti
 }
 
 func (m *defaultTPendingC2cTransferModel) Insert(ctx context.Context, data *TPendingC2cTransfer) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tPendingC2cTransferRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.BizType, data.Desc)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, tPendingC2cTransferRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.Desc)
 	return ret, err
 }
 
 func (m *defaultTPendingC2cTransferModel) Update(ctx context.Context, data *TPendingC2cTransfer) error {
 	query := fmt.Sprintf("update %s set %s where `transaction_id` = ?", m.table, tPendingC2cTransferRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.BizType, data.Desc, data.TransactionId)
+	_, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.Desc, data.TransactionId)
 	return err
 }
 

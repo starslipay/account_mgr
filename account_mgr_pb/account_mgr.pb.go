@@ -1233,7 +1233,7 @@ const file_account_mgr_proto_rawDesc = "" +
 	"seller_uid\x18\x04 \x01(\x03R\tsellerUid\x12$\n" +
 	"\x0eseller_user_id\x18\x05 \x01(\tR\fsellerUserId\x12\x19\n" +
 	"\bpay_time\x18\x06 \x01(\tR\apayTime\x12\x1b\n" +
-	"\tis_repeat\x18\a \x01(\x05R\bisRepeat2\xa8\x04\n" +
+	"\tis_repeat\x18\a \x01(\x05R\bisRepeat2\xe5\x04\n" +
 	"\n" +
 	"AccountMgr\x12M\n" +
 	"\rCreateAccount\x12\x1d.account_mgr.CreateAccountReq\x1a\x1d.account_mgr.CreateAccountRsp\x12\\\n" +
@@ -1244,7 +1244,8 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\x06Bank2C\x12\x16.account_mgr.Bank2CReq\x1a\x16.account_mgr.Bank2CRsp\x128\n" +
 	"\x06C2Bank\x12\x16.account_mgr.C2BankReq\x1a\x16.account_mgr.C2BankRsp\x124\n" +
 	"\bC2CLocal\x12\x13.account_mgr.C2CReq\x1a\x13.account_mgr.C2CRsp\x124\n" +
-	"\bC2CFinal\x12\x13.account_mgr.C2CReq\x1a\x13.account_mgr.C2CRspB\x12Z\x10./account_mgr_pbb\x06proto3"
+	"\bC2CFinal\x12\x13.account_mgr.C2CReq\x1a\x13.account_mgr.C2CRsp\x12;\n" +
+	"\x0fC2CAsyncAccount\x12\x13.account_mgr.C2CReq\x1a\x13.account_mgr.C2CRspB\x12Z\x10./account_mgr_pbb\x06proto3"
 
 var (
 	file_account_mgr_proto_rawDescOnce sync.Once
@@ -1286,16 +1287,18 @@ var file_account_mgr_proto_depIdxs = []int32{
 	11, // 6: account_mgr.AccountMgr.C2Bank:input_type -> account_mgr.C2BankReq
 	13, // 7: account_mgr.AccountMgr.C2CLocal:input_type -> account_mgr.C2CReq
 	13, // 8: account_mgr.AccountMgr.C2CFinal:input_type -> account_mgr.C2CReq
-	1,  // 9: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
-	3,  // 10: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
-	5,  // 11: account_mgr.AccountMgr.GetUserFlow:output_type -> account_mgr.GetUserFlowRsp
-	8,  // 12: account_mgr.AccountMgr.GetC2CBill:output_type -> account_mgr.GetC2CBillRsp
-	10, // 13: account_mgr.AccountMgr.Bank2C:output_type -> account_mgr.Bank2CRsp
-	12, // 14: account_mgr.AccountMgr.C2Bank:output_type -> account_mgr.C2BankRsp
-	14, // 15: account_mgr.AccountMgr.C2CLocal:output_type -> account_mgr.C2CRsp
-	14, // 16: account_mgr.AccountMgr.C2CFinal:output_type -> account_mgr.C2CRsp
-	9,  // [9:17] is the sub-list for method output_type
-	1,  // [1:9] is the sub-list for method input_type
+	13, // 9: account_mgr.AccountMgr.C2CAsyncAccount:input_type -> account_mgr.C2CReq
+	1,  // 10: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
+	3,  // 11: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
+	5,  // 12: account_mgr.AccountMgr.GetUserFlow:output_type -> account_mgr.GetUserFlowRsp
+	8,  // 13: account_mgr.AccountMgr.GetC2CBill:output_type -> account_mgr.GetC2CBillRsp
+	10, // 14: account_mgr.AccountMgr.Bank2C:output_type -> account_mgr.Bank2CRsp
+	12, // 15: account_mgr.AccountMgr.C2Bank:output_type -> account_mgr.C2BankRsp
+	14, // 16: account_mgr.AccountMgr.C2CLocal:output_type -> account_mgr.C2CRsp
+	14, // 17: account_mgr.AccountMgr.C2CFinal:output_type -> account_mgr.C2CRsp
+	14, // 18: account_mgr.AccountMgr.C2CAsyncAccount:output_type -> account_mgr.C2CRsp
+	10, // [10:19] is the sub-list for method output_type
+	1,  // [1:10] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name
 	1,  // [1:1] is the sub-list for extension extendee
 	0,  // [0:1] is the sub-list for field type_name

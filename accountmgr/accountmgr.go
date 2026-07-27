@@ -39,6 +39,7 @@ type (
 		C2Bank(ctx context.Context, in *C2BankReq, opts ...grpc.CallOption) (*C2BankRsp, error)
 		C2CLocal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 		C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
+		C2CAsyncAccount(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 	}
 
 	defaultAccountMgr struct {
@@ -90,4 +91,9 @@ func (m *defaultAccountMgr) C2CLocal(ctx context.Context, in *C2CReq, opts ...gr
 func (m *defaultAccountMgr) C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
 	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
 	return client.C2CFinal(ctx, in, opts...)
+}
+
+func (m *defaultAccountMgr) C2CAsyncAccount(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error) {
+	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
+	return client.C2CAsyncAccount(ctx, in, opts...)
 }

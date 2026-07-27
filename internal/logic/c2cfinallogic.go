@@ -152,7 +152,6 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			SellerUserId:  in.SellerUserId,
 			Amount:        in.Amount,
 			State:         consts.PendingC2cTransferInit,
-			BizType:       consts.BizTypeC2C,
 			Desc:          in.Desc,
 		})
 		if err != nil {
@@ -176,7 +175,7 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		return nil, err
 	}
 
-	// 异步发送cmq消息
+	// 异步发送cmq消息, 忽略失败
 	go l.sendCmq(in)
 
 	return result, nil

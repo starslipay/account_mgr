@@ -137,8 +137,9 @@ service AccountMgr {
 
     rpc Bank2C(Bank2CReq) returns (Bank2CRsp);
     rpc C2Bank(C2BankReq) returns (C2BankRsp);
-    rpc C2CLocal(C2CReq) returns (C2CRsp);  // 本地事务转账
-    rpc C2CFinal(C2CReq) returns (C2CRsp);  // 分布式最终一致性转账
+    rpc C2CLocal(C2CReq) returns (C2CRsp);  // 单机事务转账
+    rpc C2CFinal(C2CReq) returns (C2CRsp);  // 分布式转账(最终一致性,柔性事务)
+    rpc C2CAsyncAccount(C2CReq) returns (C2CRsp); // C2C异步入账
 }
 
 /*

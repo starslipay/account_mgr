@@ -87,7 +87,6 @@ CREATE TABLE `t_pending_c2c_transfer` (
   `seller_user_id` VARCHAR(64) NOT NULL COMMENT '卖家用户ID',
   `amount` BIGINT NOT NULL COMMENT '金额',
   `state` TINYINT NOT NULL COMMENT '状态',
-  `biz_type` INTEGER NOT NULL COMMENT '业务类型',
   `desc` VARCHAR(256) NOT NULL COMMENT '转账描述',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',  
