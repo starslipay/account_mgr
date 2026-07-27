@@ -12,6 +12,13 @@ const SaveBillStateOK = 1
 
 const MsgTypeC2CTransfer = 1
 
-const MsgStateInit = 0 // 初始状态
-const MsgStateSent = 1 // 已发送
-const MsgStateDone = 2 // 已完成
+const (
+	MsgStateInit = 0 // 初始状态
+	MsgStateSent = 1 // 已发送
+	MsgStateDone = 2 // 已完成
+)
+
+const (
+	PendingC2cTransferInit = 1 // 待入账
+	PendingC2cTransferDone = 2 // 已入账
+)

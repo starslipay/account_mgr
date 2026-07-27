@@ -17,7 +17,7 @@ SlaveDBConfig:
   # DataSource: starslipay:payClipayA2026@tcp(mysql-slave.pay-ns.svc.cluster.local:3306)/account_db?charset=utf8mb4&parseTime=True&loc=Local&timeout=5s&readTimeout=10s&writeTimeout=10s #K8S
   DataSource: root:root123456@tcp(mysql8:3306)/account_db?charset=utf8mb4&parseTime=True&loc=Local&timeout=5s&readTimeout=10s&writeTimeout=10s # 本地开发环境
 
-Kafka:
-  BrokerAddrs:
-    - kafka:9092
-  Topic: account_c2c_transfer
+# Kafka 生产者配置
+KafkaProducerConf:
+  - kafka:9092
+TopicC2cAsyncTransfer: topic_c2c_async_transfer

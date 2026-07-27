@@ -79,26 +79,22 @@ CREATE TABLE `t_save_bill` (
   INDEX `idx_update_time` (`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `t_local_message` (
-  `id` BIGINT AUTO_INCREMENT COMMENT '主键',
+CREATE TABLE `t_pending_c2c_transfer` (
   `transaction_id` VARCHAR(64) NOT NULL COMMENT '交易ID',
-  `msg_type` TINYINT NOT NULL COMMENT '消息类型',
-  `topic` VARCHAR(128) NOT NULL COMMENT '消息主题',
-  `partition` INTEGER DEFAULT 0 COMMENT '消息分区',
-  `key` VARCHAR(128) NOT NULL COMMENT '消息key',
-  `body` TEXT NOT NULL COMMENT '消息体(JSON)',
-  `state` TINYINT NOT NULL DEFAULT 0 COMMENT '消息状态',
-  `send_count` INTEGER NOT NULL DEFAULT 0 COMMENT '消息发送次数',
-  `max_send_count` INTEGER NOT NULL DEFAULT 3 COMMENT '消息最大重试次数',
-  `next_send_time` datetime NOT NULL COMMENT '下次发送时间',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
-  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_transaction_id` (`transaction_id`),
-  INDEX `idx_state_next_send_time` (`state`, `next_send_time`),
-  INDEX `idx_create_time` (`create_time`)
+  `buyer_uid` BIGINT NOT NULL COMMENT '买家用户UID',
+  `seller_uid` BIGINT NOT NULL COMMENT '卖家用户UID',
+  `buyer_user_id` VARCHAR(64) NOT NULL COMMENT '买家用户ID',
+  `seller_user_id` VARCHAR(64) NOT NULL COMMENT '卖家用户ID',
+  `amount` BIGINT NOT NULL COMMENT '金额',
+  `state` TINYINT NOT NULL COMMENT '状态',
+  `biz_type` INTEGER NOT NULL COMMENT '业务类型',
+  `desc` VARCHAR(256) NOT NULL COMMENT '转账描述',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',  
+  PRIMARY KEY (`transaction_id`),
+  INDEX `idx_create_time` (`create_time`),
+  INDEX `idx_update_time` (`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 
 -- goctl model mysql ddl -src account.sql -dir .
 -- -c：开启缓存（redis，可选，不加则无缓存）

@@ -33,22 +33,6 @@ func main() {
 		}
 	})
 	defer s.Stop()
-
-	// c2cConsumer := consumer.NewC2CConsumer(ctx)
-	// err := c2cConsumer.Start(context.Background())
-	// if err != nil {
-	// 	fmt.Printf("Failed to start C2C consumer: %v\n", err)
-	// } else {
-	// 	defer c2cConsumer.Stop()
-	// }
-
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()
-	// go func() {
-	// 	s.Start()
-	// }()
-
-	// sigChan := make(chan os.Signal, 1)
-	// signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-	// <-sigChan
 }

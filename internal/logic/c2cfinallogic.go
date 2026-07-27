@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/IBM/sarama"
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/account_mgr/internal/consts"
 	"github.com/starslipay/account_mgr/internal/svc"
@@ -19,14 +18,14 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
-type C2CTransferMessage struct {
+type PendingC2CTransferMessage struct {
 	TransactionId string `json:"transaction_id"`
 	BuyerUid      int64  `json:"buyer_uid"`
 	BuyerUserId   string `json:"buyer_user_id"`
 	SellerUid     int64  `json:"seller_uid"`
 	SellerUserId  string `json:"seller_user_id"`
 	Amount        int64  `json:"amount"`
-	CurType       int32  `json:"cur_type"`
+	BizType       int32  `json:"biz_type"`
 	Desc          string `json:"desc"`
 }
 
@@ -95,7 +94,7 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		tcAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
 		tcAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
 		tc2cBillModel := mysql.NewTC2cBillModel(sqlx.NewSqlConnFromSession(session))
-		tLocalMessageModel := mysql.NewTLocalMessageModel(sqlx.NewSqlConnFromSession(session))
+		tPendingC2cTransferModel := mysql.NewTPendingC2cTransferModel(sqlx.NewSqlConnFromSession(session))
 
 		buyerAccount, err := tcAccountModel.FindOneForUpdate(ctx, in.BuyerUid)
 		if err != nil {
@@ -145,34 +144,19 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert c2c bill failed: %v", err))
 		}
 
-		msgBody := &C2CTransferMessage{
+		_, err = tPendingC2cTransferModel.Insert(ctx, &mysql.TPendingC2cTransfer{
 			TransactionId: in.TransactionId,
 			BuyerUid:      in.BuyerUid,
-			BuyerUserId:   in.BuyerUserId,
 			SellerUid:     in.SellerUid,
+			BuyerUserId:   in.BuyerUserId,
 			SellerUserId:  in.SellerUserId,
 			Amount:        in.Amount,
-			CurType:       in.CurType,
+			State:         consts.PendingC2cTransferInit,
+			BizType:       consts.BizTypeC2C,
 			Desc:          in.Desc,
-		}
-		bodyBytes, err := json.Marshal(msgBody)
-		if err != nil {
-			return xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, fmt.Sprintf("marshal message failed: %v", err))
-		}
-
-		_, err = tLocalMessageModel.Insert(ctx, &mysql.TLocalMessage{
-			TransactionId: in.TransactionId,
-			MsgType:       consts.MsgTypeC2CTransfer,
-			Topic:         l.svcCtx.Config.Kafka.Topic,
-			Key:           in.TransactionId,
-			Body:          string(bodyBytes),
-			State:         consts.MsgStateInit,
-			SendCount:     0,
-			MaxSendCount:  3,
-			NextSendTime:  time.Now(),
 		})
 		if err != nil {
-			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert local message failed: %v", err))
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert pending c2c transfer failed: %v", err))
 		}
 
 		result = &account_mgr_pb.C2CRsp{
@@ -187,50 +171,35 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 
 		return nil
 	})
-
 	if err != nil {
 		l.Errorf("C2CFinal transaction failed: %v", err)
 		return nil, err
 	}
 
-	// TODO 发cmq异步入账消息
-	// err = l.sendKafkaMessage(in.TransactionId)
-	// if err != nil {
-	// 	l.Errorf("send kafka message failed: %v", err)
-	// }
+	// 异步发送cmq消息
+	go l.sendCmq(in)
 
 	return result, nil
 }
 
-func (l *C2CFinalLogic) sendKafkaMessage(transactionId string) error {
-	msg, err := l.svcCtx.TLocalMessageModelMaster.FindOneByTransactionId(l.ctx, transactionId)
+func (l *C2CFinalLogic) sendCmq(in *account_mgr_pb.C2CReq) {
+	message := &PendingC2CTransferMessage{
+		TransactionId: in.TransactionId,
+		BuyerUid:      in.BuyerUid,
+		SellerUid:     in.SellerUid,
+		BuyerUserId:   in.BuyerUserId,
+		SellerUserId:  in.SellerUserId,
+		Amount:        in.Amount,
+		BizType:       consts.BizTypeC2C,
+		Desc:          in.Desc,
+	}
+	jsonStr, err := json.Marshal(message)
 	if err != nil {
-		return err
+		logx.Errorf("marshal message failed: %v", err)
+		return
 	}
-
-	if msg.State != consts.MsgStateInit {
-		return nil
-	}
-
-	_, _, err = l.svcCtx.KafkaProducer.SendMessage(&sarama.ProducerMessage{
-		Topic: msg.Topic,
-		Key:   sarama.StringEncoder(msg.Key),
-		Value: sarama.StringEncoder(msg.Body),
-	})
+	err = l.svcCtx.C2CAsyncTransferProducer.Push(l.ctx, string(jsonStr))
 	if err != nil {
-		newSendCount := msg.SendCount + 1
-		if newSendCount >= msg.MaxSendCount {
-			msg.State = consts.MsgStateDone
-		} else {
-			msg.SendCount = newSendCount
-			msg.NextSendTime = time.Now().Add(time.Minute * time.Duration(newSendCount*2))
-		}
-		l.svcCtx.TLocalMessageModelMaster.Update(l.ctx, msg)
-		return err
+		logx.Errorf("send cmq message failed: %v", err)
 	}
-
-	msg.State = consts.MsgStateSent
-	msg.SendCount = msg.SendCount + 1
-	err = l.svcCtx.TLocalMessageModelMaster.Update(l.ctx, msg)
-	return err
 }
