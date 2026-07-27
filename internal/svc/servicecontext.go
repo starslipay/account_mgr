@@ -52,6 +52,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		TC2cBillModelSlave:                  mysql.NewTC2cBillModel(SqlSlaveConn),
 		TLocalPendingC2cTransferModelMaster: mysql.NewTPendingC2cTransferModel(SqlMasterConn),
 		TLocalPendingC2cTransferModelSlave:  mysql.NewTPendingC2cTransferModel(SqlSlaveConn),
-		C2CAsyncTransferProducer:            kq.NewPusher(c.KafkaProducerConf, "topic_c2c_async_transfer"),
+		C2CAsyncTransferProducer:            kq.NewPusher(c.KafkaProducerConf, c.TopicC2cAsyncTransfer),
 	}
 }

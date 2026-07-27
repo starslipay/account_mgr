@@ -199,6 +199,14 @@ func (l *C2CFinalLogic) sendCmq(in *account_mgr_pb.C2CReq) {
 		return
 	}
 	err = l.svcCtx.C2CAsyncTransferProducer.Push(l.ctx, string(jsonStr))
+	// 查看所有topic
+	// docker exec -it kafka bash -c "/opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 --list"
+	// 创建topic
+	// docker exec -it kafka bash -c "/opt/kafka/bin/kafka-topics.sh --create --bootstrap-server 127.0.0.1:9092 --topic topic_c2c_async_transfer --partitions 2 --replication-factor 1 --config retention.ms=86400000 --config max.message.bytes=10485760"
+	// 查看topic详情
+	// docker exec -it kafka bash -c "/opt/kafka/bin/kafka-topics.sh --describe --bootstrap-server 127.0.0.1:9092 --topic topic_c2c_async_transfer"
+	// 查看topic消息
+	// docker exec -it kafka bash -c "/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic topic_c2c_async_transfer --from-beginning"
 	if err != nil {
 		logx.Errorf("send cmq message failed: %v", err)
 	}
