@@ -59,6 +59,11 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccoun
 			return nil
 		}
 
+		sellerAccount, err := tcAccountModel.FindOneForUpdate(ctx, pendingTransfer.SellerUid)
+		if err != nil {
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find seller account failed: %v", err))
+		}
+
 		// 卖家账户加钱
 		err = tcAccountModel.AddBalance(ctx, pendingTransfer.SellerUid, pendingTransfer.Amount)
 		if err != nil {
@@ -74,6 +79,7 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccoun
 			TransactionId:      pendingTransfer.TransactionId,
 			InoutType:          consts.InoutTypeIn,
 			BizType:            consts.BizTypeC2C,
+			Balance:            sellerAccount.Balance + pendingTransfer.Amount,
 			Amount:             pendingTransfer.Amount,
 			Desc:               pendingTransfer.Desc,
 		})
