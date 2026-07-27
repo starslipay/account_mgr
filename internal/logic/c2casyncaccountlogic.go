@@ -73,6 +73,7 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccoun
 			CounterpartyUid:    pendingTransfer.BuyerUid,
 			TransactionId:      pendingTransfer.TransactionId,
 			InoutType:          consts.InoutTypeIn,
+			BizType:            consts.BizTypeC2C,
 			Amount:             pendingTransfer.Amount,
 			Desc:               pendingTransfer.Desc,
 		})
