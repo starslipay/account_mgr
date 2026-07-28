@@ -87,7 +87,7 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		tcAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
 		tcAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
 		tc2cBillModel := mysql.NewTC2cBillModel(sqlx.NewSqlConnFromSession(session))
-		tPendingC2cTransferModel := mysql.NewTPendingC2cTransferModel(sqlx.NewSqlConnFromSession(session))
+		tC2cPendingTransferModel := mysql.NewTC2cPendingTransferModel(sqlx.NewSqlConnFromSession(session))
 
 		buyerAccount, err := tcAccountModel.FindOneForUpdate(ctx, in.BuyerUid)
 		if err != nil {
@@ -137,7 +137,7 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert c2c bill failed: %v", err))
 		}
 
-		_, err = tPendingC2cTransferModel.Insert(ctx, &mysql.TPendingC2cTransfer{
+		_, err = tC2cPendingTransferModel.Insert(ctx, &mysql.TC2cPendingTransfer{
 			TransactionId: in.TransactionId,
 			BuyerUid:      in.BuyerUid,
 			SellerUid:     in.SellerUid,

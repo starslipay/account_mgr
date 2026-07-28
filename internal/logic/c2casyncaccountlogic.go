@@ -32,7 +32,7 @@ func NewC2CAsyncAccountLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 
 func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccountReq) (*account_mgr_pb.C2CAsyncAccountRsp, error) {
 	// 1. 先无锁查询t_pending_c2c_transfer，查看是否已经入账（幂等检查）
-	pendingTransfer, err := l.svcCtx.TLocalPendingC2cTransferModelSlave.FindOne(l.ctx, in.TransactionId)
+	pendingTransfer, err := l.svcCtx.TC2cPendingTransferModelMaster.FindOne(l.ctx, in.TransactionId)
 	if err != nil {
 		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find pending c2c transfer failed: %v", err))
 	}
@@ -46,10 +46,10 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccoun
 	err = l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
 		tcAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
 		tcAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
-		tPendingC2cTransferModel := mysql.NewTPendingC2cTransferModel(sqlx.NewSqlConnFromSession(session))
+		tC2cPendingTransferModel := mysql.NewTC2cPendingTransferModel(sqlx.NewSqlConnFromSession(session))
 
 		// 加锁查询t_pending_c2c_transfer
-		pendingTransfer, err := tPendingC2cTransferModel.FindOneForUpdate(ctx, in.TransactionId)
+		pendingTransfer, err := tC2cPendingTransferModel.FindOneForUpdate(ctx, in.TransactionId)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find pending c2c transfer for update failed: %v", err))
 		}
@@ -89,7 +89,7 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccoun
 
 		// 修改t_pending_c2c_transfer状态为已完成
 		pendingTransfer.State = consts.PendingC2cTransferDone
-		err = tPendingC2cTransferModel.Update(ctx, pendingTransfer)
+		err = tC2cPendingTransferModel.Update(ctx, pendingTransfer)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("update pending c2c transfer state failed: %v", err))
 		}

@@ -79,7 +79,7 @@ CREATE TABLE `t_save_bill` (
   INDEX `idx_update_time` (`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `t_pending_c2c_transfer` (
+CREATE TABLE `t_c2c_pending_transfer` (
   `transaction_id` VARCHAR(64) NOT NULL COMMENT '交易ID',
   `buyer_uid` BIGINT NOT NULL COMMENT '买家用户UID',
   `seller_uid` BIGINT NOT NULL COMMENT '卖家用户UID',
