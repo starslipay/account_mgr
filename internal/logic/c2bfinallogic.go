@@ -69,13 +69,13 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 	// 检查是否是重入
 	bill, _ := l.svcCtx.TC2bBillModelMaster.FindOne(l.ctx, in.TransactionId)
 	if bill != nil {
-		// 检查单据状态是否是OK
+		// 检查单据状态是否是成功
 		if consts.C2BBillStateSuccess == bill.State {
 			if bill.Uid != in.Uid ||
 				bill.UserId != in.UserId ||
 				bill.MerchantUid != in.MerchantUid ||
 				bill.MerchantId != in.MerchantId ||
-				bill.Amount != fmt.Sprintf("%d", in.Amount) {
+				bill.Amount != in.Amount {
 				return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeRepeatButInfoNotConsistent, "repeat but info not consistent")
 			}
 
@@ -93,15 +93,6 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 		} else {
 			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeC2BBillStateInvalid, "c2b bill state is invalid")
 		}
-	}
-
-	// 补偿模式, 单不存在返回错误
-	if ModeSupply == in.Mode {
-		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeSupplyModeC2BBillNotFound, "c2b bill not exist")
-	} else if ModeNormal == in.Mode {
-		// 继续流程
-	} else {
-		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "mode is not support")
 	}
 
 	var result *account_mgr_pb.C2BRsp
@@ -149,7 +140,7 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 			UserId:        in.UserId,
 			MerchantUid:   in.MerchantUid,
 			MerchantId:    in.MerchantId,
-			Amount:        fmt.Sprintf("%d", in.Amount),
+			Amount:        in.Amount,
 			State:         consts.C2BBillStateSuccess,
 			BizType:       consts.BizTypeC2B,
 			Desc:          in.Desc,

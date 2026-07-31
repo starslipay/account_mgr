@@ -146,7 +146,6 @@ message C2BReq {
     int64 amount = 7;
     int32 cur_type = 8;
     string desc = 9;
-    int32 mode = 10;  // 0-正常, 1-补单模式只查单是否成功
 }
 
 // 转账Rsp
@@ -168,6 +167,23 @@ message C2BAsyncAccountReq {
 message C2BAsyncAccountRsp {
 }
 
+// 查询C2B单据Req
+message QueryC2BBillReq {
+    string transaction_id = 1;
+}
+
+// 查询C2B单据Rsp
+message QueryC2BBillRsp {
+    string transaction_id = 1;
+    string out_trade_no = 2;
+    int64 uid = 3;
+    string user_id = 4;
+    int64 merchant_uid = 5;
+    string merchant_id = 6;
+    int64 amount = 7;
+    int32 state = 8;
+}
+
 service AccountMgr {
     rpc CreateAccount(CreateAccountReq) returns (CreateAccountRsp);
     rpc GetUserBalanceInfo(GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp);
@@ -182,6 +198,7 @@ service AccountMgr {
     rpc C2CAsyncAccount(C2CAsyncAccountReq) returns (C2CAsyncAccountRsp); // C2C异步入账
     rpc C2BFinal(C2BReq) returns (C2BRsp);  // 分布式转账(最终一致性,柔性事务)异步入账
     rpc C2BAsyncAccount(C2BAsyncAccountReq) returns (C2BAsyncAccountRsp);  // C2B异步入账
+    rpc QueryC2BBill(QueryC2BBillReq) returns (QueryC2BBillRsp);  // 查询C2B单据
 }
 
 /*

@@ -38,11 +38,12 @@ type (
 
 	TC2bBill struct {
 		TransactionId string    `db:"transaction_id"` // 交易ID
+		OutTradeNo    string    `db:"out_trade_no"`   // 商户订单号
 		Uid           int64     `db:"uid"`            // 用户UID
 		UserId        string    `db:"user_id"`        // 用户ID
 		MerchantUid   int64     `db:"merchant_uid"`   // 商户UID
 		MerchantId    string    `db:"merchant_id"`    // 商户ID
-		Amount        string    `db:"amount"`         // 金额
+		Amount        int64     `db:"amount"`         // 金额
 		State         int64     `db:"state"`          // 单状态
 		BizType       int64     `db:"biz_type"`       // 业务类型
 		Desc          string    `db:"desc"`           // 转账描述
@@ -80,14 +81,14 @@ func (m *defaultTC2bBillModel) FindOne(ctx context.Context, transactionId string
 }
 
 func (m *defaultTC2bBillModel) Insert(ctx context.Context, data *TC2bBill) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tC2bBillRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.Uid, data.UserId, data.MerchantUid, data.MerchantId, data.Amount, data.State, data.BizType, data.Desc, data.PayTime)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tC2bBillRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.OutTradeNo, data.Uid, data.UserId, data.MerchantUid, data.MerchantId, data.Amount, data.State, data.BizType, data.Desc, data.PayTime)
 	return ret, err
 }
 
 func (m *defaultTC2bBillModel) Update(ctx context.Context, data *TC2bBill) error {
 	query := fmt.Sprintf("update %s set %s where `transaction_id` = ?", m.table, tC2bBillRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.MerchantUid, data.MerchantId, data.Amount, data.State, data.BizType, data.Desc, data.PayTime, data.TransactionId)
+	_, err := m.conn.ExecCtx(ctx, query, data.OutTradeNo, data.Uid, data.UserId, data.MerchantUid, data.MerchantId, data.Amount, data.State, data.BizType, data.Desc, data.PayTime, data.TransactionId)
 	return err
 }
 

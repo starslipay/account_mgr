@@ -77,3 +77,8 @@ func (s *AccountMgrServer) C2BAsyncAccount(ctx context.Context, in *account_mgr_
 	l := logic.NewC2BAsyncAccountLogic(ctx, s.svcCtx)
 	return l.C2BAsyncAccount(in)
 }
+
+func (s *AccountMgrServer) QueryC2BBill(ctx context.Context, in *account_mgr_pb.QueryC2BBillReq) (*account_mgr_pb.QueryC2BBillRsp, error) {
+	l := logic.NewQueryC2BBillLogic(ctx, s.svcCtx)
+	return l.QueryC2BBill(in)
+}

@@ -101,11 +101,12 @@ CREATE TABLE `t_save_bill` (
 
 CREATE TABLE `t_c2b_bill` (
   `transaction_id` VARCHAR(64) NOT NULL COMMENT '交易ID',
+  `out_trade_no` VARCHAR(64) NOT NULL COMMENT '商户订单号',
   `uid` BIGINT NOT NULL COMMENT '用户UID',
   `user_id` VARCHAR(64) NOT NULL COMMENT '用户ID',
   `merchant_uid` BIGINT NOT NULL COMMENT '商户UID',
   `merchant_id` VARCHAR(64) NOT NULL COMMENT '商户ID',
-  `amount` VARCHAR(64) NOT NULL COMMENT '金额',
+  `amount` BIGINT NOT NULL COMMENT '金额',
   `state` TINYINT NOT NULL COMMENT '单状态',
   `biz_type` INTEGER NOT NULL COMMENT '业务类型',
   `desc` VARCHAR(256) NOT NULL COMMENT '转账描述',

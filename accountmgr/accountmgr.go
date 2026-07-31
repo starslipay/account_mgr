@@ -34,6 +34,8 @@ type (
 	GetUserBalanceInfoRsp = account_mgr_pb.GetUserBalanceInfoRsp
 	GetUserFlowReq        = account_mgr_pb.GetUserFlowReq
 	GetUserFlowRsp        = account_mgr_pb.GetUserFlowRsp
+	QueryC2BBillReq       = account_mgr_pb.QueryC2BBillReq
+	QueryC2BBillRsp       = account_mgr_pb.QueryC2BBillRsp
 	UserFlow              = account_mgr_pb.UserFlow
 
 	AccountMgr interface {
@@ -48,6 +50,7 @@ type (
 		C2CAsyncAccount(ctx context.Context, in *C2CAsyncAccountReq, opts ...grpc.CallOption) (*C2CAsyncAccountRsp, error)
 		C2BFinal(ctx context.Context, in *C2BReq, opts ...grpc.CallOption) (*C2BRsp, error)
 		C2BAsyncAccount(ctx context.Context, in *C2BAsyncAccountReq, opts ...grpc.CallOption) (*C2BAsyncAccountRsp, error)
+		QueryC2BBill(ctx context.Context, in *QueryC2BBillReq, opts ...grpc.CallOption) (*QueryC2BBillRsp, error)
 	}
 
 	defaultAccountMgr struct {
@@ -114,4 +117,9 @@ func (m *defaultAccountMgr) C2BFinal(ctx context.Context, in *C2BReq, opts ...gr
 func (m *defaultAccountMgr) C2BAsyncAccount(ctx context.Context, in *C2BAsyncAccountReq, opts ...grpc.CallOption) (*C2BAsyncAccountRsp, error) {
 	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
 	return client.C2BAsyncAccount(ctx, in, opts...)
+}
+
+func (m *defaultAccountMgr) QueryC2BBill(ctx context.Context, in *QueryC2BBillReq, opts ...grpc.CallOption) (*QueryC2BBillRsp, error) {
+	client := account_mgr_pb.NewAccountMgrClient(m.cli.Conn())
+	return client.QueryC2BBill(ctx, in, opts...)
 }
