@@ -32,7 +32,7 @@ func (l *GetC2CBillLogic) GetC2CBill(in *account_mgr_pb.GetC2CBillReq) (*account
 	bill, err := l.svcCtx.TC2cBillModelSlave.FindOne(l.ctx, in.TransactionId)
 	if err != nil {
 		if err == sqlx.ErrNotFound {
-			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeBillNotFound, "bill not found")
+			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeC2CBillNotFound, "bill not found")
 		}
 		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find bill failed: %v", err))
 	}

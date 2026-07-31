@@ -182,6 +182,7 @@ message QueryC2BBillRsp {
     string merchant_id = 6;
     int64 amount = 7;
     int32 state = 8;
+    string pay_time = 9;
 }
 
 service AccountMgr {

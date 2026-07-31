@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc/codes"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
 type QueryC2BBillLogic struct {
@@ -34,6 +35,9 @@ func (l *QueryC2BBillLogic) QueryC2BBill(in *account_mgr_pb.QueryC2BBillReq) (*a
 
 	bill, err := l.svcCtx.TC2bBillModelMaster.FindOne(l.ctx, in.TransactionId)
 	if err != nil {
+		if err == sqlx.ErrNotFound {
+			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeC2BBillNotFound, "bill not found")
+		}
 		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find bill failed: %v", err))
 	}
 
@@ -46,5 +50,6 @@ func (l *QueryC2BBillLogic) QueryC2BBill(in *account_mgr_pb.QueryC2BBillReq) (*a
 		MerchantId:    bill.MerchantId,
 		Amount:        bill.Amount,
 		State:         int32(bill.State),
+		PayTime:       bill.PayTime.Format("2006-01-02 15:04:05"),
 	}, nil
 }

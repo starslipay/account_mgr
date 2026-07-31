@@ -1563,6 +1563,7 @@ type QueryC2BBillRsp struct {
 	MerchantId    string                 `protobuf:"bytes,6,opt,name=merchant_id,json=merchantId,proto3" json:"merchant_id,omitempty"`
 	Amount        int64                  `protobuf:"varint,7,opt,name=amount,proto3" json:"amount,omitempty"`
 	State         int32                  `protobuf:"varint,8,opt,name=state,proto3" json:"state,omitempty"`
+	PayTime       string                 `protobuf:"bytes,9,opt,name=pay_time,json=payTime,proto3" json:"pay_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1651,6 +1652,13 @@ func (x *QueryC2BBillRsp) GetState() int32 {
 		return x.State
 	}
 	return 0
+}
+
+func (x *QueryC2BBillRsp) GetPayTime() string {
+	if x != nil {
+		return x.PayTime
+	}
+	return ""
 }
 
 var File_account_mgr_proto protoreflect.FileDescriptor
@@ -1779,7 +1787,7 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\"\x14\n" +
 	"\x12C2BAsyncAccountRsp\"8\n" +
 	"\x0fQueryC2BBillReq\x12%\n" +
-	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\"\xf7\x01\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\"\x92\x02\n" +
 	"\x0fQueryC2BBillRsp\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12 \n" +
 	"\fout_trade_no\x18\x02 \x01(\tR\n" +
@@ -1790,7 +1798,8 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\vmerchant_id\x18\x06 \x01(\tR\n" +
 	"merchantId\x12\x16\n" +
 	"\x06amount\x18\a \x01(\x03R\x06amount\x12\x14\n" +
-	"\x05state\x18\b \x01(\x05R\x05state2\xd4\x06\n" +
+	"\x05state\x18\b \x01(\x05R\x05state\x12\x19\n" +
+	"\bpay_time\x18\t \x01(\tR\apayTime2\xd4\x06\n" +
 	"\n" +
 	"AccountMgr\x12M\n" +
 	"\rCreateAccount\x12\x1d.account_mgr.CreateAccountReq\x1a\x1d.account_mgr.CreateAccountRsp\x12\\\n" +
