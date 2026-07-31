@@ -71,6 +71,11 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			bill.Amount != in.Amount {
 			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeRepeatButInfoNotConsistent, "repeat but info not consistent")
 		}
+
+		if bill.State != consts.SaveBillStateOK {
+			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeBillStateNotOK, "bill state is not OK")
+		}
+
 		return &account_mgr_pb.C2CRsp{
 			TransactionId: bill.TransactionId,
 			BuyerUid:      bill.BuyerUid,

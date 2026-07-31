@@ -71,6 +71,11 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 			bill.Amount != fmt.Sprintf("%d", in.Amount) {
 			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeRepeatButInfoNotConsistent, "repeat but info not consistent")
 		}
+
+		if bill.State != consts.SaveBillStateOK {
+			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeBillStateNotOK, "bill state is not OK")
+		}
+
 		return &account_mgr_pb.C2BRsp{
 			TransactionId: bill.TransactionId,
 			Uid:           bill.Uid,

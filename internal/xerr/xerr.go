@@ -13,11 +13,10 @@ var (
 	ErrCodeServerInternal = ModuleErrorBase + 1
 
 	// 业务错误码 1000-1999
-	ErrCodeParam            = ModuleErrorBase + 1000
-	ErrCodeBalanceNotEnough = ModuleErrorBase + 1001
-	ErrCodeDB               = ModuleErrorBase + 1002
-	// 重入，但信息不一致
-	ErrCodeRepeatButInfoNotConsistent = ModuleErrorBase + 1003
-	// 单据不存在
-	ErrCodeBillNotFound = ModuleErrorBase + 1004
+	ErrCodeParam                      = ModuleErrorBase + 1000
+	ErrCodeBalanceNotEnough           = ModuleErrorBase + 1001
+	ErrCodeDB                         = ModuleErrorBase + 1002
+	ErrCodeRepeatButInfoNotConsistent = ModuleErrorBase + 1003 // 重入，但信息不一致
+	ErrCodeBillNotFound               = ModuleErrorBase + 1004 // 单据不存在
+	ErrCodeBillStateNotOK             = ModuleErrorBase + 1005 // 单据状态不是OK
 )
