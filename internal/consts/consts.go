@@ -9,7 +9,12 @@ const BizTypeC2Bank = 3
 const BizTypeC2B = 4
 
 const C2CBillStateOK = 1
-const C2BBillStateOK = 1
+
+const (
+	C2BBillStateSuccess = 1
+	C2BBillStateClose   = 99
+)
+
 const SaveBillStateOK = 1
 
 const MsgTypeC2CTransfer = 1

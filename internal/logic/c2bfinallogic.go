@@ -18,6 +18,11 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
+const (
+	ModeNormal = 0 // 正常模式
+	ModeSupply = 1 // 补单模式
+)
+
 type PendingC2BTransferMessage struct {
 	TransactionId string `json:"transaction_id"`
 }
@@ -64,27 +69,39 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 	// 检查是否是重入
 	bill, _ := l.svcCtx.TC2bBillModelMaster.FindOne(l.ctx, in.TransactionId)
 	if bill != nil {
-		if bill.Uid != in.Uid ||
-			bill.UserId != in.UserId ||
-			bill.MerchantUid != in.MerchantUid ||
-			bill.MerchantId != in.MerchantId ||
-			bill.Amount != fmt.Sprintf("%d", in.Amount) {
-			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeRepeatButInfoNotConsistent, "repeat but info not consistent")
-		}
+		// 检查单据状态是否是OK
+		if consts.C2BBillStateSuccess == bill.State {
+			if bill.Uid != in.Uid ||
+				bill.UserId != in.UserId ||
+				bill.MerchantUid != in.MerchantUid ||
+				bill.MerchantId != in.MerchantId ||
+				bill.Amount != fmt.Sprintf("%d", in.Amount) {
+				return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeRepeatButInfoNotConsistent, "repeat but info not consistent")
+			}
 
-		if bill.State != consts.SaveBillStateOK {
-			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeBillStateNotOK, "bill state is not OK")
+			return &account_mgr_pb.C2BRsp{
+				TransactionId: bill.TransactionId,
+				Uid:           bill.Uid,
+				UserId:        bill.UserId,
+				MerchantUid:   bill.MerchantUid,
+				MerchantId:    bill.MerchantId,
+				PayTime:       bill.PayTime.Format("2006-01-02 15:04:05"),
+				IsRepeat:      1,
+			}, nil
+		} else if consts.C2BBillStateClose == bill.State {
+			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeC2BBillStateAlreadyClose, "c2b bill already close")
+		} else {
+			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeC2BBillStateInvalid, "c2b bill state is invalid")
 		}
+	}
 
-		return &account_mgr_pb.C2BRsp{
-			TransactionId: bill.TransactionId,
-			Uid:           bill.Uid,
-			UserId:        bill.UserId,
-			MerchantUid:   bill.MerchantUid,
-			MerchantId:    bill.MerchantId,
-			PayTime:       bill.PayTime.Format("2006-01-02 15:04:05"),
-			IsRepeat:      1,
-		}, nil
+	// 补偿模式, 单不存在返回错误
+	if ModeSupply == in.Mode {
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeSupplyModeC2BBillNotFound, "c2b bill not exist")
+	} else if ModeNormal == in.Mode {
+		// 继续流程
+	} else {
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "mode is not support")
 	}
 
 	var result *account_mgr_pb.C2BRsp
@@ -133,7 +150,7 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 			MerchantUid:   in.MerchantUid,
 			MerchantId:    in.MerchantId,
 			Amount:        fmt.Sprintf("%d", in.Amount),
-			State:         consts.C2BBillStateOK,
+			State:         consts.C2BBillStateSuccess,
 			BizType:       consts.BizTypeC2B,
 			Desc:          in.Desc,
 			PayTime:       payTime,

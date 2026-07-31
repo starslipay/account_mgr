@@ -19,4 +19,7 @@ var (
 	ErrCodeRepeatButInfoNotConsistent = ModuleErrorBase + 1003 // 重入，但信息不一致
 	ErrCodeBillNotFound               = ModuleErrorBase + 1004 // 单据不存在
 	ErrCodeBillStateNotOK             = ModuleErrorBase + 1005 // 单据状态不是OK
+	ErrCodeSupplyModeC2BBillNotFound  = ModuleErrorBase + 1006 // 补单模式下C2B单据不存在
+	ErrCodeC2BBillStateInvalid        = ModuleErrorBase + 1007 // C2B单据状态无效
+	ErrCodeC2BBillStateAlreadyClose   = ModuleErrorBase + 1008 // C2B单据状态已关闭
 )

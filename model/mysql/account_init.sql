@@ -59,7 +59,7 @@ CREATE TABLE `t_b_account` (
 
 INSERT INTO `t_b_account` (`merchant_uid`, `merchant_id`, `balance`, `cur_type`, `create_time`, `update_time`)
 VALUES (2000000000, '2000000000', 0, 1, NOW(), NOW());
-
+SELECT * FROM `t_b_account`;
 
 DROP TABLE IF EXISTS `t_b_account_log`;
 -- 商户账户流水日志表

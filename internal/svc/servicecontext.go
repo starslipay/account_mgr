@@ -17,6 +17,12 @@ type ServiceContext struct {
 	TCAccountLogModelMaster mysql.TCAccountLogModel
 	TCAccountLogModelSlave  mysql.TCAccountLogModel
 
+	TBAccountModelMaster mysql.TBAccountModel
+	TBAccountModelSlave  mysql.TBAccountModel
+
+	TBAccountLogModelMaster mysql.TBAccountLogModel
+	TBAccountLogModelSlave  mysql.TBAccountLogModel
+
 	TC2crOrderMaster mysql.TC2cOrderModel
 	TC2cOrderSlave   mysql.TC2cOrderModel
 
@@ -51,6 +57,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		TCAccountModelSlave:            mysql.NewTCAccountModel(SqlSlaveConn),
 		TCAccountLogModelMaster:        mysql.NewTCAccountLogModel(SqlMasterConn),
 		TCAccountLogModelSlave:         mysql.NewTCAccountLogModel(SqlSlaveConn),
+		TBAccountModelMaster:           mysql.NewTBAccountModel(SqlMasterConn),
+		TBAccountModelSlave:            mysql.NewTBAccountModel(SqlSlaveConn),
+		TBAccountLogModelMaster:        mysql.NewTBAccountLogModel(SqlMasterConn),
+		TBAccountLogModelSlave:         mysql.NewTBAccountLogModel(SqlSlaveConn),
 		TC2crOrderMaster:               mysql.NewTC2cOrderModel(SqlMasterConn),
 		TC2cOrderSlave:                 mysql.NewTC2cOrderModel(SqlSlaveConn),
 		TSaveBillModelMaster:           mysql.NewTSaveBillModel(SqlMasterConn),

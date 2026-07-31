@@ -1221,13 +1221,15 @@ func (*C2CAsyncAccountRsp) Descriptor() ([]byte, []int) {
 type C2BReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TransactionId string                 `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
-	Uid           int64                  `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
-	UserId        string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	MerchantUid   int64                  `protobuf:"varint,4,opt,name=merchant_uid,json=merchantUid,proto3" json:"merchant_uid,omitempty"`
-	MerchantId    string                 `protobuf:"bytes,5,opt,name=merchant_id,json=merchantId,proto3" json:"merchant_id,omitempty"`
-	Amount        int64                  `protobuf:"varint,6,opt,name=amount,proto3" json:"amount,omitempty"`
-	CurType       int32                  `protobuf:"varint,7,opt,name=cur_type,json=curType,proto3" json:"cur_type,omitempty"`
-	Desc          string                 `protobuf:"bytes,8,opt,name=desc,proto3" json:"desc,omitempty"`
+	OutTradeNo    string                 `protobuf:"bytes,2,opt,name=out_trade_no,json=outTradeNo,proto3" json:"out_trade_no,omitempty"`
+	Uid           int64                  `protobuf:"varint,3,opt,name=uid,proto3" json:"uid,omitempty"`
+	UserId        string                 `protobuf:"bytes,4,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	MerchantUid   int64                  `protobuf:"varint,5,opt,name=merchant_uid,json=merchantUid,proto3" json:"merchant_uid,omitempty"`
+	MerchantId    string                 `protobuf:"bytes,6,opt,name=merchant_id,json=merchantId,proto3" json:"merchant_id,omitempty"`
+	Amount        int64                  `protobuf:"varint,7,opt,name=amount,proto3" json:"amount,omitempty"`
+	CurType       int32                  `protobuf:"varint,8,opt,name=cur_type,json=curType,proto3" json:"cur_type,omitempty"`
+	Desc          string                 `protobuf:"bytes,9,opt,name=desc,proto3" json:"desc,omitempty"`
+	Mode          int32                  `protobuf:"varint,10,opt,name=mode,proto3" json:"mode,omitempty"` // 0-正常, 1-补单模式只查单是否成功
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1265,6 +1267,13 @@ func (*C2BReq) Descriptor() ([]byte, []int) {
 func (x *C2BReq) GetTransactionId() string {
 	if x != nil {
 		return x.TransactionId
+	}
+	return ""
+}
+
+func (x *C2BReq) GetOutTradeNo() string {
+	if x != nil {
+		return x.OutTradeNo
 	}
 	return ""
 }
@@ -1318,6 +1327,13 @@ func (x *C2BReq) GetDesc() string {
 	return ""
 }
 
+func (x *C2BReq) GetMode() int32 {
+	if x != nil {
+		return x.Mode
+	}
+	return 0
+}
+
 // 转账Rsp
 type C2BRsp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1328,6 +1344,7 @@ type C2BRsp struct {
 	MerchantId    string                 `protobuf:"bytes,5,opt,name=merchant_id,json=merchantId,proto3" json:"merchant_id,omitempty"`
 	PayTime       string                 `protobuf:"bytes,6,opt,name=pay_time,json=payTime,proto3" json:"pay_time,omitempty"`
 	IsRepeat      int32                  `protobuf:"varint,7,opt,name=is_repeat,json=isRepeat,proto3" json:"is_repeat,omitempty"`
+	DeductToken   string                 `protobuf:"bytes,8,opt,name=deduct_token,json=deductToken,proto3" json:"deduct_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1409,6 +1426,13 @@ func (x *C2BRsp) GetIsRepeat() int32 {
 		return x.IsRepeat
 	}
 	return 0
+}
+
+func (x *C2BRsp) GetDeductToken() string {
+	if x != nil {
+		return x.DeductToken
+	}
+	return ""
 }
 
 type C2BAsyncAccountReq struct {
@@ -1590,17 +1614,21 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\tis_repeat\x18\a \x01(\x05R\bisRepeat\";\n" +
 	"\x12C2CAsyncAccountReq\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\"\x14\n" +
-	"\x12C2CAsyncAccountRsp\"\xe5\x01\n" +
+	"\x12C2CAsyncAccountRsp\"\x9b\x02\n" +
 	"\x06C2BReq\x12%\n" +
-	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x10\n" +
-	"\x03uid\x18\x02 \x01(\x03R\x03uid\x12\x17\n" +
-	"\auser_id\x18\x03 \x01(\tR\x06userId\x12!\n" +
-	"\fmerchant_uid\x18\x04 \x01(\x03R\vmerchantUid\x12\x1f\n" +
-	"\vmerchant_id\x18\x05 \x01(\tR\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12 \n" +
+	"\fout_trade_no\x18\x02 \x01(\tR\n" +
+	"outTradeNo\x12\x10\n" +
+	"\x03uid\x18\x03 \x01(\x03R\x03uid\x12\x17\n" +
+	"\auser_id\x18\x04 \x01(\tR\x06userId\x12!\n" +
+	"\fmerchant_uid\x18\x05 \x01(\x03R\vmerchantUid\x12\x1f\n" +
+	"\vmerchant_id\x18\x06 \x01(\tR\n" +
 	"merchantId\x12\x16\n" +
-	"\x06amount\x18\x06 \x01(\x03R\x06amount\x12\x19\n" +
-	"\bcur_type\x18\a \x01(\x05R\acurType\x12\x12\n" +
-	"\x04desc\x18\b \x01(\tR\x04desc\"\xd6\x01\n" +
+	"\x06amount\x18\a \x01(\x03R\x06amount\x12\x19\n" +
+	"\bcur_type\x18\b \x01(\x05R\acurType\x12\x12\n" +
+	"\x04desc\x18\t \x01(\tR\x04desc\x12\x12\n" +
+	"\x04mode\x18\n" +
+	" \x01(\x05R\x04mode\"\xf9\x01\n" +
 	"\x06C2BRsp\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x10\n" +
 	"\x03uid\x18\x02 \x01(\x03R\x03uid\x12\x17\n" +
@@ -1609,7 +1637,8 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\vmerchant_id\x18\x05 \x01(\tR\n" +
 	"merchantId\x12\x19\n" +
 	"\bpay_time\x18\x06 \x01(\tR\apayTime\x12\x1b\n" +
-	"\tis_repeat\x18\a \x01(\x05R\bisRepeat\";\n" +
+	"\tis_repeat\x18\a \x01(\x05R\bisRepeat\x12!\n" +
+	"\fdeduct_token\x18\b \x01(\tR\vdeductToken\";\n" +
 	"\x12C2BAsyncAccountReq\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\"\x14\n" +
 	"\x12C2BAsyncAccountRsp2\x88\x06\n" +

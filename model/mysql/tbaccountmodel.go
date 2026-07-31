@@ -1,6 +1,11 @@
 package mysql
 
-import "github.com/zeromicro/go-zero/core/stores/sqlx"
+import (
+	"context"
+	"fmt"
+
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+)
 
 var _ TBAccountModel = (*customTBAccountModel)(nil)
 
@@ -10,6 +15,8 @@ type (
 	TBAccountModel interface {
 		tBAccountModel
 		withSession(session sqlx.Session) TBAccountModel
+		AddBalance(ctx context.Context, merchantUid int64, amount int64) error
+		FindOneForUpdate(ctx context.Context, merchantUid int64) (*TBAccount, error)
 	}
 
 	customTBAccountModel struct {
@@ -26,4 +33,24 @@ func NewTBAccountModel(conn sqlx.SqlConn) TBAccountModel {
 
 func (m *customTBAccountModel) withSession(session sqlx.Session) TBAccountModel {
 	return NewTBAccountModel(sqlx.NewSqlConnFromSession(session))
+}
+
+func (m *customTBAccountModel) AddBalance(ctx context.Context, merchantUid int64, amount int64) error {
+	query := fmt.Sprintf("update %s set `balance` = `balance` + ? where `merchant_uid` = ?", m.table)
+	_, err := m.conn.ExecCtx(ctx, query, amount, merchantUid)
+	return err
+}
+
+func (m *customTBAccountModel) FindOneForUpdate(ctx context.Context, merchantUid int64) (*TBAccount, error) {
+	query := fmt.Sprintf("select %s from %s where `merchant_uid` = ? for update", tBAccountRows, m.table)
+	var resp TBAccount
+	err := m.conn.QueryRowCtx(ctx, &resp, query, merchantUid)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlx.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }

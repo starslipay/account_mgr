@@ -44,8 +44,8 @@ func (l *C2BAsyncAccountLogic) C2BAsyncAccount(in *account_mgr_pb.C2BAsyncAccoun
 
 	// 2. 加锁查询并执行入账逻辑
 	err = l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
-		tcAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
-		tcAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
+		tbAccountModel := mysql.NewTBAccountModel(sqlx.NewSqlConnFromSession(session))
+		tbAccountLogModel := mysql.NewTBAccountLogModel(sqlx.NewSqlConnFromSession(session))
 		tC2bPendingTransferModel := mysql.NewTC2bPendingTransferModel(sqlx.NewSqlConnFromSession(session))
 
 		// 加锁查询t_c2b_pending_transfer
@@ -59,21 +59,21 @@ func (l *C2BAsyncAccountLogic) C2BAsyncAccount(in *account_mgr_pb.C2BAsyncAccoun
 			return nil
 		}
 
-		merchantAccount, err := tcAccountModel.FindOneForUpdate(ctx, pendingTransfer.MerchantUid)
+		merchantAccount, err := tbAccountModel.FindOneForUpdate(ctx, pendingTransfer.MerchantUid)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find merchant account failed: %v", err))
 		}
 
 		// 商户账户加钱
-		err = tcAccountModel.AddBalance(ctx, pendingTransfer.MerchantUid, pendingTransfer.Amount)
+		err = tbAccountModel.AddBalance(ctx, pendingTransfer.MerchantUid, pendingTransfer.Amount)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("add balance failed: %v", err))
 		}
 
 		// 记录商户入账流水
-		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
-			Uid:             pendingTransfer.MerchantUid,
-			UserId:          pendingTransfer.MerchantId,
+		_, err = tbAccountLogModel.Insert(ctx, &mysql.TBAccountLog{
+			MerchantUid:     pendingTransfer.MerchantUid,
+			MerchantId:      pendingTransfer.MerchantId,
 			CounterpartyId:  pendingTransfer.UserId,
 			CounterpartyUid: pendingTransfer.Uid,
 			TransactionId:   pendingTransfer.TransactionId,
