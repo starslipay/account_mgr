@@ -135,6 +135,36 @@ message C2CAsyncAccountReq {
 message C2CAsyncAccountRsp {
 }
 
+// 转账Req
+message C2BReq {
+    string transaction_id = 1;
+    int64 uid = 2;
+    string user_id = 3;
+    int64 merchant_uid = 4;
+    string merchant_id = 5;
+    int64 amount = 6;
+    int32 cur_type = 7;
+    string desc = 8;
+}
+
+// 转账Rsp
+message C2BRsp {
+    string transaction_id = 1;
+    int64 uid = 2;
+    string user_id = 3;
+    int64 merchant_uid = 4;
+    string merchant_id = 5;
+    string pay_time = 6;
+    int32 is_repeat = 7;
+}
+
+message C2BAsyncAccountReq {
+    string transaction_id = 1;
+}
+
+message C2BAsyncAccountRsp {
+}
+
 service AccountMgr {
     rpc CreateAccount(CreateAccountReq) returns (CreateAccountRsp);
     rpc GetUserBalanceInfo(GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp);
@@ -147,6 +177,8 @@ service AccountMgr {
     rpc C2CLocal(C2CReq) returns (C2CRsp);  // 单机事务转账
     rpc C2CFinal(C2CReq) returns (C2CRsp);  // 分布式转账(最终一致性,柔性事务)
     rpc C2CAsyncAccount(C2CAsyncAccountReq) returns (C2CAsyncAccountRsp); // C2C异步入账
+    rpc C2BFinal(C2BReq) returns (C2BRsp);  // 分布式转账(最终一致性,柔性事务)异步入账
+    rpc C2BAsyncAccount(C2BAsyncAccountReq) returns (C2BAsyncAccountRsp);  // C2B异步入账
 }
 
 /*

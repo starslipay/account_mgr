@@ -124,32 +124,32 @@ func (l *C2CLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		}
 
 		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
-			Uid:                in.BuyerUid,
-			UserId:             in.BuyerUserId,
-			CounterpartyUserId: in.SellerUserId,
-			CounterpartyUid:    in.SellerUid,
-			TransactionId:      in.TransactionId,
-			InoutType:          consts.InoutTypeOut,
-			BizType:            consts.BizTypeC2C,
-			Amount:             in.Amount,
-			Balance:            buyerAccount.Balance - in.Amount,
-			Desc:               in.Desc,
+			Uid:             in.BuyerUid,
+			UserId:          in.BuyerUserId,
+			CounterpartyId:  in.SellerUserId,
+			CounterpartyUid: in.SellerUid,
+			TransactionId:   in.TransactionId,
+			InoutType:       consts.InoutTypeOut,
+			BizType:         consts.BizTypeC2C,
+			Amount:          in.Amount,
+			Balance:         buyerAccount.Balance - in.Amount,
+			Desc:            in.Desc,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))
 		}
 
 		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
-			Uid:                in.SellerUid,
-			UserId:             in.SellerUserId,
-			CounterpartyUserId: in.BuyerUserId,
-			CounterpartyUid:    in.BuyerUid,
-			TransactionId:      in.TransactionId,
-			InoutType:          consts.InoutTypeIn,
-			BizType:            consts.BizTypeC2C,
-			Amount:             in.Amount,
-			Balance:            sellerAccount.Balance + in.Amount,
-			Desc:               in.Desc,
+			Uid:             in.SellerUid,
+			UserId:          in.SellerUserId,
+			CounterpartyId:  in.BuyerUserId,
+			CounterpartyUid: in.BuyerUid,
+			TransactionId:   in.TransactionId,
+			InoutType:       consts.InoutTypeIn,
+			BizType:         consts.BizTypeC2C,
+			Amount:          in.Amount,
+			Balance:         sellerAccount.Balance + in.Amount,
+			Desc:            in.Desc,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))

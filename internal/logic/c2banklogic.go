@@ -62,15 +62,15 @@ func (l *C2BankLogic) C2Bank(in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2Ba
 		}
 
 		_, err = tCAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
-			Uid:                in.Uid,
-			UserId:             in.UserId,
-			CounterpartyUserId: strconv.Itoa(int(in.BankType)),
-			CounterpartyUid:    int64(in.BankType),
-			TransactionId:      in.TransactionId,
-			InoutType:          consts.InoutTypeOut,
-			BizType:            consts.BizTypeC2Bank,
-			Amount:             in.Amount,
-			Desc:               in.Desc,
+			Uid:             in.Uid,
+			UserId:          in.UserId,
+			CounterpartyId:  strconv.Itoa(int(in.BankType)),
+			CounterpartyUid: int64(in.BankType),
+			TransactionId:   in.TransactionId,
+			InoutType:       consts.InoutTypeOut,
+			BizType:         consts.BizTypeC2Bank,
+			Amount:          in.Amount,
+			Desc:            in.Desc,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))

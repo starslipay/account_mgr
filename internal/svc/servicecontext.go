@@ -29,7 +29,14 @@ type ServiceContext struct {
 	TC2cPendingTransferModelMaster mysql.TC2cPendingTransferModel
 	TC2cPendingTransferModelSlave  mysql.TC2cPendingTransferModel
 
+	TC2bBillModelMaster mysql.TC2bBillModel
+	TC2bBillModelSlave  mysql.TC2bBillModel
+
+	TC2bPendingTransferModelMaster mysql.TC2bPendingTransferModel
+	TC2bPendingTransferModelSlave  mysql.TC2bPendingTransferModel
+
 	C2CAsyncTransferProducer *kq.Pusher
+	C2BAsyncTransferProducer *kq.Pusher
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -52,6 +59,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		TC2cBillModelSlave:             mysql.NewTC2cBillModel(SqlSlaveConn),
 		TC2cPendingTransferModelMaster: mysql.NewTC2cPendingTransferModel(SqlMasterConn),
 		TC2cPendingTransferModelSlave:  mysql.NewTC2cPendingTransferModel(SqlSlaveConn),
+		TC2bBillModelMaster:            mysql.NewTC2bBillModel(SqlMasterConn),
+		TC2bBillModelSlave:             mysql.NewTC2bBillModel(SqlSlaveConn),
+		TC2bPendingTransferModelMaster: mysql.NewTC2bPendingTransferModel(SqlMasterConn),
+		TC2bPendingTransferModelSlave:  mysql.NewTC2bPendingTransferModel(SqlSlaveConn),
 		C2CAsyncTransferProducer:       kq.NewPusher(c.KafkaProducerConf, c.TopicC2cAsyncTransfer),
+		C2BAsyncTransferProducer:       kq.NewPusher(c.KafkaProducerConf, c.TopicC2bAsyncTransfer),
 	}
 }

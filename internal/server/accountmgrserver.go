@@ -67,3 +67,13 @@ func (s *AccountMgrServer) C2CAsyncAccount(ctx context.Context, in *account_mgr_
 	l := logic.NewC2CAsyncAccountLogic(ctx, s.svcCtx)
 	return l.C2CAsyncAccount(in)
 }
+
+func (s *AccountMgrServer) C2BFinal(ctx context.Context, in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2BRsp, error) {
+	l := logic.NewC2BFinalLogic(ctx, s.svcCtx)
+	return l.C2BFinal(in)
+}
+
+func (s *AccountMgrServer) C2BAsyncAccount(ctx context.Context, in *account_mgr_pb.C2BAsyncAccountReq) (*account_mgr_pb.C2BAsyncAccountRsp, error) {
+	l := logic.NewC2BAsyncAccountLogic(ctx, s.svcCtx)
+	return l.C2BAsyncAccount(in)
+}

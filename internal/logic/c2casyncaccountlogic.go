@@ -72,16 +72,16 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccoun
 
 		// 记录卖家入账流水
 		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
-			Uid:                pendingTransfer.SellerUid,
-			UserId:             pendingTransfer.SellerUserId,
-			CounterpartyUserId: pendingTransfer.BuyerUserId,
-			CounterpartyUid:    pendingTransfer.BuyerUid,
-			TransactionId:      pendingTransfer.TransactionId,
-			InoutType:          consts.InoutTypeIn,
-			BizType:            consts.BizTypeC2C,
-			Balance:            sellerAccount.Balance + pendingTransfer.Amount,
-			Amount:             pendingTransfer.Amount,
-			Desc:               pendingTransfer.Desc,
+			Uid:             pendingTransfer.SellerUid,
+			UserId:          pendingTransfer.SellerUserId,
+			CounterpartyId:  pendingTransfer.BuyerUserId,
+			CounterpartyUid: pendingTransfer.BuyerUid,
+			TransactionId:   pendingTransfer.TransactionId,
+			InoutType:       consts.InoutTypeIn,
+			BizType:         consts.BizTypeC2C,
+			Balance:         sellerAccount.Balance + pendingTransfer.Amount,
+			Amount:          pendingTransfer.Amount,
+			Desc:            pendingTransfer.Desc,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))

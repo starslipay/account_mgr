@@ -28,6 +28,8 @@ const (
 	AccountMgr_C2CLocal_FullMethodName           = "/account_mgr.AccountMgr/C2CLocal"
 	AccountMgr_C2CFinal_FullMethodName           = "/account_mgr.AccountMgr/C2CFinal"
 	AccountMgr_C2CAsyncAccount_FullMethodName    = "/account_mgr.AccountMgr/C2CAsyncAccount"
+	AccountMgr_C2BFinal_FullMethodName           = "/account_mgr.AccountMgr/C2BFinal"
+	AccountMgr_C2BAsyncAccount_FullMethodName    = "/account_mgr.AccountMgr/C2BAsyncAccount"
 )
 
 // AccountMgrClient is the client API for AccountMgr service.
@@ -43,6 +45,8 @@ type AccountMgrClient interface {
 	C2CLocal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 	C2CFinal(ctx context.Context, in *C2CReq, opts ...grpc.CallOption) (*C2CRsp, error)
 	C2CAsyncAccount(ctx context.Context, in *C2CAsyncAccountReq, opts ...grpc.CallOption) (*C2CAsyncAccountRsp, error)
+	C2BFinal(ctx context.Context, in *C2BReq, opts ...grpc.CallOption) (*C2BRsp, error)
+	C2BAsyncAccount(ctx context.Context, in *C2BAsyncAccountReq, opts ...grpc.CallOption) (*C2BAsyncAccountRsp, error)
 }
 
 type accountMgrClient struct {
@@ -143,6 +147,26 @@ func (c *accountMgrClient) C2CAsyncAccount(ctx context.Context, in *C2CAsyncAcco
 	return out, nil
 }
 
+func (c *accountMgrClient) C2BFinal(ctx context.Context, in *C2BReq, opts ...grpc.CallOption) (*C2BRsp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(C2BRsp)
+	err := c.cc.Invoke(ctx, AccountMgr_C2BFinal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountMgrClient) C2BAsyncAccount(ctx context.Context, in *C2BAsyncAccountReq, opts ...grpc.CallOption) (*C2BAsyncAccountRsp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(C2BAsyncAccountRsp)
+	err := c.cc.Invoke(ctx, AccountMgr_C2BAsyncAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountMgrServer is the server API for AccountMgr service.
 // All implementations must embed UnimplementedAccountMgrServer
 // for forward compatibility.
@@ -156,6 +180,8 @@ type AccountMgrServer interface {
 	C2CLocal(context.Context, *C2CReq) (*C2CRsp, error)
 	C2CFinal(context.Context, *C2CReq) (*C2CRsp, error)
 	C2CAsyncAccount(context.Context, *C2CAsyncAccountReq) (*C2CAsyncAccountRsp, error)
+	C2BFinal(context.Context, *C2BReq) (*C2BRsp, error)
+	C2BAsyncAccount(context.Context, *C2BAsyncAccountReq) (*C2BAsyncAccountRsp, error)
 	mustEmbedUnimplementedAccountMgrServer()
 }
 
@@ -192,6 +218,12 @@ func (UnimplementedAccountMgrServer) C2CFinal(context.Context, *C2CReq) (*C2CRsp
 }
 func (UnimplementedAccountMgrServer) C2CAsyncAccount(context.Context, *C2CAsyncAccountReq) (*C2CAsyncAccountRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method C2CAsyncAccount not implemented")
+}
+func (UnimplementedAccountMgrServer) C2BFinal(context.Context, *C2BReq) (*C2BRsp, error) {
+	return nil, status.Error(codes.Unimplemented, "method C2BFinal not implemented")
+}
+func (UnimplementedAccountMgrServer) C2BAsyncAccount(context.Context, *C2BAsyncAccountReq) (*C2BAsyncAccountRsp, error) {
+	return nil, status.Error(codes.Unimplemented, "method C2BAsyncAccount not implemented")
 }
 func (UnimplementedAccountMgrServer) mustEmbedUnimplementedAccountMgrServer() {}
 func (UnimplementedAccountMgrServer) testEmbeddedByValue()                    {}
@@ -376,6 +408,42 @@ func _AccountMgr_C2CAsyncAccount_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountMgr_C2BFinal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(C2BReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountMgrServer).C2BFinal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountMgr_C2BFinal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountMgrServer).C2BFinal(ctx, req.(*C2BReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountMgr_C2BAsyncAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(C2BAsyncAccountReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountMgrServer).C2BAsyncAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountMgr_C2BAsyncAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountMgrServer).C2BAsyncAccount(ctx, req.(*C2BAsyncAccountReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountMgr_ServiceDesc is the grpc.ServiceDesc for AccountMgr service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -418,6 +486,14 @@ var AccountMgr_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "C2CAsyncAccount",
 			Handler:    _AccountMgr_C2CAsyncAccount_Handler,
+		},
+		{
+			MethodName: "C2BFinal",
+			Handler:    _AccountMgr_C2BFinal_Handler,
+		},
+		{
+			MethodName: "C2BAsyncAccount",
+			Handler:    _AccountMgr_C2BAsyncAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

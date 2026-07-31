@@ -27,8 +27,8 @@ CREATE TABLE `t_c_account_log` (
   `id` BIGINT AUTO_INCREMENT COMMENT '主键',
   `uid` BIGINT NOT NULL COMMENT '用户UID',
   `user_id` VARCHAR(64) NOT NULL COMMENT '用户ID',
-  `counterparty_user_id` VARCHAR(64) NOT NULL COMMENT '对方用户ID',
-  `counterparty_uid` BIGINT NOT NULL COMMENT '对方用户UID',
+  `counterparty_id` VARCHAR(64) NOT NULL COMMENT '对方ID',
+  `counterparty_uid` BIGINT NOT NULL COMMENT '对方UID',
   `transaction_id` VARCHAR(64) NOT NULL COMMENT '交易ID',
   `inout_type` TINYINT NOT NULL COMMENT '出入金类型',
   `biz_type` INTEGER NOT NULL COMMENT '业务类型',
@@ -46,13 +46,40 @@ CREATE TABLE `t_c_account_log` (
 
 DROP TABLE IF EXISTS `t_b_account`;
 CREATE TABLE `t_b_account` (
-  `sp_id` BIGINT NOT NULL COMMENT '商户号',
-  `sp_name` VARCHAR(64) NOT NULL COMMENT '商户名称',
+  `merchant_uid` BIGINT NOT NULL COMMENT '商户UID',
+  `merchant_id` VARCHAR(64) NOT NULL COMMENT '商户ID',
   `balance` BIGINT NOT NULL COMMENT '余额',
   `cur_type` INTEGER NOT NULL COMMENT '货币类型',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`sp_id`),
+  PRIMARY KEY (`merchant_uid`),
+  INDEX `idx_create_time` (`create_time`),
+  INDEX `idx_update_time` (`update_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `t_b_account` (`merchant_uid`, `merchant_id`, `balance`, `cur_type`, `create_time`, `update_time`)
+VALUES (2000000000, '2000000000', 0, 1, NOW(), NOW());
+
+
+DROP TABLE IF EXISTS `t_b_account_log`;
+-- 商户账户流水日志表
+CREATE TABLE `t_b_account_log` (
+  `id` BIGINT AUTO_INCREMENT COMMENT '主键',
+  `merchant_uid` BIGINT NOT NULL COMMENT '商户UID',
+  `merchant_id` VARCHAR(64) NOT NULL COMMENT '商户ID',
+  `counterparty_id` VARCHAR(64) NOT NULL COMMENT '对方ID',
+  `counterparty_uid` BIGINT NOT NULL COMMENT '对方UID',
+  `transaction_id` VARCHAR(64) NOT NULL COMMENT '交易ID',
+  `inout_type` TINYINT NOT NULL COMMENT '出入金类型',
+  `biz_type` INTEGER NOT NULL COMMENT '业务类型',
+  `balance` BIGINT NOT NULL COMMENT '余额',
+  `amount` BIGINT NOT NULL COMMENT '金额',
+  `desc` VARCHAR(256) NOT NULL COMMENT '描述',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_merchant_uid_inout_type_transaction_id_biz_type` (`merchant_uid`,`inout_type`,`transaction_id`),
+  INDEX `idx_transaction_id` (`transaction_id`),
   INDEX `idx_create_time` (`create_time`),
   INDEX `idx_update_time` (`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

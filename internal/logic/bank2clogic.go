@@ -53,15 +53,15 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 		}
 
 		_, err = tCAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
-			Uid:                in.Uid,
-			UserId:             in.UserId,
-			CounterpartyUserId: strconv.Itoa(int(in.BankType)),
-			CounterpartyUid:    int64(in.BankType),
-			TransactionId:      in.TransactionId,
-			InoutType:          consts.InoutTypeIn,
-			BizType:            consts.BizTypeBank2C,
-			Amount:             in.Amount,
-			Desc:               in.Desc,
+			Uid:             in.Uid,
+			UserId:          in.UserId,
+			CounterpartyId:  strconv.Itoa(int(in.BankType)),
+			CounterpartyUid: int64(in.BankType),
+			TransactionId:   in.TransactionId,
+			InoutType:       consts.InoutTypeIn,
+			BizType:         consts.BizTypeBank2C,
+			Amount:          in.Amount,
+			Desc:            in.Desc,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))

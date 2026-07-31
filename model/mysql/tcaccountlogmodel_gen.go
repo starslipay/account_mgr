@@ -38,19 +38,19 @@ type (
 	}
 
 	TCAccountLog struct {
-		Id                 int64     `db:"id"`                   // 主键
-		Uid                int64     `db:"uid"`                  // 用户UID
-		UserId             string    `db:"user_id"`              // 用户ID
-		CounterpartyUserId string    `db:"counterparty_user_id"` // 对方用户ID
-		CounterpartyUid    int64     `db:"counterparty_uid"`     // 对方用户UID
-		TransactionId      string    `db:"transaction_id"`       // 交易ID
-		InoutType          int64     `db:"inout_type"`           // 出入金类型
-		BizType            int64     `db:"biz_type"`             // 业务类型
-		Balance            int64     `db:"balance"`              // 余额
-		Amount             int64     `db:"amount"`               // 金额
-		Desc               string    `db:"desc"`                 // 描述
-		CreateTime         time.Time `db:"create_time"`
-		UpdateTime         time.Time `db:"update_time"`
+		Id              int64     `db:"id"`               // 主键
+		Uid             int64     `db:"uid"`              // 用户UID
+		UserId          string    `db:"user_id"`          // 用户ID
+		CounterpartyId  string    `db:"counterparty_id"`  // 对方ID
+		CounterpartyUid int64     `db:"counterparty_uid"` // 对方UID
+		TransactionId   string    `db:"transaction_id"`   // 交易ID
+		InoutType       int64     `db:"inout_type"`       // 出入金类型
+		BizType         int64     `db:"biz_type"`         // 业务类型
+		Balance         int64     `db:"balance"`          // 余额
+		Amount          int64     `db:"amount"`           // 金额
+		Desc            string    `db:"desc"`             // 描述
+		CreateTime      time.Time `db:"create_time"`
+		UpdateTime      time.Time `db:"update_time"`
 	}
 )
 
@@ -97,13 +97,13 @@ func (m *defaultTCAccountLogModel) FindOneByUidInoutTypeTransactionId(ctx contex
 
 func (m *defaultTCAccountLogModel) Insert(ctx context.Context, data *TCAccountLog) (sql.Result, error) {
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tCAccountLogRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.CounterpartyUserId, data.CounterpartyUid, data.TransactionId, data.InoutType, data.BizType, data.Balance, data.Amount, data.Desc)
+	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.CounterpartyId, data.CounterpartyUid, data.TransactionId, data.InoutType, data.BizType, data.Balance, data.Amount, data.Desc)
 	return ret, err
 }
 
 func (m *defaultTCAccountLogModel) Update(ctx context.Context, newData *TCAccountLog) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, tCAccountLogRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, newData.Uid, newData.UserId, newData.CounterpartyUserId, newData.CounterpartyUid, newData.TransactionId, newData.InoutType, newData.BizType, newData.Balance, newData.Amount, newData.Desc, newData.Id)
+	_, err := m.conn.ExecCtx(ctx, query, newData.Uid, newData.UserId, newData.CounterpartyId, newData.CounterpartyUid, newData.TransactionId, newData.InoutType, newData.BizType, newData.Balance, newData.Amount, newData.Desc, newData.Id)
 	return err
 }
 

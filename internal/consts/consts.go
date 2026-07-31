@@ -6,8 +6,10 @@ const InoutTypeOut = 2
 const BizTypeBank2C = 1
 const BizTypeC2C = 2
 const BizTypeC2Bank = 3
+const BizTypeC2B = 4
 
 const C2CBillStateOK = 1
+const C2BBillStateOK = 1
 const SaveBillStateOK = 1
 
 const MsgTypeC2CTransfer = 1
@@ -21,4 +23,9 @@ const (
 const (
 	PendingC2cTransferInit = 1 // 待入账
 	PendingC2cTransferDone = 2 // 已入账
+)
+
+const (
+	PendingC2bTransferInit = 1 // 待入账
+	PendingC2bTransferDone = 2 // 已入账
 )

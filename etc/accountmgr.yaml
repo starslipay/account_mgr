@@ -21,3 +21,4 @@ SlaveDBConfig:
 KafkaProducerConf:
   - kafka:29092
 TopicC2cAsyncTransfer: topic_c2c_async_transfer
+TopicC2bAsyncTransfer: topic_c2b_async_transfer

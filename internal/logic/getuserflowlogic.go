@@ -54,7 +54,7 @@ func (l *GetUserFlowLogic) GetUserFlow(in *account_mgr_pb.GetUserFlowReq) (*acco
 		userFlowList = append(userFlowList, &account_mgr_pb.UserFlow{
 			TransactionId:      flow.TransactionId,
 			UserId:             flow.UserId,
-			CounterpartyUserId: flow.CounterpartyUserId,
+			CounterpartyUserId: flow.CounterpartyId,
 			InoutType:          int32(flow.InoutType),
 			BizType:            int32(flow.BizType),
 			Amount:             flow.Amount,

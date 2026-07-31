@@ -12,4 +12,5 @@ type Config struct {
 	}
 	KafkaProducerConf     []string
 	TopicC2cAsyncTransfer string
+	TopicC2bAsyncTransfer string
 }

@@ -20,15 +20,15 @@ var (
 	tBAccountFieldNames          = builder.RawFieldNames(&TBAccount{})
 	tBAccountRows                = strings.Join(tBAccountFieldNames, ",")
 	tBAccountRowsExpectAutoSet   = strings.Join(stringx.Remove(tBAccountFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
-	tBAccountRowsWithPlaceHolder = strings.Join(stringx.Remove(tBAccountFieldNames, "`uid`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
+	tBAccountRowsWithPlaceHolder = strings.Join(stringx.Remove(tBAccountFieldNames, "`merchant_uid`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 )
 
 type (
 	tBAccountModel interface {
 		Insert(ctx context.Context, data *TBAccount) (sql.Result, error)
-		FindOne(ctx context.Context, uid int64) (*TBAccount, error)
+		FindOne(ctx context.Context, merchantUid int64) (*TBAccount, error)
 		Update(ctx context.Context, data *TBAccount) error
-		Delete(ctx context.Context, uid int64) error
+		Delete(ctx context.Context, merchantUid int64) error
 	}
 
 	defaultTBAccountModel struct {
@@ -37,12 +37,12 @@ type (
 	}
 
 	TBAccount struct {
-		Uid        int64     `db:"uid"`      // 主键
-		UserId     string    `db:"user_id"`  // 用户ID
-		Balance    int64     `db:"balance"`  // 余额
-		CurType    int64     `db:"cur_type"` // 货币类型
-		CreateTime time.Time `db:"create_time"`
-		UpdateTime time.Time `db:"update_time"`
+		MerchantUid int64     `db:"merchant_uid"` // 商户UID
+		MerchantId  string    `db:"merchant_id"`  // 商户ID
+		Balance     int64     `db:"balance"`      // 余额
+		CurType     int64     `db:"cur_type"`     // 货币类型
+		CreateTime  time.Time `db:"create_time"`
+		UpdateTime  time.Time `db:"update_time"`
 	}
 )
 
@@ -53,16 +53,16 @@ func newTBAccountModel(conn sqlx.SqlConn) *defaultTBAccountModel {
 	}
 }
 
-func (m *defaultTBAccountModel) Delete(ctx context.Context, uid int64) error {
-	query := fmt.Sprintf("delete from %s where `uid` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, uid)
+func (m *defaultTBAccountModel) Delete(ctx context.Context, merchantUid int64) error {
+	query := fmt.Sprintf("delete from %s where `merchant_uid` = ?", m.table)
+	_, err := m.conn.ExecCtx(ctx, query, merchantUid)
 	return err
 }
 
-func (m *defaultTBAccountModel) FindOne(ctx context.Context, uid int64) (*TBAccount, error) {
-	query := fmt.Sprintf("select %s from %s where `uid` = ? limit 1", tBAccountRows, m.table)
+func (m *defaultTBAccountModel) FindOne(ctx context.Context, merchantUid int64) (*TBAccount, error) {
+	query := fmt.Sprintf("select %s from %s where `merchant_uid` = ? limit 1", tBAccountRows, m.table)
 	var resp TBAccount
-	err := m.conn.QueryRowCtx(ctx, &resp, query, uid)
+	err := m.conn.QueryRowCtx(ctx, &resp, query, merchantUid)
 	switch err {
 	case nil:
 		return &resp, nil
@@ -75,13 +75,13 @@ func (m *defaultTBAccountModel) FindOne(ctx context.Context, uid int64) (*TBAcco
 
 func (m *defaultTBAccountModel) Insert(ctx context.Context, data *TBAccount) (sql.Result, error) {
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, tBAccountRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.Balance, data.CurType)
+	ret, err := m.conn.ExecCtx(ctx, query, data.MerchantUid, data.MerchantId, data.Balance, data.CurType)
 	return ret, err
 }
 
 func (m *defaultTBAccountModel) Update(ctx context.Context, data *TBAccount) error {
-	query := fmt.Sprintf("update %s set %s where `uid` = ?", m.table, tBAccountRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.UserId, data.Balance, data.CurType, data.Uid)
+	query := fmt.Sprintf("update %s set %s where `merchant_uid` = ?", m.table, tBAccountRowsWithPlaceHolder)
+	_, err := m.conn.ExecCtx(ctx, query, data.MerchantId, data.Balance, data.CurType, data.MerchantUid)
 	return err
 }
 
