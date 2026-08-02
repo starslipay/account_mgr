@@ -183,6 +183,7 @@ message QueryC2BBillRsp {
     int64 amount = 7;
     int32 state = 8;
     string pay_time = 9;
+    string deduct_token = 10;
 }
 
 message CloseC2BBillReq {
