@@ -59,8 +59,11 @@ func newTC2cPendingTransferModel(conn sqlx.SqlConn) *defaultTC2cPendingTransferM
 
 func (m *defaultTC2cPendingTransferModel) Delete(ctx context.Context, transactionId string) error {
 	query := fmt.Sprintf("delete from %s where `transaction_id` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, transactionId)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, transactionId)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTC2cPendingTransferModel) FindOne(ctx context.Context, transactionId string) (*TC2cPendingTransfer, error) {
@@ -80,13 +83,22 @@ func (m *defaultTC2cPendingTransferModel) FindOne(ctx context.Context, transacti
 func (m *defaultTC2cPendingTransferModel) Insert(ctx context.Context, data *TC2cPendingTransfer) (sql.Result, error) {
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, tC2cPendingTransferRowsExpectAutoSet)
 	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.Desc)
-	return ret, err
+	if err != nil {
+		return ret, err
+	}
+	if err = checkOneRowAffected(ret); err != nil {
+		return ret, err
+	}
+	return ret, nil
 }
 
 func (m *defaultTC2cPendingTransferModel) Update(ctx context.Context, data *TC2cPendingTransfer) error {
 	query := fmt.Sprintf("update %s set %s where `transaction_id` = ?", m.table, tC2cPendingTransferRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.Desc, data.TransactionId)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.Desc, data.TransactionId)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTC2cPendingTransferModel) tableName() string {

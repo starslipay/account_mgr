@@ -38,14 +38,20 @@ func (m *customTCAccountModel) withSession(session sqlx.Session) TCAccountModel 
 
 func (m *customTCAccountModel) AddBalance(ctx context.Context, uid int64, amount int64) error {
 	query := fmt.Sprintf("update %s set `balance` = `balance` + ? where `uid` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, amount, uid)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, amount, uid)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *customTCAccountModel) SubBalance(ctx context.Context, uid int64, amount int64) error {
 	query := fmt.Sprintf("update %s set `balance` = `balance` - ? where `uid` = ? and `balance` >= ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, amount, uid, amount)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, amount, uid, amount)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *customTCAccountModel) FindOneForUpdate(ctx context.Context, uid int64) (*TCAccount, error) {

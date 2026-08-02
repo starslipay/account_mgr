@@ -55,8 +55,11 @@ func newTCAccountModel(conn sqlx.SqlConn) *defaultTCAccountModel {
 
 func (m *defaultTCAccountModel) Delete(ctx context.Context, uid int64) error {
 	query := fmt.Sprintf("delete from %s where `uid` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, uid)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, uid)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTCAccountModel) FindOne(ctx context.Context, uid int64) (*TCAccount, error) {
@@ -76,13 +79,22 @@ func (m *defaultTCAccountModel) FindOne(ctx context.Context, uid int64) (*TCAcco
 func (m *defaultTCAccountModel) Insert(ctx context.Context, data *TCAccount) (sql.Result, error) {
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, tCAccountRowsExpectAutoSet)
 	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.Balance, data.CurType)
-	return ret, err
+	if err != nil {
+		return ret, err
+	}
+	if err = checkOneRowAffected(ret); err != nil {
+		return ret, err
+	}
+	return ret, nil
 }
 
 func (m *defaultTCAccountModel) Update(ctx context.Context, data *TCAccount) error {
 	query := fmt.Sprintf("update %s set %s where `uid` = ?", m.table, tCAccountRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.UserId, data.Balance, data.CurType, data.Uid)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, data.UserId, data.Balance, data.CurType, data.Uid)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTCAccountModel) tableName() string {

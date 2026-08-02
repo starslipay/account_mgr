@@ -58,8 +58,11 @@ func newTC2cOrderModel(conn sqlx.SqlConn) *defaultTC2cOrderModel {
 
 func (m *defaultTC2cOrderModel) Delete(ctx context.Context, transactionId string) error {
 	query := fmt.Sprintf("delete from %s where `transaction_id` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, transactionId)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, transactionId)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTC2cOrderModel) FindOne(ctx context.Context, transactionId string) (*TC2cOrder, error) {
@@ -79,13 +82,22 @@ func (m *defaultTC2cOrderModel) FindOne(ctx context.Context, transactionId strin
 func (m *defaultTC2cOrderModel) Insert(ctx context.Context, data *TC2cOrder) (sql.Result, error) {
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, tC2cOrderRowsExpectAutoSet)
 	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.BizType)
-	return ret, err
+	if err != nil {
+		return ret, err
+	}
+	if err = checkOneRowAffected(ret); err != nil {
+		return ret, err
+	}
+	return ret, nil
 }
 
 func (m *defaultTC2cOrderModel) Update(ctx context.Context, data *TC2cOrder) error {
 	query := fmt.Sprintf("update %s set %s where `transaction_id` = ?", m.table, tC2cOrderRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.BizType, data.TransactionId)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.BizType, data.TransactionId)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTC2cOrderModel) tableName() string {

@@ -58,8 +58,11 @@ func newTSaveBillModel(conn sqlx.SqlConn) *defaultTSaveBillModel {
 
 func (m *defaultTSaveBillModel) Delete(ctx context.Context, transactionId string) error {
 	query := fmt.Sprintf("delete from %s where `transaction_id` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, transactionId)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, transactionId)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTSaveBillModel) FindOne(ctx context.Context, transactionId string) (*TSaveBill, error) {
@@ -79,13 +82,22 @@ func (m *defaultTSaveBillModel) FindOne(ctx context.Context, transactionId strin
 func (m *defaultTSaveBillModel) Insert(ctx context.Context, data *TSaveBill) (sql.Result, error) {
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, tSaveBillRowsExpectAutoSet)
 	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.Uid, data.UserId, data.BankType, data.Amount, data.State, data.Desc)
-	return ret, err
+	if err != nil {
+		return ret, err
+	}
+	if err = checkOneRowAffected(ret); err != nil {
+		return ret, err
+	}
+	return ret, nil
 }
 
 func (m *defaultTSaveBillModel) Update(ctx context.Context, data *TSaveBill) error {
 	query := fmt.Sprintf("update %s set %s where `transaction_id` = ?", m.table, tSaveBillRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.BankType, data.Amount, data.State, data.Desc, data.TransactionId)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.BankType, data.Amount, data.State, data.Desc, data.TransactionId)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTSaveBillModel) tableName() string {

@@ -63,8 +63,11 @@ func newTCAccountLogModel(conn sqlx.SqlConn) *defaultTCAccountLogModel {
 
 func (m *defaultTCAccountLogModel) Delete(ctx context.Context, id int64) error {
 	query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, id)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, id)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTCAccountLogModel) FindOne(ctx context.Context, id int64) (*TCAccountLog, error) {
@@ -98,13 +101,22 @@ func (m *defaultTCAccountLogModel) FindOneByUidInoutTypeTransactionId(ctx contex
 func (m *defaultTCAccountLogModel) Insert(ctx context.Context, data *TCAccountLog) (sql.Result, error) {
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tCAccountLogRowsExpectAutoSet)
 	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.CounterpartyId, data.CounterpartyUid, data.TransactionId, data.InoutType, data.BizType, data.Balance, data.Amount, data.Desc)
-	return ret, err
+	if err != nil {
+		return ret, err
+	}
+	if err = checkOneRowAffected(ret); err != nil {
+		return ret, err
+	}
+	return ret, nil
 }
 
 func (m *defaultTCAccountLogModel) Update(ctx context.Context, newData *TCAccountLog) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, tCAccountLogRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, newData.Uid, newData.UserId, newData.CounterpartyId, newData.CounterpartyUid, newData.TransactionId, newData.InoutType, newData.BizType, newData.Balance, newData.Amount, newData.Desc, newData.Id)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, newData.Uid, newData.UserId, newData.CounterpartyId, newData.CounterpartyUid, newData.TransactionId, newData.InoutType, newData.BizType, newData.Balance, newData.Amount, newData.Desc, newData.Id)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTCAccountLogModel) tableName() string {

@@ -61,8 +61,11 @@ func newTC2cBillModel(conn sqlx.SqlConn) *defaultTC2cBillModel {
 
 func (m *defaultTC2cBillModel) Delete(ctx context.Context, transactionId string) error {
 	query := fmt.Sprintf("delete from %s where `transaction_id` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, transactionId)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, transactionId)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTC2cBillModel) FindOne(ctx context.Context, transactionId string) (*TC2cBill, error) {
@@ -82,13 +85,22 @@ func (m *defaultTC2cBillModel) FindOne(ctx context.Context, transactionId string
 func (m *defaultTC2cBillModel) Insert(ctx context.Context, data *TC2cBill) (sql.Result, error) {
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tC2cBillRowsExpectAutoSet)
 	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.BizType, data.Desc, data.PayTime)
-	return ret, err
+	if err != nil {
+		return ret, err
+	}
+	if err = checkOneRowAffected(ret); err != nil {
+		return ret, err
+	}
+	return ret, nil
 }
 
 func (m *defaultTC2cBillModel) Update(ctx context.Context, data *TC2cBill) error {
 	query := fmt.Sprintf("update %s set %s where `transaction_id` = ?", m.table, tC2cBillRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.BizType, data.Desc, data.PayTime, data.TransactionId)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.BizType, data.Desc, data.PayTime, data.TransactionId)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTC2cBillModel) tableName() string {

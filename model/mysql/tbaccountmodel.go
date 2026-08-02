@@ -37,8 +37,11 @@ func (m *customTBAccountModel) withSession(session sqlx.Session) TBAccountModel 
 
 func (m *customTBAccountModel) AddBalance(ctx context.Context, merchantUid int64, amount int64) error {
 	query := fmt.Sprintf("update %s set `balance` = `balance` + ? where `merchant_uid` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, amount, merchantUid)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, amount, merchantUid)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *customTBAccountModel) FindOneForUpdate(ctx context.Context, merchantUid int64) (*TBAccount, error) {

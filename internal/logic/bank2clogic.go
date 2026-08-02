@@ -31,15 +31,22 @@ func NewBank2CLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Bank2CLogi
 	}
 }
 
-func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank2CRsp, error) {
+func (l *Bank2CLogic) validateParams(in *account_mgr_pb.Bank2CReq) error {
 	if in.Uid <= 0 {
-		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "uid is invalid")
+		return xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "uid is invalid")
 	}
 	if in.Amount <= 0 {
-		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "amount must be positive")
+		return xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "amount must be positive")
 	}
 	if in.TransactionId == "" {
-		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "transaction_id is required")
+		return xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "transaction_id is required")
+	}
+	return nil
+}
+
+func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank2CRsp, error) {
+	if err := l.validateParams(in); err != nil {
+		return nil, err
 	}
 
 	err := l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {

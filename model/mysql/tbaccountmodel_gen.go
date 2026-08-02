@@ -55,8 +55,11 @@ func newTBAccountModel(conn sqlx.SqlConn) *defaultTBAccountModel {
 
 func (m *defaultTBAccountModel) Delete(ctx context.Context, merchantUid int64) error {
 	query := fmt.Sprintf("delete from %s where `merchant_uid` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, merchantUid)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, merchantUid)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTBAccountModel) FindOne(ctx context.Context, merchantUid int64) (*TBAccount, error) {
@@ -76,13 +79,22 @@ func (m *defaultTBAccountModel) FindOne(ctx context.Context, merchantUid int64) 
 func (m *defaultTBAccountModel) Insert(ctx context.Context, data *TBAccount) (sql.Result, error) {
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, tBAccountRowsExpectAutoSet)
 	ret, err := m.conn.ExecCtx(ctx, query, data.MerchantUid, data.MerchantId, data.Balance, data.CurType)
-	return ret, err
+	if err != nil {
+		return ret, err
+	}
+	if err = checkOneRowAffected(ret); err != nil {
+		return ret, err
+	}
+	return ret, nil
 }
 
 func (m *defaultTBAccountModel) Update(ctx context.Context, data *TBAccount) error {
 	query := fmt.Sprintf("update %s set %s where `merchant_uid` = ?", m.table, tBAccountRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.MerchantId, data.Balance, data.CurType, data.MerchantUid)
-	return err
+	ret, err := m.conn.ExecCtx(ctx, query, data.MerchantId, data.Balance, data.CurType, data.MerchantUid)
+	if err != nil {
+		return err
+	}
+	return checkOneRowAffected(ret)
 }
 
 func (m *defaultTBAccountModel) tableName() string {
