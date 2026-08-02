@@ -185,6 +185,14 @@ message QueryC2BBillRsp {
     string pay_time = 9;
 }
 
+message CloseC2BBillReq {
+    string transaction_id = 1;
+}
+
+message CloseC2BBillRsp {
+    string transaction_id = 1;
+}
+
 service AccountMgr {
     rpc CreateAccount(CreateAccountReq) returns (CreateAccountRsp);
     rpc GetUserBalanceInfo(GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp);
@@ -200,6 +208,7 @@ service AccountMgr {
     rpc C2BFinal(C2BReq) returns (C2BRsp);  // 分布式转账(最终一致性,柔性事务)异步入账
     rpc C2BAsyncAccount(C2BAsyncAccountReq) returns (C2BAsyncAccountRsp);  // C2B异步入账
     rpc QueryC2BBill(QueryC2BBillReq) returns (QueryC2BBillRsp);  // 查询C2B单据
+    rpc CloseC2BBill(CloseC2BBillReq) returns (CloseC2BBillRsp);  // 关闭C2B单据
 }
 
 /*

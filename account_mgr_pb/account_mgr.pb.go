@@ -1661,6 +1661,94 @@ func (x *QueryC2BBillRsp) GetPayTime() string {
 	return ""
 }
 
+type CloseC2BBillReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TransactionId string                 `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CloseC2BBillReq) Reset() {
+	*x = CloseC2BBillReq{}
+	mi := &file_account_mgr_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CloseC2BBillReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CloseC2BBillReq) ProtoMessage() {}
+
+func (x *CloseC2BBillReq) ProtoReflect() protoreflect.Message {
+	mi := &file_account_mgr_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CloseC2BBillReq.ProtoReflect.Descriptor instead.
+func (*CloseC2BBillReq) Descriptor() ([]byte, []int) {
+	return file_account_mgr_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *CloseC2BBillReq) GetTransactionId() string {
+	if x != nil {
+		return x.TransactionId
+	}
+	return ""
+}
+
+type CloseC2BBillRsp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TransactionId string                 `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CloseC2BBillRsp) Reset() {
+	*x = CloseC2BBillRsp{}
+	mi := &file_account_mgr_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CloseC2BBillRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CloseC2BBillRsp) ProtoMessage() {}
+
+func (x *CloseC2BBillRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_account_mgr_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CloseC2BBillRsp.ProtoReflect.Descriptor instead.
+func (*CloseC2BBillRsp) Descriptor() ([]byte, []int) {
+	return file_account_mgr_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *CloseC2BBillRsp) GetTransactionId() string {
+	if x != nil {
+		return x.TransactionId
+	}
+	return ""
+}
+
 var File_account_mgr_proto protoreflect.FileDescriptor
 
 const file_account_mgr_proto_rawDesc = "" +
@@ -1799,7 +1887,11 @@ const file_account_mgr_proto_rawDesc = "" +
 	"merchantId\x12\x16\n" +
 	"\x06amount\x18\a \x01(\x03R\x06amount\x12\x14\n" +
 	"\x05state\x18\b \x01(\x05R\x05state\x12\x19\n" +
-	"\bpay_time\x18\t \x01(\tR\apayTime2\xd4\x06\n" +
+	"\bpay_time\x18\t \x01(\tR\apayTime\"8\n" +
+	"\x0fCloseC2BBillReq\x12%\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\"8\n" +
+	"\x0fCloseC2BBillRsp\x12%\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId2\xa0\a\n" +
 	"\n" +
 	"AccountMgr\x12M\n" +
 	"\rCreateAccount\x12\x1d.account_mgr.CreateAccountReq\x1a\x1d.account_mgr.CreateAccountRsp\x12\\\n" +
@@ -1814,7 +1906,8 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\x0fC2CAsyncAccount\x12\x1f.account_mgr.C2CAsyncAccountReq\x1a\x1f.account_mgr.C2CAsyncAccountRsp\x124\n" +
 	"\bC2BFinal\x12\x13.account_mgr.C2BReq\x1a\x13.account_mgr.C2BRsp\x12S\n" +
 	"\x0fC2BAsyncAccount\x12\x1f.account_mgr.C2BAsyncAccountReq\x1a\x1f.account_mgr.C2BAsyncAccountRsp\x12J\n" +
-	"\fQueryC2BBill\x12\x1c.account_mgr.QueryC2BBillReq\x1a\x1c.account_mgr.QueryC2BBillRspB\x12Z\x10./account_mgr_pbb\x06proto3"
+	"\fQueryC2BBill\x12\x1c.account_mgr.QueryC2BBillReq\x1a\x1c.account_mgr.QueryC2BBillRsp\x12J\n" +
+	"\fCloseC2BBill\x12\x1c.account_mgr.CloseC2BBillReq\x1a\x1c.account_mgr.CloseC2BBillRspB\x12Z\x10./account_mgr_pbb\x06proto3"
 
 var (
 	file_account_mgr_proto_rawDescOnce sync.Once
@@ -1828,7 +1921,7 @@ func file_account_mgr_proto_rawDescGZIP() []byte {
 	return file_account_mgr_proto_rawDescData
 }
 
-var file_account_mgr_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_account_mgr_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_account_mgr_proto_goTypes = []any{
 	(*CreateAccountReq)(nil),      // 0: account_mgr.CreateAccountReq
 	(*CreateAccountRsp)(nil),      // 1: account_mgr.CreateAccountRsp
@@ -1853,6 +1946,8 @@ var file_account_mgr_proto_goTypes = []any{
 	(*C2BAsyncAccountRsp)(nil),    // 20: account_mgr.C2BAsyncAccountRsp
 	(*QueryC2BBillReq)(nil),       // 21: account_mgr.QueryC2BBillReq
 	(*QueryC2BBillRsp)(nil),       // 22: account_mgr.QueryC2BBillRsp
+	(*CloseC2BBillReq)(nil),       // 23: account_mgr.CloseC2BBillReq
+	(*CloseC2BBillRsp)(nil),       // 24: account_mgr.CloseC2BBillRsp
 }
 var file_account_mgr_proto_depIdxs = []int32{
 	6,  // 0: account_mgr.GetUserFlowRsp.UserFlowList:type_name -> account_mgr.UserFlow
@@ -1868,20 +1963,22 @@ var file_account_mgr_proto_depIdxs = []int32{
 	17, // 10: account_mgr.AccountMgr.C2BFinal:input_type -> account_mgr.C2BReq
 	19, // 11: account_mgr.AccountMgr.C2BAsyncAccount:input_type -> account_mgr.C2BAsyncAccountReq
 	21, // 12: account_mgr.AccountMgr.QueryC2BBill:input_type -> account_mgr.QueryC2BBillReq
-	1,  // 13: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
-	3,  // 14: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
-	5,  // 15: account_mgr.AccountMgr.GetUserFlow:output_type -> account_mgr.GetUserFlowRsp
-	8,  // 16: account_mgr.AccountMgr.GetC2CBill:output_type -> account_mgr.GetC2CBillRsp
-	10, // 17: account_mgr.AccountMgr.Bank2C:output_type -> account_mgr.Bank2CRsp
-	12, // 18: account_mgr.AccountMgr.C2Bank:output_type -> account_mgr.C2BankRsp
-	14, // 19: account_mgr.AccountMgr.C2CLocal:output_type -> account_mgr.C2CRsp
-	14, // 20: account_mgr.AccountMgr.C2CFinal:output_type -> account_mgr.C2CRsp
-	16, // 21: account_mgr.AccountMgr.C2CAsyncAccount:output_type -> account_mgr.C2CAsyncAccountRsp
-	18, // 22: account_mgr.AccountMgr.C2BFinal:output_type -> account_mgr.C2BRsp
-	20, // 23: account_mgr.AccountMgr.C2BAsyncAccount:output_type -> account_mgr.C2BAsyncAccountRsp
-	22, // 24: account_mgr.AccountMgr.QueryC2BBill:output_type -> account_mgr.QueryC2BBillRsp
-	13, // [13:25] is the sub-list for method output_type
-	1,  // [1:13] is the sub-list for method input_type
+	23, // 13: account_mgr.AccountMgr.CloseC2BBill:input_type -> account_mgr.CloseC2BBillReq
+	1,  // 14: account_mgr.AccountMgr.CreateAccount:output_type -> account_mgr.CreateAccountRsp
+	3,  // 15: account_mgr.AccountMgr.GetUserBalanceInfo:output_type -> account_mgr.GetUserBalanceInfoRsp
+	5,  // 16: account_mgr.AccountMgr.GetUserFlow:output_type -> account_mgr.GetUserFlowRsp
+	8,  // 17: account_mgr.AccountMgr.GetC2CBill:output_type -> account_mgr.GetC2CBillRsp
+	10, // 18: account_mgr.AccountMgr.Bank2C:output_type -> account_mgr.Bank2CRsp
+	12, // 19: account_mgr.AccountMgr.C2Bank:output_type -> account_mgr.C2BankRsp
+	14, // 20: account_mgr.AccountMgr.C2CLocal:output_type -> account_mgr.C2CRsp
+	14, // 21: account_mgr.AccountMgr.C2CFinal:output_type -> account_mgr.C2CRsp
+	16, // 22: account_mgr.AccountMgr.C2CAsyncAccount:output_type -> account_mgr.C2CAsyncAccountRsp
+	18, // 23: account_mgr.AccountMgr.C2BFinal:output_type -> account_mgr.C2BRsp
+	20, // 24: account_mgr.AccountMgr.C2BAsyncAccount:output_type -> account_mgr.C2BAsyncAccountRsp
+	22, // 25: account_mgr.AccountMgr.QueryC2BBill:output_type -> account_mgr.QueryC2BBillRsp
+	24, // 26: account_mgr.AccountMgr.CloseC2BBill:output_type -> account_mgr.CloseC2BBillRsp
+	14, // [14:27] is the sub-list for method output_type
+	1,  // [1:14] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name
 	1,  // [1:1] is the sub-list for extension extendee
 	0,  // [0:1] is the sub-list for field type_name
@@ -1898,7 +1995,7 @@ func file_account_mgr_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_account_mgr_proto_rawDesc), len(file_account_mgr_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   23,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

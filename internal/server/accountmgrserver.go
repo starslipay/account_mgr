@@ -82,3 +82,8 @@ func (s *AccountMgrServer) QueryC2BBill(ctx context.Context, in *account_mgr_pb.
 	l := logic.NewQueryC2BBillLogic(ctx, s.svcCtx)
 	return l.QueryC2BBill(in)
 }
+
+func (s *AccountMgrServer) CloseC2BBill(ctx context.Context, in *account_mgr_pb.CloseC2BBillReq) (*account_mgr_pb.CloseC2BBillRsp, error) {
+	l := logic.NewCloseC2BBillLogic(ctx, s.svcCtx)
+	return l.CloseC2BBill(in)
+}

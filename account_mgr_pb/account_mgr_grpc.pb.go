@@ -31,6 +31,7 @@ const (
 	AccountMgr_C2BFinal_FullMethodName           = "/account_mgr.AccountMgr/C2BFinal"
 	AccountMgr_C2BAsyncAccount_FullMethodName    = "/account_mgr.AccountMgr/C2BAsyncAccount"
 	AccountMgr_QueryC2BBill_FullMethodName       = "/account_mgr.AccountMgr/QueryC2BBill"
+	AccountMgr_CloseC2BBill_FullMethodName       = "/account_mgr.AccountMgr/CloseC2BBill"
 )
 
 // AccountMgrClient is the client API for AccountMgr service.
@@ -49,6 +50,7 @@ type AccountMgrClient interface {
 	C2BFinal(ctx context.Context, in *C2BReq, opts ...grpc.CallOption) (*C2BRsp, error)
 	C2BAsyncAccount(ctx context.Context, in *C2BAsyncAccountReq, opts ...grpc.CallOption) (*C2BAsyncAccountRsp, error)
 	QueryC2BBill(ctx context.Context, in *QueryC2BBillReq, opts ...grpc.CallOption) (*QueryC2BBillRsp, error)
+	CloseC2BBill(ctx context.Context, in *CloseC2BBillReq, opts ...grpc.CallOption) (*CloseC2BBillRsp, error)
 }
 
 type accountMgrClient struct {
@@ -179,6 +181,16 @@ func (c *accountMgrClient) QueryC2BBill(ctx context.Context, in *QueryC2BBillReq
 	return out, nil
 }
 
+func (c *accountMgrClient) CloseC2BBill(ctx context.Context, in *CloseC2BBillReq, opts ...grpc.CallOption) (*CloseC2BBillRsp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CloseC2BBillRsp)
+	err := c.cc.Invoke(ctx, AccountMgr_CloseC2BBill_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountMgrServer is the server API for AccountMgr service.
 // All implementations must embed UnimplementedAccountMgrServer
 // for forward compatibility.
@@ -195,6 +207,7 @@ type AccountMgrServer interface {
 	C2BFinal(context.Context, *C2BReq) (*C2BRsp, error)
 	C2BAsyncAccount(context.Context, *C2BAsyncAccountReq) (*C2BAsyncAccountRsp, error)
 	QueryC2BBill(context.Context, *QueryC2BBillReq) (*QueryC2BBillRsp, error)
+	CloseC2BBill(context.Context, *CloseC2BBillReq) (*CloseC2BBillRsp, error)
 	mustEmbedUnimplementedAccountMgrServer()
 }
 
@@ -240,6 +253,9 @@ func (UnimplementedAccountMgrServer) C2BAsyncAccount(context.Context, *C2BAsyncA
 }
 func (UnimplementedAccountMgrServer) QueryC2BBill(context.Context, *QueryC2BBillReq) (*QueryC2BBillRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method QueryC2BBill not implemented")
+}
+func (UnimplementedAccountMgrServer) CloseC2BBill(context.Context, *CloseC2BBillReq) (*CloseC2BBillRsp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CloseC2BBill not implemented")
 }
 func (UnimplementedAccountMgrServer) mustEmbedUnimplementedAccountMgrServer() {}
 func (UnimplementedAccountMgrServer) testEmbeddedByValue()                    {}
@@ -478,6 +494,24 @@ func _AccountMgr_QueryC2BBill_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountMgr_CloseC2BBill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CloseC2BBillReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountMgrServer).CloseC2BBill(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountMgr_CloseC2BBill_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountMgrServer).CloseC2BBill(ctx, req.(*CloseC2BBillReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountMgr_ServiceDesc is the grpc.ServiceDesc for AccountMgr service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -532,6 +566,10 @@ var AccountMgr_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "QueryC2BBill",
 			Handler:    _AccountMgr_QueryC2BBill_Handler,
+		},
+		{
+			MethodName: "CloseC2BBill",
+			Handler:    _AccountMgr_CloseC2BBill_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

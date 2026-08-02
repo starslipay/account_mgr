@@ -23,4 +23,5 @@ var (
 	ErrCodeC2BBillStateInvalid        = ModuleErrorBase + 1007 // C2B单据状态无效
 	ErrCodeC2BBillStateAlreadyClose   = ModuleErrorBase + 1008 // C2B单据状态已关闭
 	ErrCodeC2BBillNotFound            = ModuleErrorBase + 1009 // C2B单据不存在
+	ErrCodeC2BBillConflict            = ModuleErrorBase + 1010 // C2B单据已存在,插入冲突
 )
