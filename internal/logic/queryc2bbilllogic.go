@@ -5,7 +5,9 @@ import (
 	"fmt"
 
 	"github.com/starslipay/account_mgr/account_mgr_pb"
+	"github.com/starslipay/account_mgr/internal/consts"
 	"github.com/starslipay/account_mgr/internal/svc"
+	"github.com/starslipay/account_mgr/internal/util"
 	"github.com/starslipay/account_mgr/internal/xerr"
 	"github.com/starslipay/paycomm/xerror"
 	"google.golang.org/grpc/codes"
@@ -41,6 +43,10 @@ func (l *QueryC2BBillLogic) QueryC2BBill(in *account_mgr_pb.QueryC2BBillReq) (*a
 		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find bill failed: %v", err))
 	}
 
+	deductToken := ""
+	if bill.State == consts.C2BBillStateSuccess {
+		deductToken = util.GenC2BDeductToken(bill.TransactionId, bill.MerchantUid, bill.Uid, bill.Amount)
+	}
 	return &account_mgr_pb.QueryC2BBillRsp{
 		TransactionId: bill.TransactionId,
 		OutTradeNo:    bill.OutTradeNo,
@@ -51,5 +57,6 @@ func (l *QueryC2BBillLogic) QueryC2BBill(in *account_mgr_pb.QueryC2BBillReq) (*a
 		Amount:        bill.Amount,
 		State:         int32(bill.State),
 		PayTime:       bill.PayTime.Format("2006-01-02 15:04:05"),
+		DeductToken:   deductToken,
 	}, nil
 }

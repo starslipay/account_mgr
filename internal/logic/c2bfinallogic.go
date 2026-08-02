@@ -9,6 +9,7 @@ import (
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/account_mgr/internal/consts"
 	"github.com/starslipay/account_mgr/internal/svc"
+	"github.com/starslipay/account_mgr/internal/util"
 	"github.com/starslipay/account_mgr/internal/xerr"
 	"github.com/starslipay/account_mgr/model/mysql"
 	"github.com/starslipay/paycomm/xerror"
@@ -87,6 +88,7 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 				MerchantId:    bill.MerchantId,
 				PayTime:       bill.PayTime.Format("2006-01-02 15:04:05"),
 				IsRepeat:      1,
+				DeductToken:   util.GenC2BDeductToken(in.TransactionId, in.MerchantUid, in.Uid, in.Amount),
 			}, nil
 		} else if consts.C2BBillStateClose == bill.State {
 			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeC2BBillStateAlreadyClose, "c2b bill already close")
@@ -172,6 +174,7 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 			MerchantId:    in.MerchantId,
 			PayTime:       payTime.Format("2006-01-02 15:04:05"),
 			IsRepeat:      0,
+			DeductToken:   util.GenC2BDeductToken(in.TransactionId, in.MerchantUid, in.Uid, in.Amount),
 		}
 
 		return nil
