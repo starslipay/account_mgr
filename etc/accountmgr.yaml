@@ -22,3 +22,9 @@ KafkaProducerConf:
   - kafka:29092
 TopicC2cAsyncTransfer: topic_c2c_async_transfer
 TopicC2bAsyncTransfer: topic_c2b_async_transfer
+
+# Prometheus 指标采集：go-zero 会另起一个独立 HTTP 端口暴露 /metrics
+Prometheus:
+  Host: 0.0.0.0
+  Port: 9090
+  Path: /metrics
