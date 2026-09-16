@@ -20,9 +20,11 @@ import (
 var configFile = flag.String("f", "etc/accountmgr.yaml", "the config file")
 
 func main() {
+	// 解析命令行参数
 	flag.Parse()
 
 	var c config.Config
+	// 加载配置文件
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
 
