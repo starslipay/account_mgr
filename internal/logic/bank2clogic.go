@@ -54,11 +54,19 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 		tCAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
 		tSaveBillModel := mysql.NewTSaveBillModel(sqlx.NewSqlConnFromSession(session))
 
-		err := tCAccountModel.AddBalance(ctx, in.Uid, in.Amount)
+		// 1. 加锁查询账户
+		account, err := tCAccountModel.FindOneForUpdate(ctx, in.Uid)
+		if err != nil {
+			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find account for update failed: %v", err))
+		}
+
+		// 2. 加余额
+		err = tCAccountModel.AddBalance(ctx, in.Uid, in.Amount)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("add balance failed: %v", err))
 		}
 
+		// 3. 记录流水，balance填写变化后的余额
 		_, err = tCAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
 			Uid:             in.Uid,
 			UserId:          in.UserId,
@@ -67,6 +75,7 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 			TransactionId:   in.TransactionId,
 			InoutType:       consts.InoutTypeIn,
 			BizType:         consts.BizTypeBank2C,
+			Balance:         account.Balance + in.Amount,
 			Amount:          in.Amount,
 			Desc:            in.Desc,
 			Memo:            in.Memo,
