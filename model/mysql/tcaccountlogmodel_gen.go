@@ -100,8 +100,8 @@ func (m *defaultTCAccountLogModel) FindOneByUidInoutTypeTransactionId(ctx contex
 }
 
 func (m *defaultTCAccountLogModel) Insert(ctx context.Context, data *TCAccountLog) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tCAccountLogRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.CounterpartyId, data.CounterpartyUid, data.TransactionId, data.InoutType, data.BizType, data.Balance, data.Amount, data.Desc)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tCAccountLogRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.CounterpartyId, data.CounterpartyUid, data.TransactionId, data.InoutType, data.BizType, data.Balance, data.Amount, data.Desc, data.Memo)
 	if err != nil {
 		return ret, err
 	}
@@ -113,7 +113,7 @@ func (m *defaultTCAccountLogModel) Insert(ctx context.Context, data *TCAccountLo
 
 func (m *defaultTCAccountLogModel) Update(ctx context.Context, newData *TCAccountLog) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, tCAccountLogRowsWithPlaceHolder)
-	ret, err := m.conn.ExecCtx(ctx, query, newData.Uid, newData.UserId, newData.CounterpartyId, newData.CounterpartyUid, newData.TransactionId, newData.InoutType, newData.BizType, newData.Balance, newData.Amount, newData.Desc, newData.Id)
+	ret, err := m.conn.ExecCtx(ctx, query, newData.Uid, newData.UserId, newData.CounterpartyId, newData.CounterpartyUid, newData.TransactionId, newData.InoutType, newData.BizType, newData.Balance, newData.Amount, newData.Desc, newData.Memo, newData.Id)
 	if err != nil {
 		return err
 	}

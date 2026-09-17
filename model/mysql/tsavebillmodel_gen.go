@@ -81,8 +81,8 @@ func (m *defaultTSaveBillModel) FindOne(ctx context.Context, transactionId strin
 }
 
 func (m *defaultTSaveBillModel) Insert(ctx context.Context, data *TSaveBill) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, tSaveBillRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.Uid, data.UserId, data.BankType, data.Amount, data.State, data.Desc)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, tSaveBillRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.Uid, data.UserId, data.BankType, data.Amount, data.State, data.Desc, data.Memo)
 	if err != nil {
 		return ret, err
 	}
@@ -94,7 +94,7 @@ func (m *defaultTSaveBillModel) Insert(ctx context.Context, data *TSaveBill) (sq
 
 func (m *defaultTSaveBillModel) Update(ctx context.Context, data *TSaveBill) error {
 	query := fmt.Sprintf("update %s set %s where `transaction_id` = ?", m.table, tSaveBillRowsWithPlaceHolder)
-	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.BankType, data.Amount, data.State, data.Desc, data.TransactionId)
+	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.BankType, data.Amount, data.State, data.Desc, data.Memo, data.TransactionId)
 	if err != nil {
 		return err
 	}

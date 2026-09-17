@@ -82,8 +82,8 @@ func (m *defaultTC2cPendingTransferModel) FindOne(ctx context.Context, transacti
 }
 
 func (m *defaultTC2cPendingTransferModel) Insert(ctx context.Context, data *TC2cPendingTransfer) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, tC2cPendingTransferRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.Desc)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tC2cPendingTransferRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.Desc, data.Memo)
 	if err != nil {
 		return ret, err
 	}
@@ -95,7 +95,7 @@ func (m *defaultTC2cPendingTransferModel) Insert(ctx context.Context, data *TC2c
 
 func (m *defaultTC2cPendingTransferModel) Update(ctx context.Context, data *TC2cPendingTransfer) error {
 	query := fmt.Sprintf("update %s set %s where `transaction_id` = ?", m.table, tC2cPendingTransferRowsWithPlaceHolder)
-	ret, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.Desc, data.TransactionId)
+	ret, err := m.conn.ExecCtx(ctx, query, data.BuyerUid, data.SellerUid, data.BuyerUserId, data.SellerUserId, data.Amount, data.State, data.Desc, data.Memo, data.TransactionId)
 	if err != nil {
 		return err
 	}

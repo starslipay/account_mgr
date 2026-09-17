@@ -100,8 +100,8 @@ func (m *defaultTBAccountLogModel) FindOneByMerchantUidInoutTypeTransactionId(ct
 }
 
 func (m *defaultTBAccountLogModel) Insert(ctx context.Context, data *TBAccountLog) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tBAccountLogRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.MerchantUid, data.MerchantId, data.CounterpartyId, data.CounterpartyUid, data.TransactionId, data.InoutType, data.BizType, data.Balance, data.Amount, data.Desc)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tBAccountLogRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.MerchantUid, data.MerchantId, data.CounterpartyId, data.CounterpartyUid, data.TransactionId, data.InoutType, data.BizType, data.Balance, data.Amount, data.Desc, data.Memo)
 	if err != nil {
 		return ret, err
 	}
@@ -113,7 +113,7 @@ func (m *defaultTBAccountLogModel) Insert(ctx context.Context, data *TBAccountLo
 
 func (m *defaultTBAccountLogModel) Update(ctx context.Context, newData *TBAccountLog) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, tBAccountLogRowsWithPlaceHolder)
-	ret, err := m.conn.ExecCtx(ctx, query, newData.MerchantUid, newData.MerchantId, newData.CounterpartyId, newData.CounterpartyUid, newData.TransactionId, newData.InoutType, newData.BizType, newData.Balance, newData.Amount, newData.Desc, newData.Id)
+	ret, err := m.conn.ExecCtx(ctx, query, newData.MerchantUid, newData.MerchantId, newData.CounterpartyId, newData.CounterpartyUid, newData.TransactionId, newData.InoutType, newData.BizType, newData.Balance, newData.Amount, newData.Desc, newData.Memo, newData.Id)
 	if err != nil {
 		return err
 	}

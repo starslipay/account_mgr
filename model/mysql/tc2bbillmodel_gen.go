@@ -85,8 +85,8 @@ func (m *defaultTC2bBillModel) FindOne(ctx context.Context, transactionId string
 }
 
 func (m *defaultTC2bBillModel) Insert(ctx context.Context, data *TC2bBill) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tC2bBillRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.OutTradeNo, data.Uid, data.UserId, data.MerchantUid, data.MerchantId, data.Amount, data.State, data.BizType, data.Desc, data.PayTime)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, tC2bBillRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.TransactionId, data.OutTradeNo, data.Uid, data.UserId, data.MerchantUid, data.MerchantId, data.Amount, data.State, data.BizType, data.Desc, data.Memo, data.PayTime)
 	if err != nil {
 		return ret, err
 	}
@@ -98,7 +98,7 @@ func (m *defaultTC2bBillModel) Insert(ctx context.Context, data *TC2bBill) (sql.
 
 func (m *defaultTC2bBillModel) Update(ctx context.Context, data *TC2bBill) error {
 	query := fmt.Sprintf("update %s set %s where `transaction_id` = ?", m.table, tC2bBillRowsWithPlaceHolder)
-	ret, err := m.conn.ExecCtx(ctx, query, data.OutTradeNo, data.Uid, data.UserId, data.MerchantUid, data.MerchantId, data.Amount, data.State, data.BizType, data.Desc, data.PayTime, data.TransactionId)
+	ret, err := m.conn.ExecCtx(ctx, query, data.OutTradeNo, data.Uid, data.UserId, data.MerchantUid, data.MerchantId, data.Amount, data.State, data.BizType, data.Desc, data.Memo, data.PayTime, data.TransactionId)
 	if err != nil {
 		return err
 	}
