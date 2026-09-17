@@ -73,6 +73,7 @@ message GetC2CBillRsp {
     string pay_time = 6;
     int64 amount = 7;
     string desc = 8;
+    string memo = 9;
 }
 
 message Bank2CReq {
@@ -115,6 +116,7 @@ message C2CReq {
     int64 amount = 6;
     int32 cur_type = 7;
     string desc = 8;
+    string memo = 9;
 }
 
 // 转账Rsp

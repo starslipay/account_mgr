@@ -565,6 +565,7 @@ type GetC2CBillRsp struct {
 	PayTime       string                 `protobuf:"bytes,6,opt,name=pay_time,json=payTime,proto3" json:"pay_time,omitempty"`
 	Amount        int64                  `protobuf:"varint,7,opt,name=amount,proto3" json:"amount,omitempty"`
 	Desc          string                 `protobuf:"bytes,8,opt,name=desc,proto3" json:"desc,omitempty"`
+	Memo          string                 `protobuf:"bytes,9,opt,name=memo,proto3" json:"memo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -651,6 +652,13 @@ func (x *GetC2CBillRsp) GetAmount() int64 {
 func (x *GetC2CBillRsp) GetDesc() string {
 	if x != nil {
 		return x.Desc
+	}
+	return ""
+}
+
+func (x *GetC2CBillRsp) GetMemo() string {
+	if x != nil {
+		return x.Memo
 	}
 	return ""
 }
@@ -954,6 +962,7 @@ type C2CReq struct {
 	Amount        int64                  `protobuf:"varint,6,opt,name=amount,proto3" json:"amount,omitempty"`
 	CurType       int32                  `protobuf:"varint,7,opt,name=cur_type,json=curType,proto3" json:"cur_type,omitempty"`
 	Desc          string                 `protobuf:"bytes,8,opt,name=desc,proto3" json:"desc,omitempty"`
+	Memo          string                 `protobuf:"bytes,9,opt,name=memo,proto3" json:"memo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1040,6 +1049,13 @@ func (x *C2CReq) GetCurType() int32 {
 func (x *C2CReq) GetDesc() string {
 	if x != nil {
 		return x.Desc
+	}
+	return ""
+}
+
+func (x *C2CReq) GetMemo() string {
+	if x != nil {
+		return x.Memo
 	}
 	return ""
 }
@@ -1802,7 +1818,7 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\vcreate_time\x18\t \x01(\tR\n" +
 	"createTime\"6\n" +
 	"\rGetC2CBillReq\x12%\n" +
-	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\"\x83\x02\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\"\x97\x02\n" +
 	"\rGetC2CBillRsp\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x1b\n" +
 	"\tbuyer_uid\x18\x02 \x01(\x03R\bbuyerUid\x12\"\n" +
@@ -1812,7 +1828,8 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\x0eseller_user_id\x18\x05 \x01(\tR\fsellerUserId\x12\x19\n" +
 	"\bpay_time\x18\x06 \x01(\tR\apayTime\x12\x16\n" +
 	"\x06amount\x18\a \x01(\x03R\x06amount\x12\x12\n" +
-	"\x04desc\x18\b \x01(\tR\x04desc\"\xc1\x01\n" +
+	"\x04desc\x18\b \x01(\tR\x04desc\x12\x12\n" +
+	"\x04memo\x18\t \x01(\tR\x04memo\"\xc1\x01\n" +
 	"\tBank2CReq\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x10\n" +
@@ -1834,7 +1851,7 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\x04desc\x18\a \x01(\tR\x04desc\"K\n" +
 	"\tC2BankRsp\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\"\xfc\x01\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\"\x90\x02\n" +
 	"\x06C2CReq\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x1b\n" +
 	"\tbuyer_uid\x18\x02 \x01(\x03R\bbuyerUid\x12\"\n" +
@@ -1844,7 +1861,8 @@ const file_account_mgr_proto_rawDesc = "" +
 	"\x0eseller_user_id\x18\x05 \x01(\tR\fsellerUserId\x12\x16\n" +
 	"\x06amount\x18\x06 \x01(\x03R\x06amount\x12\x19\n" +
 	"\bcur_type\x18\a \x01(\x05R\acurType\x12\x12\n" +
-	"\x04desc\x18\b \x01(\tR\x04desc\"\xed\x01\n" +
+	"\x04desc\x18\b \x01(\tR\x04desc\x12\x12\n" +
+	"\x04memo\x18\t \x01(\tR\x04memo\"\xed\x01\n" +
 	"\x06C2CRsp\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12\x1b\n" +
 	"\tbuyer_uid\x18\x02 \x01(\x03R\bbuyerUid\x12\"\n" +

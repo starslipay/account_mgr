@@ -45,5 +45,6 @@ func (l *GetC2CBillLogic) GetC2CBill(in *account_mgr_pb.GetC2CBillReq) (*account
 		PayTime:       bill.PayTime.Format("2006-01-02 15:04:05"),
 		Amount:        bill.Amount,
 		Desc:          bill.Desc,
+		Memo:          bill.Memo,
 	}, nil
 }

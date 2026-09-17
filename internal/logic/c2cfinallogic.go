@@ -121,6 +121,7 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			Amount:          in.Amount,
 			Balance:         buyerAccount.Balance - in.Amount,
 			Desc:            in.Desc,
+			Memo:            in.Memo,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))
