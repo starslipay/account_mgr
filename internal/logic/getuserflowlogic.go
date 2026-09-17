@@ -60,6 +60,7 @@ func (l *GetUserFlowLogic) GetUserFlow(in *account_mgr_pb.GetUserFlowReq) (*acco
 			Amount:             flow.Amount,
 			Balance:            flow.Balance,
 			Desc:               flow.Desc,
+			Memo:               flow.Memo,
 			CreateTime:         flow.CreateTime.Format("2006-01-02 15:04:05"),
 		})
 	}

@@ -82,6 +82,7 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccoun
 			Balance:         sellerAccount.Balance + pendingTransfer.Amount,
 			Amount:          pendingTransfer.Amount,
 			Desc:            pendingTransfer.Desc,
+			Memo:            pendingTransfer.Memo,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))

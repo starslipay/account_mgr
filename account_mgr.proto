@@ -57,7 +57,8 @@ message UserFlow {
     int64 balance = 7;
     int64 amount = 6;
     string desc = 8;
-    string create_time = 9;
+    string memo = 9;
+    string create_time = 10;
 }
 
 message GetC2CBillReq {
@@ -84,6 +85,7 @@ message Bank2CReq {
     int64 amount = 5;
     int32 cur_type = 6;
     string desc = 7;
+    string memo = 8;
 }
 
 message Bank2CRsp {
@@ -99,6 +101,7 @@ message C2BankReq {
     int64 amount = 5;
     int32 cur_type = 6;
     string desc = 7;
+    string memo = 8;
 }
 
 message C2BankRsp {
@@ -148,6 +151,7 @@ message C2BReq {
     int64 amount = 7;
     int32 cur_type = 8;
     string desc = 9;
+    string memo = 10;
 }
 
 // 转账Rsp

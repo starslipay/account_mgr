@@ -137,6 +137,7 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			State:         consts.C2CBillStateOK,
 			BizType:       consts.BizTypeC2C,
 			Desc:          in.Desc,
+			Memo:          in.Memo,
 			PayTime:       payTime,
 		})
 		if err != nil {
@@ -152,6 +153,7 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			Amount:        in.Amount,
 			State:         consts.PendingC2cTransferInit,
 			Desc:          in.Desc,
+			Memo:          in.Memo,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert pending c2c transfer failed: %v", err))

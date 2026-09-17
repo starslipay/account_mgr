@@ -71,6 +71,7 @@ func (l *C2BankLogic) C2Bank(in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2Ba
 			BizType:         consts.BizTypeC2Bank,
 			Amount:          in.Amount,
 			Desc:            in.Desc,
+			Memo:            in.Memo,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))
@@ -84,6 +85,7 @@ func (l *C2BankLogic) C2Bank(in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2Ba
 			Amount:        in.Amount,
 			State:         consts.SaveBillStateOK,
 			Desc:          in.Desc,
+			Memo:          in.Memo,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert save bill failed: %v", err))

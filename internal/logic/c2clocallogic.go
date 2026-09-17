@@ -134,6 +134,7 @@ func (l *C2CLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			Amount:          in.Amount,
 			Balance:         buyerAccount.Balance - in.Amount,
 			Desc:            in.Desc,
+			Memo:            in.Memo,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))
@@ -150,6 +151,7 @@ func (l *C2CLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			Amount:          in.Amount,
 			Balance:         sellerAccount.Balance + in.Amount,
 			Desc:            in.Desc,
+			Memo:            in.Memo,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))
@@ -165,6 +167,7 @@ func (l *C2CLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			State:         consts.C2CBillStateOK,
 			BizType:       consts.BizTypeC2C,
 			Desc:          in.Desc,
+			Memo:          in.Memo,
 			PayTime:       payTime,
 		})
 		if err != nil {

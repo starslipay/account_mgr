@@ -69,6 +69,7 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 			BizType:         consts.BizTypeBank2C,
 			Amount:          in.Amount,
 			Desc:            in.Desc,
+			Memo:            in.Memo,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert account log failed: %v", err))
@@ -82,6 +83,7 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 			Amount:        in.Amount,
 			State:         consts.SaveBillStateOK,
 			Desc:          in.Desc,
+			Memo:          in.Memo,
 		})
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("insert save bill failed: %v", err))
