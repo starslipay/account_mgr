@@ -69,6 +69,7 @@ func (l *C2BankLogic) C2Bank(in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2Ba
 			TransactionId:   in.TransactionId,
 			InoutType:       consts.InoutTypeOut,
 			BizType:         consts.BizTypeC2Bank,
+			Balance:         account.Balance - in.Amount,
 			Amount:          in.Amount,
 			Desc:            in.Desc,
 			Memo:            in.Memo,
