@@ -46,6 +46,7 @@ type (
 		State         int64     `db:"state"`          // 单状态
 		BizType       int64     `db:"biz_type"`       // 业务类型
 		Desc          string    `db:"desc"`           // 转账描述
+		Memo          string    `db:"memo"`           // 备注
 		PayTime       time.Time `db:"pay_time"`       // 支付时间
 		CreateTime    time.Time `db:"create_time"`    // 创建时间
 		UpdateTime    time.Time `db:"update_time"`    // 更新时间

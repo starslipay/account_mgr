@@ -49,8 +49,9 @@ type (
 		Balance         int64     `db:"balance"`          // 余额
 		Amount          int64     `db:"amount"`           // 金额
 		Desc            string    `db:"desc"`             // 描述
-		CreateTime      time.Time `db:"create_time"`
-		UpdateTime      time.Time `db:"update_time"`
+		Memo            string    `db:"memo"`             // 备注
+		CreateTime      time.Time `db:"create_time"`      // 创建时间
+		UpdateTime      time.Time `db:"update_time"`      // 更新时间
 	}
 )
 

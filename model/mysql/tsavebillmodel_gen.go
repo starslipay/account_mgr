@@ -43,7 +43,8 @@ type (
 		BankType      string    `db:"bank_type"`      // 银行类型
 		Amount        int64     `db:"amount"`         // 金额
 		State         int64     `db:"state"`          // 单状态
-		Desc          string    `db:"desc"`           // 充值描述
+		Desc          string    `db:"desc"`           // 描述
+		Memo          string    `db:"memo"`           // 备注
 		CreateTime    time.Time `db:"create_time"`    // 创建时间
 		UpdateTime    time.Time `db:"update_time"`    // 更新时间
 	}
