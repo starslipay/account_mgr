@@ -10,14 +10,14 @@ Etcd:
   Key: accountmgr.rpc
 
 MasterDBConfig:
-  DataSource: root:root123456@tcp(mysql8:3306)/account_db?charset=utf8mb4&parseTime=True&loc=Local&timeout=5s&readTimeout=10s&writeTimeout=10s # docker环境
+  DataSource: root:root123456@tcp(mysql-master:3306)/account_db?charset=utf8mb4&parseTime=True&loc=Local&timeout=5s&readTimeout=10s&writeTimeout=10s # docker环境
   # 连接池配置(不填则用默认值 64/64/60)
   MaxOpenConns: 64        # 最大打开连接数
   MaxIdleConns: 64        # 最大空闲连接数
   ConnMaxLifetimeSec: 60  # 连接最大存活时间(秒)
 
 SlaveDBConfig:
-  DataSource: root:root123456@tcp(mysql8:3306)/account_db?charset=utf8mb4&parseTime=True&loc=Local&timeout=5s&readTimeout=10s&writeTimeout=10s # docker环境
+  DataSource: root:root123456@tcp(mysql-master:3306)/account_db?charset=utf8mb4&parseTime=True&loc=Local&timeout=5s&readTimeout=10s&writeTimeout=10s # docker环境
   # 连接池配置(从库读多,可按需调大)
   MaxOpenConns: 100       # 最大打开连接数
   MaxIdleConns: 50        # 最大空闲连接数
