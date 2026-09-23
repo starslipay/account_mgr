@@ -8,6 +8,10 @@ Etcd:
   Hosts:
     - etcd:2379 # docker环境
   Key: accountmgr.rpc
+Middlewares:
+  Breaker: false  # 关闭服务端熔断
+  Shedding: false # 关闭自适应降载（service overloaded，不是熔断，一并关掉）
+CpuThreshold: 0 # 0 关闭CPU过载降载兜底保护
 
 MasterDBConfig:
   DataSource: root:root123456@tcp(mysql-master:3306)/account_db?charset=utf8mb4&parseTime=True&loc=Local&timeout=5s&readTimeout=10s&writeTimeout=10s # docker环境
