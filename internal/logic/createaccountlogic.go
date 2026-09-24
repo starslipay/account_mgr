@@ -45,6 +45,7 @@ func (l *CreateAccountLogic) CreateAccount(in *account_mgr_pb.CreateAccountReq) 
 	if isAccountExist {
 		// 判断重入前，校验关键字段一致性
 		if account.UserId != in.UserId {
+			logx.Errorf("user id not match, account user id: %d, req user id: %d, uid: %d", account.UserId, in.UserId, account.Uid)
 			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "user id not match")
 		}
 
