@@ -184,7 +184,7 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 	})
 	if err != nil {
 		l.Errorf("C2BFinal transaction failed: %v", err)
-		return nil, err
+		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("transaction failed: %v", err))
 	}
 
 	// 异步发送kafka消息, 忽略失败

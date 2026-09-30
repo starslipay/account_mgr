@@ -45,7 +45,8 @@ func newDBConn(dataSource, name string, maxOpen, maxIdle, lifetimeSec int) sqlx.
 		logx.Must(err)
 	}
 	prometheus.MustRegister(collectors.NewDBStatsCollector(db, name))
-	return sqlx.NewSqlConnFromDB(db, sqlx.WithAcceptable(acceptDuplicateEntry))
+	// 关闭db熔断保护
+	return sqlx.NewSqlConnFromDB(db, sqlx.WithAcceptable(func(err error) bool { return true }))
 }
 
 type ServiceContext struct {
