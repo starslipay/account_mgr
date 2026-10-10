@@ -6,7 +6,9 @@ Middlewares:
   Breaker: false
 Etcd:
   Hosts:
-    - etcd:2379 # docker环境
+    - etcd:2379  # etcd 集群节点1
+    - etcd2:2379 # etcd 集群节点2, 任一节点可用即可
+    - etcd3:2379 # etcd 集群节点3
   Key: accountmgr.rpc
 Middlewares:
   Breaker: false  # 关闭服务端熔断
@@ -27,9 +29,11 @@ SlaveDBConfig:
   MaxIdleConns: 500        # 最大空闲连接数
   ConnMaxLifetimeSec: 60  # 连接最大存活时间(秒)
 
-# Kafka 生产者配置
+# Kafka 生产者配置 (3 节点集群, 客户端自动发现所有 broker)
 KafkaProducerConf:
-  - kafka:29092
+  - kafka1:29092
+  - kafka2:29092
+  - kafka3:29092
 TopicC2cAsyncTransfer: topic_c2c_async_transfer
 TopicC2bAsyncTransfer: topic_c2b_async_transfer
 
