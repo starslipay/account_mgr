@@ -6,6 +6,8 @@ CREATE TABLE `t_c_account` (
   `cur_type` SMALLINT NOT NULL COMMENT '货币类型',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `balance_modify_time_s` BIGINT NOT NULL COMMENT '余额变更时间(秒)',
+  `balance_modify_time_ms` BIGINT NOT NULL COMMENT '余额变更时间的毫秒部分',
   PRIMARY KEY (`uid`),
   INDEX `idx_create_time` (`create_time`),
   INDEX `idx_update_time` (`update_time`)

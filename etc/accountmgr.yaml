@@ -37,6 +37,13 @@ KafkaProducerConf:
 TopicC2cAsyncTransfer: topic_c2c_async_transfer
 TopicC2bAsyncTransfer: topic_c2b_async_transfer
 
+# Redis 缓存配置（余额缓存 balance|{uid}）
+RedisConfig:
+  # Host: redis-master.pay-ns.svc.cluster.local:6379  # k8s
+  Host: redis-master:6379  # 开发环境
+  Type: node  # node-单机, cluster-集群
+  Pass: ""    # 无密码
+
 # Prometheus 指标采集：go-zero 会另起一个独立 HTTP 端口暴露 /metrics
 Prometheus:
   Host: 0.0.0.0

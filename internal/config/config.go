@@ -1,6 +1,9 @@
 package config
 
-import "github.com/zeromicro/go-zero/zrpc"
+import (
+	"github.com/zeromicro/go-zero/core/stores/redis"
+	"github.com/zeromicro/go-zero/zrpc"
+)
 
 type DBConfig struct {
 	DataSource         string // 数据库连接字符串
@@ -16,6 +19,7 @@ type Config struct {
 	KafkaProducerConf     []string
 	TopicC2cAsyncTransfer string
 	TopicC2bAsyncTransfer string
+	RedisConfig           redis.RedisConf
 
 	// AccessLog 请求/响应日志脱敏配置
 	AccessLog AccessLogConf

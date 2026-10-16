@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/account_mgr/internal/consts"
@@ -43,6 +44,10 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccoun
 	}
 
 	// 2. 加锁查询并执行入账逻辑
+	var newSellerBalance int64
+	var sellerUid int64
+	var sellerCurType int64
+	var modifyTime time.Time
 	err = l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
 		tcAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
 		tcAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
@@ -64,11 +69,15 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccoun
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find seller account failed: %v", err))
 		}
 
-		// 卖家账户加钱
-		err = tcAccountModel.AddBalance(ctx, pendingTransfer.SellerUid, pendingTransfer.Amount)
+		// 卖家账户加钱, 余额变更时间入库并作为缓存版本号
+		modifyTime = time.Now()
+		sellerUid = pendingTransfer.SellerUid
+		err = tcAccountModel.AddBalance(ctx, pendingTransfer.SellerUid, pendingTransfer.Amount, modifyTime)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("add balance failed: %v", err))
 		}
+		newSellerBalance = sellerAccount.Balance + pendingTransfer.Amount
+		sellerCurType = sellerAccount.CurType
 
 		// 记录卖家入账流水
 		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
@@ -100,6 +109,11 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccoun
 	if err != nil {
 		l.Errorf("C2CAsyncAccount transaction failed: %v", err)
 		return nil, err
+	}
+
+	// 卖家余额变更后更新 redis 余额缓存(乐观锁 CAS, 尽力而为)
+	if sellerUid > 0 {
+		updateBalanceCache(l.ctx, l.svcCtx, sellerUid, sellerCurType, newSellerBalance, modifyTime)
 	}
 
 	return &account_mgr_pb.C2CAsyncAccountRsp{}, nil

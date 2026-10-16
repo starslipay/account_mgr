@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"math"
+	"time"
 
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/account_mgr/internal/svc"
@@ -60,11 +61,15 @@ func (l *CreateAccountLogic) CreateAccount(in *account_mgr_pb.CreateAccountReq) 
 		}, nil
 	}
 
+	// 开户即初始化余额, 余额变更时间取开户时间(毫秒只存秒内的毫秒部分)
+	now := time.Now()
 	_, err = l.svcCtx.TCAccountModelMaster.Insert(l.ctx, &mysql.TCAccount{
-		Uid:     in.Uid,
-		UserId:  in.UserId,
-		CurType: int64(in.CurType),
-		Balance: 0,
+		Uid:                 in.Uid,
+		UserId:              in.UserId,
+		CurType:             int64(in.CurType),
+		Balance:             0,
+		BalanceModifyTimeS:  now.Unix(),
+		BalanceModifyTimeMs: now.UnixMilli() % 1000,
 	})
 	if err != nil {
 		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, err.Error())

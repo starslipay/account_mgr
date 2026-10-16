@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/account_mgr/internal/consts"
@@ -49,6 +50,9 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 		return nil, err
 	}
 
+	var newBalance int64
+	var curType int64
+	var modifyTime time.Time
 	err := l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
 		tCAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
 		tCAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
@@ -60,11 +64,14 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("find account for update failed: %v", err))
 		}
 
-		// 2. 加余额
-		err = tCAccountModel.AddBalance(ctx, in.Uid, in.Amount)
+		// 2. 加余额, 余额变更时间入库并作为缓存版本号
+		modifyTime = time.Now()
+		err = tCAccountModel.AddBalance(ctx, in.Uid, in.Amount, modifyTime)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("add balance failed: %v", err))
 		}
+		newBalance = account.Balance + in.Amount
+		curType = account.CurType
 
 		// 3. 记录流水，balance填写变化后的余额
 		_, err = tCAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
@@ -105,6 +112,9 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 		l.Errorf("Bank2C transaction failed: %v", err)
 		return nil, err
 	}
+
+	// 余额变更后更新 redis 余额缓存(乐观锁 CAS, 尽力而为)
+	updateBalanceCache(l.ctx, l.svcCtx, in.Uid, curType, newBalance, modifyTime)
 
 	return &account_mgr_pb.Bank2CRsp{
 		TransactionId: in.TransactionId,

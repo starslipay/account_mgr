@@ -12,6 +12,7 @@ import (
 	"github.com/starslipay/account_mgr/model/mysql"
 	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
@@ -85,6 +86,8 @@ type ServiceContext struct {
 
 	C2CAsyncTransferProducer *kq.Pusher
 	C2BAsyncTransferProducer *kq.Pusher
+
+	RedisClient *redis.Redis
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -119,5 +122,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		TC2bPendingTransferModelSlave:  mysql.NewTC2bPendingTransferModel(SqlSlaveConn),
 		C2CAsyncTransferProducer:       kq.NewPusher(c.KafkaProducerConf, c.TopicC2cAsyncTransfer),
 		C2BAsyncTransferProducer:       kq.NewPusher(c.KafkaProducerConf, c.TopicC2bAsyncTransfer),
+		RedisClient:                    redis.MustNewRedis(c.RedisConfig),
 	}
 }

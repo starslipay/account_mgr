@@ -37,12 +37,14 @@ type (
 	}
 
 	TCAccount struct {
-		Uid        int64     `db:"uid"`      // 主键
-		UserId     string    `db:"user_id"`  // 用户ID
-		Balance    int64     `db:"balance"`  // 余额
-		CurType    int64     `db:"cur_type"` // 货币类型
-		CreateTime time.Time `db:"create_time"`
-		UpdateTime time.Time `db:"update_time"`
+		Uid                 int64     `db:"uid"`      // 主键
+		UserId              string    `db:"user_id"`  // 用户ID
+		Balance             int64     `db:"balance"`  // 余额
+		CurType             int64     `db:"cur_type"` // 货币类型
+		CreateTime          time.Time `db:"create_time"`
+		UpdateTime          time.Time `db:"update_time"`
+		BalanceModifyTimeS  int64     `db:"balance_modify_time_s"`  // 余额变更时间(秒)
+		BalanceModifyTimeMs int64     `db:"balance_modify_time_ms"` // 余额变更时间(ms)
 	}
 )
 
@@ -77,8 +79,8 @@ func (m *defaultTCAccountModel) FindOne(ctx context.Context, uid int64) (*TCAcco
 }
 
 func (m *defaultTCAccountModel) Insert(ctx context.Context, data *TCAccount) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, tCAccountRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.Balance, data.CurType)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, tCAccountRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.Uid, data.UserId, data.Balance, data.CurType, data.BalanceModifyTimeS, data.BalanceModifyTimeMs)
 	if err != nil {
 		return ret, err
 	}
@@ -90,7 +92,7 @@ func (m *defaultTCAccountModel) Insert(ctx context.Context, data *TCAccount) (sq
 
 func (m *defaultTCAccountModel) Update(ctx context.Context, data *TCAccount) error {
 	query := fmt.Sprintf("update %s set %s where `uid` = ?", m.table, tCAccountRowsWithPlaceHolder)
-	ret, err := m.conn.ExecCtx(ctx, query, data.UserId, data.Balance, data.CurType, data.Uid)
+	ret, err := m.conn.ExecCtx(ctx, query, data.UserId, data.Balance, data.CurType, data.BalanceModifyTimeS, data.BalanceModifyTimeMs, data.Uid)
 	if err != nil {
 		return err
 	}

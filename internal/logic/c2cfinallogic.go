@@ -88,6 +88,9 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 	}
 
 	var result *account_mgr_pb.C2CRsp
+	var newBuyerBalance int64
+	var buyerCurType int64
+	var payTime time.Time
 	err = l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
 		tcAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
 		tcAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
@@ -103,12 +106,15 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeBalanceNotEnough, "balance not enough")
 		}
 
-		payTime := time.Now()
+		// 支付时间, 同时作为余额变更时间入库与缓存版本号
+		payTime = time.Now()
 
-		err = tcAccountModel.SubBalance(ctx, in.BuyerUid, in.Amount)
+		err = tcAccountModel.SubBalance(ctx, in.BuyerUid, in.Amount, payTime)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("sub balance failed: %v", err))
 		}
+		newBuyerBalance = buyerAccount.Balance - in.Amount
+		buyerCurType = buyerAccount.CurType
 
 		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
 			Uid:             in.BuyerUid,
@@ -175,6 +181,9 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		l.Errorf("C2CFinal transaction failed: %v", err)
 		return nil, err
 	}
+
+	// 买家余额变更后更新 redis 余额缓存(乐观锁 CAS, 尽力而为)
+	updateBalanceCache(l.ctx, l.svcCtx, in.BuyerUid, buyerCurType, newBuyerBalance, payTime)
 
 	// 异步发送cmq消息, 忽略失败
 	go l.sendCmq(in)

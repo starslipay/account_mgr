@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/starslipay/account_mgr/account_mgr_pb"
 	"github.com/starslipay/account_mgr/internal/consts"
@@ -42,6 +43,9 @@ func (l *C2BankLogic) C2Bank(in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2Ba
 		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "transaction_id is required")
 	}
 
+	var newBalance int64
+	var curType int64
+	var modifyTime time.Time
 	err := l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
 		tCAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
 		tCAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
@@ -56,10 +60,13 @@ func (l *C2BankLogic) C2Bank(in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2Ba
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeBalanceNotEnough, "balance is not enough")
 		}
 
-		err = tCAccountModel.SubBalance(ctx, in.Uid, in.Amount)
+		modifyTime = time.Now()
+		err = tCAccountModel.SubBalance(ctx, in.Uid, in.Amount, modifyTime)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("add balance failed: %v", err))
 		}
+		newBalance = account.Balance - in.Amount
+		curType = account.CurType
 
 		_, err = tCAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
 			Uid:             in.Uid,
@@ -99,6 +106,9 @@ func (l *C2BankLogic) C2Bank(in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2Ba
 		l.Errorf("C2Bank transaction failed: %v", err)
 		return nil, err
 	}
+
+	// 余额变更后更新 redis 余额缓存(乐观锁 CAS, 尽力而为)
+	updateBalanceCache(l.ctx, l.svcCtx, in.Uid, curType, newBalance, modifyTime)
 
 	return &account_mgr_pb.C2BankRsp{
 		TransactionId: in.TransactionId,

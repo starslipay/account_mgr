@@ -98,6 +98,9 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 	}
 
 	var result *account_mgr_pb.C2BRsp
+	var newUserBalance int64
+	var curType int64
+	var payTime time.Time
 	err = l.svcCtx.SqlMasterConn.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
 		tcAccountModel := mysql.NewTCAccountModel(sqlx.NewSqlConnFromSession(session))
 		tcAccountLogModel := mysql.NewTCAccountLogModel(sqlx.NewSqlConnFromSession(session))
@@ -113,12 +116,15 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeBalanceNotEnough, "balance not enough")
 		}
 
-		payTime := time.Now()
+		// 支付时间, 同时作为余额变更时间入库与缓存版本号
+		payTime = time.Now()
 
-		err = tcAccountModel.SubBalance(ctx, in.Uid, in.Amount)
+		err = tcAccountModel.SubBalance(ctx, in.Uid, in.Amount, payTime)
 		if err != nil {
 			return xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("sub balance failed: %v", err))
 		}
+		newUserBalance = userAccount.Balance - in.Amount
+		curType = userAccount.CurType
 
 		_, err = tcAccountLogModel.Insert(ctx, &mysql.TCAccountLog{
 			Uid:             in.Uid,
@@ -186,6 +192,9 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 		l.Errorf("C2BFinal transaction failed: %v", err)
 		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("transaction failed: %v", err))
 	}
+
+	// 用户余额变更后更新 redis 余额缓存(乐观锁 CAS, 尽力而为)
+	updateBalanceCache(l.ctx, l.svcCtx, in.Uid, curType, newUserBalance, payTime)
 
 	// 异步发送kafka消息, 忽略失败
 	go l.sendKafkaMessage(in)
