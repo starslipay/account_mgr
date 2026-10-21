@@ -86,6 +86,7 @@ type ServiceContext struct {
 
 	C2CAsyncTransferProducer *kq.Pusher
 	C2BAsyncTransferProducer *kq.Pusher
+	UpdateBalanceProducer    *kq.Pusher
 
 	RedisClient *redis.Redis
 }
@@ -122,6 +123,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		TC2bPendingTransferModelSlave:  mysql.NewTC2bPendingTransferModel(SqlSlaveConn),
 		C2CAsyncTransferProducer:       kq.NewPusher(c.KafkaProducerConf, c.TopicC2cAsyncTransfer),
 		C2BAsyncTransferProducer:       kq.NewPusher(c.KafkaProducerConf, c.TopicC2bAsyncTransfer),
+		UpdateBalanceProducer:          kq.NewPusher(c.KafkaProducerConf, c.TopicUpdateBalance),
 		RedisClient:                    redis.MustNewRedis(c.RedisConfig),
 	}
 }

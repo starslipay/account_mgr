@@ -107,8 +107,8 @@ func (l *C2BankLogic) C2Bank(in *account_mgr_pb.C2BankReq) (*account_mgr_pb.C2Ba
 		return nil, err
 	}
 
-	// 余额变更后更新 redis 余额缓存(乐观锁 CAS, 尽力而为)
-	updateBalanceCache(l.ctx, l.svcCtx, in.Uid, curType, newBalance, modifyTime)
+	// 提现出账成功后发送余额缓存更新消息(由消费端异步写入 Redis)
+	sendUpdateBalanceMessage(l.ctx, l.svcCtx, in.Uid, curType, newBalance, modifyTime)
 
 	return &account_mgr_pb.C2BankRsp{
 		TransactionId: in.TransactionId,

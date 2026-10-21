@@ -54,9 +54,8 @@ func (l *CreateAccountLogic) CreateAccount(in *account_mgr_pb.CreateAccountReq) 
 			return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeParam, "cur type not match")
 		}
 
-		// 重复开户(幂等重入): 用 DB 权威数据回写缓存, 可自愈缺失/过期的缓存条目
-		// (版本号取 DB 中的余额变更时间, 缓存若更新则 CAS 会自动跳过, 不会回写旧数据)
-		updateBalanceCache(l.ctx, l.svcCtx, account.Uid, account.CurType, account.Balance,
+		// 重复开户(幂等重入): 用 DB 权威数据回写缓存(发消息由消费端异步更新), 可自愈缺失/过期的缓存条目
+		sendUpdateBalanceMessage(l.ctx, l.svcCtx, account.Uid, account.CurType, account.Balance,
 			time.Unix(account.BalanceModifyTimeS, account.BalanceModifyTimeMs*int64(time.Millisecond)))
 
 		return &account_mgr_pb.CreateAccountRsp{
@@ -80,8 +79,8 @@ func (l *CreateAccountLogic) CreateAccount(in *account_mgr_pb.CreateAccountReq) 
 		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, err.Error())
 	}
 
-	// 开户成功即写入 redis 余额缓存(balance|{uid}), 初始 balance=0
-	updateBalanceCache(l.ctx, l.svcCtx, in.Uid, int64(in.CurType), 0, now)
+	// 开户成功即发送余额缓存更新消息(balance|{uid}), 初始 balance=0, 由消费端异步写入 Redis
+	sendUpdateBalanceMessage(l.ctx, l.svcCtx, in.Uid, int64(in.CurType), 0, now)
 
 	return &account_mgr_pb.CreateAccountRsp{
 		Uid:      in.Uid,

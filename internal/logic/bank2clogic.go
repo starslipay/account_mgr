@@ -113,8 +113,8 @@ func (l *Bank2CLogic) Bank2C(in *account_mgr_pb.Bank2CReq) (*account_mgr_pb.Bank
 		return nil, err
 	}
 
-	// 余额变更后更新 redis 余额缓存(乐观锁 CAS, 尽力而为)
-	updateBalanceCache(l.ctx, l.svcCtx, in.Uid, curType, newBalance, modifyTime)
+	// 充值入账成功后发送余额缓存更新消息(由消费端异步写入 Redis)
+	sendUpdateBalanceMessage(l.ctx, l.svcCtx, in.Uid, curType, newBalance, modifyTime)
 
 	return &account_mgr_pb.Bank2CRsp{
 		TransactionId: in.TransactionId,

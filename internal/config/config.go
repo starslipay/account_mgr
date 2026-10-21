@@ -19,6 +19,7 @@ type Config struct {
 	KafkaProducerConf     []string
 	TopicC2cAsyncTransfer string
 	TopicC2bAsyncTransfer string
+	TopicUpdateBalance    string
 	RedisConfig           redis.RedisConf
 
 	// AccessLog 请求/响应日志脱敏配置

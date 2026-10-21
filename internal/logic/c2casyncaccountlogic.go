@@ -111,9 +111,9 @@ func (l *C2CAsyncAccountLogic) C2CAsyncAccount(in *account_mgr_pb.C2CAsyncAccoun
 		return nil, err
 	}
 
-	// 卖家余额变更后更新 redis 余额缓存(乐观锁 CAS, 尽力而为)
+	// 卖家入账成功后发送余额缓存更新消息(由消费端异步写入 Redis)
 	if sellerUid > 0 {
-		updateBalanceCache(l.ctx, l.svcCtx, sellerUid, sellerCurType, newSellerBalance, modifyTime)
+		sendUpdateBalanceMessage(l.ctx, l.svcCtx, sellerUid, sellerCurType, newSellerBalance, modifyTime)
 	}
 
 	return &account_mgr_pb.C2CAsyncAccountRsp{}, nil

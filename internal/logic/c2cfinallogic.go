@@ -182,8 +182,8 @@ func (l *C2CFinalLogic) C2CFinal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		return nil, err
 	}
 
-	// 买家余额变更后更新 redis 余额缓存(乐观锁 CAS, 尽力而为)
-	updateBalanceCache(l.ctx, l.svcCtx, in.BuyerUid, buyerCurType, newBuyerBalance, payTime)
+	// 买家扣款成功后发送余额缓存更新消息(由消费端异步写入 Redis)
+	sendUpdateBalanceMessage(l.ctx, l.svcCtx, in.BuyerUid, buyerCurType, newBuyerBalance, payTime)
 
 	// 异步发送cmq消息, 忽略失败
 	go l.sendCmq(in)

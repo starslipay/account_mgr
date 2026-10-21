@@ -199,9 +199,9 @@ func (l *C2CLocalLogic) C2CLocal(in *account_mgr_pb.C2CReq) (*account_mgr_pb.C2C
 		return nil, err
 	}
 
-	// 买卖双方余额变更后更新 redis 余额缓存(乐观锁 CAS, 尽力而为)
-	updateBalanceCache(l.ctx, l.svcCtx, in.BuyerUid, buyerCurType, newBuyerBalance, payTime)
-	updateBalanceCache(l.ctx, l.svcCtx, in.SellerUid, sellerCurType, newSellerBalance, payTime)
+	// 买卖双方余额变更后发送余额缓存更新消息(由消费端异步写入 Redis)
+	sendUpdateBalanceMessage(l.ctx, l.svcCtx, in.BuyerUid, buyerCurType, newBuyerBalance, payTime)
+	sendUpdateBalanceMessage(l.ctx, l.svcCtx, in.SellerUid, sellerCurType, newSellerBalance, payTime)
 
 	return result, nil
 }

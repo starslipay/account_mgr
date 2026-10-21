@@ -193,8 +193,8 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 		return nil, xerror.NewBizError(codes.Internal, xerr.ErrCodeDB, fmt.Sprintf("transaction failed: %v", err))
 	}
 
-	// 用户余额变更后更新 redis 余额缓存(乐观锁 CAS, 尽力而为)
-	updateBalanceCache(l.ctx, l.svcCtx, in.Uid, curType, newUserBalance, payTime)
+	// 用户扣款成功后发送余额缓存更新消息(由消费端异步写入 Redis)
+	sendUpdateBalanceMessage(l.ctx, l.svcCtx, in.Uid, curType, newUserBalance, payTime)
 
 	// 异步发送kafka消息, 忽略失败
 	go l.sendKafkaMessage(in)
