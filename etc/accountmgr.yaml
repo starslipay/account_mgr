@@ -38,6 +38,10 @@ TopicC2cAsyncTransfer: topic_c2c_async_transfer
 TopicC2bAsyncTransfer: topic_c2b_async_transfer
 TopicUpdateBalance: t_update_balance
 
+# 余额缓存更新开关: 控制余额变更后是否发送 cmq(t_update_balance) 通知消费端更新 Redis
+UpdateBalanceCmq:
+  Enable: true  # false 时不发送消息, Redis 余额缓存将停止更新
+
 # Redis 缓存配置（余额缓存 balance|{uid}）
 RedisConfig:
   # Host: redis-master.pay-ns.svc.cluster.local:6379  # k8s

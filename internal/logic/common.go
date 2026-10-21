@@ -24,6 +24,10 @@ type UpdateBalanceMessage struct {
 // modifyTime 必须与写入数据库 t_c_account 的余额变更时间一致
 // 发送失败仅记录日志, 不影响主流程(缓存最终一致性)
 func sendUpdateBalanceMessage(ctx context.Context, svcCtx *svc.ServiceContext, uid int64, curType int64, balance int64, modifyTime time.Time) {
+	// 开关关闭时不发送消息, Redis 余额缓存不再更新
+	if !svcCtx.Config.UpdateBalanceCmq.Enable {
+		return
+	}
 	msg := &UpdateBalanceMessage{
 		Uid:                 uid,
 		CurType:             curType,

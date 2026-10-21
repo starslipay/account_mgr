@@ -20,10 +20,16 @@ type Config struct {
 	TopicC2cAsyncTransfer string
 	TopicC2bAsyncTransfer string
 	TopicUpdateBalance    string
+	UpdateBalanceCmq      UpdateBalanceCmqConf
 	RedisConfig           redis.RedisConf
 
 	// AccessLog 请求/响应日志脱敏配置
 	AccessLog AccessLogConf
+}
+
+// UpdateBalanceCmqConf 余额缓存更新消息开关配置
+type UpdateBalanceCmqConf struct {
+	Enable bool `json:",default=true"` // 是否发送 cmq(t_update_balance) 更新余额缓存
 }
 
 // AccessLogConf 访问日志配置
