@@ -145,6 +145,7 @@ func (l *C2BFinalLogic) C2BFinal(in *account_mgr_pb.C2BReq) (*account_mgr_pb.C2B
 
 		_, err = tc2bBillModel.Insert(ctx, &mysql.TC2bBill{
 			TransactionId: in.TransactionId,
+			OutTradeNo:    in.OutTradeNo,
 			Uid:           in.Uid,
 			UserId:        in.UserId,
 			MerchantUid:   in.MerchantUid,
