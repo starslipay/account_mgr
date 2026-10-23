@@ -61,7 +61,12 @@ CREATE TABLE `t_b_account` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `t_b_account` (`merchant_uid`, `merchant_id`, `balance`, `cur_type`, `create_time`, `update_time`)
-VALUES (2000000000, '2000000000', 0, 1, NOW(), NOW());
+VALUES
+  (2000000000, '2000000000', 0, 1, NOW(), NOW()),
+  (3000000000, '3000000000', 0, 1, NOW(), NOW()),
+  (4000000000, '4000000000', 0, 1, NOW(), NOW()),
+  (5000000000, '5000000000', 0, 1, NOW(), NOW()),
+  (6000000000, '6000000000', 0, 1, NOW(), NOW());
 SELECT * FROM `t_b_account`;
 
 DROP TABLE IF EXISTS `t_b_account_log`;
