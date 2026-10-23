@@ -19,19 +19,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AccountMgr_CreateAccount_FullMethodName      = "/account_mgr.AccountMgr/CreateAccount"
-	AccountMgr_GetUserBalanceInfo_FullMethodName = "/account_mgr.AccountMgr/GetUserBalanceInfo"
-	AccountMgr_GetUserFlow_FullMethodName        = "/account_mgr.AccountMgr/GetUserFlow"
-	AccountMgr_GetC2CBill_FullMethodName         = "/account_mgr.AccountMgr/GetC2CBill"
-	AccountMgr_Bank2C_FullMethodName             = "/account_mgr.AccountMgr/Bank2C"
-	AccountMgr_C2Bank_FullMethodName             = "/account_mgr.AccountMgr/C2Bank"
-	AccountMgr_C2CLocal_FullMethodName           = "/account_mgr.AccountMgr/C2CLocal"
-	AccountMgr_C2CFinal_FullMethodName           = "/account_mgr.AccountMgr/C2CFinal"
-	AccountMgr_C2CAsyncAccount_FullMethodName    = "/account_mgr.AccountMgr/C2CAsyncAccount"
-	AccountMgr_C2BFinal_FullMethodName           = "/account_mgr.AccountMgr/C2BFinal"
-	AccountMgr_C2BAsyncAccount_FullMethodName    = "/account_mgr.AccountMgr/C2BAsyncAccount"
-	AccountMgr_QueryC2BBill_FullMethodName       = "/account_mgr.AccountMgr/QueryC2BBill"
-	AccountMgr_CloseC2BBill_FullMethodName       = "/account_mgr.AccountMgr/CloseC2BBill"
+	AccountMgr_CreateAccount_FullMethodName          = "/account_mgr.AccountMgr/CreateAccount"
+	AccountMgr_GetUserBalanceInfo_FullMethodName     = "/account_mgr.AccountMgr/GetUserBalanceInfo"
+	AccountMgr_GetUserFlow_FullMethodName            = "/account_mgr.AccountMgr/GetUserFlow"
+	AccountMgr_GetC2CBill_FullMethodName             = "/account_mgr.AccountMgr/GetC2CBill"
+	AccountMgr_Bank2C_FullMethodName                 = "/account_mgr.AccountMgr/Bank2C"
+	AccountMgr_C2Bank_FullMethodName                 = "/account_mgr.AccountMgr/C2Bank"
+	AccountMgr_C2CLocal_FullMethodName               = "/account_mgr.AccountMgr/C2CLocal"
+	AccountMgr_C2CFinal_FullMethodName               = "/account_mgr.AccountMgr/C2CFinal"
+	AccountMgr_C2CAsyncAccount_FullMethodName        = "/account_mgr.AccountMgr/C2CAsyncAccount"
+	AccountMgr_C2BFinal_FullMethodName               = "/account_mgr.AccountMgr/C2BFinal"
+	AccountMgr_C2BAsyncAccount_FullMethodName        = "/account_mgr.AccountMgr/C2BAsyncAccount"
+	AccountMgr_QueryC2BBill_FullMethodName           = "/account_mgr.AccountMgr/QueryC2BBill"
+	AccountMgr_CloseC2BBill_FullMethodName           = "/account_mgr.AccountMgr/CloseC2BBill"
+	AccountMgr_GetMerchantBalanceInfo_FullMethodName = "/account_mgr.AccountMgr/GetMerchantBalanceInfo"
 )
 
 // AccountMgrClient is the client API for AccountMgr service.
@@ -51,6 +52,7 @@ type AccountMgrClient interface {
 	C2BAsyncAccount(ctx context.Context, in *C2BAsyncAccountReq, opts ...grpc.CallOption) (*C2BAsyncAccountRsp, error)
 	QueryC2BBill(ctx context.Context, in *QueryC2BBillReq, opts ...grpc.CallOption) (*QueryC2BBillRsp, error)
 	CloseC2BBill(ctx context.Context, in *CloseC2BBillReq, opts ...grpc.CallOption) (*CloseC2BBillRsp, error)
+	GetMerchantBalanceInfo(ctx context.Context, in *GetMerchantBalanceInfoReq, opts ...grpc.CallOption) (*GetMerchantBalanceInfoRsp, error)
 }
 
 type accountMgrClient struct {
@@ -191,6 +193,16 @@ func (c *accountMgrClient) CloseC2BBill(ctx context.Context, in *CloseC2BBillReq
 	return out, nil
 }
 
+func (c *accountMgrClient) GetMerchantBalanceInfo(ctx context.Context, in *GetMerchantBalanceInfoReq, opts ...grpc.CallOption) (*GetMerchantBalanceInfoRsp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMerchantBalanceInfoRsp)
+	err := c.cc.Invoke(ctx, AccountMgr_GetMerchantBalanceInfo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountMgrServer is the server API for AccountMgr service.
 // All implementations must embed UnimplementedAccountMgrServer
 // for forward compatibility.
@@ -208,6 +220,7 @@ type AccountMgrServer interface {
 	C2BAsyncAccount(context.Context, *C2BAsyncAccountReq) (*C2BAsyncAccountRsp, error)
 	QueryC2BBill(context.Context, *QueryC2BBillReq) (*QueryC2BBillRsp, error)
 	CloseC2BBill(context.Context, *CloseC2BBillReq) (*CloseC2BBillRsp, error)
+	GetMerchantBalanceInfo(context.Context, *GetMerchantBalanceInfoReq) (*GetMerchantBalanceInfoRsp, error)
 	mustEmbedUnimplementedAccountMgrServer()
 }
 
@@ -256,6 +269,9 @@ func (UnimplementedAccountMgrServer) QueryC2BBill(context.Context, *QueryC2BBill
 }
 func (UnimplementedAccountMgrServer) CloseC2BBill(context.Context, *CloseC2BBillReq) (*CloseC2BBillRsp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CloseC2BBill not implemented")
+}
+func (UnimplementedAccountMgrServer) GetMerchantBalanceInfo(context.Context, *GetMerchantBalanceInfoReq) (*GetMerchantBalanceInfoRsp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMerchantBalanceInfo not implemented")
 }
 func (UnimplementedAccountMgrServer) mustEmbedUnimplementedAccountMgrServer() {}
 func (UnimplementedAccountMgrServer) testEmbeddedByValue()                    {}
@@ -512,6 +528,24 @@ func _AccountMgr_CloseC2BBill_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountMgr_GetMerchantBalanceInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMerchantBalanceInfoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountMgrServer).GetMerchantBalanceInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountMgr_GetMerchantBalanceInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountMgrServer).GetMerchantBalanceInfo(ctx, req.(*GetMerchantBalanceInfoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountMgr_ServiceDesc is the grpc.ServiceDesc for AccountMgr service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -570,6 +604,10 @@ var AccountMgr_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CloseC2BBill",
 			Handler:    _AccountMgr_CloseC2BBill_Handler,
+		},
+		{
+			MethodName: "GetMerchantBalanceInfo",
+			Handler:    _AccountMgr_GetMerchantBalanceInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

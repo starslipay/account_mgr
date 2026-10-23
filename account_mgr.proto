@@ -200,6 +200,19 @@ message CloseC2BBillRsp {
     string transaction_id = 1;
 }
 
+// 查询商户余额
+message GetMerchantBalanceInfoReq {
+    int64 merchant_uid = 1;
+    int32 qry_mode = 2;  // 1-查从库 2-查主库
+}
+
+message GetMerchantBalanceInfoRsp {
+    int64 merchant_uid = 1;
+    string merchant_id = 2;
+    int64 balance = 3;
+    int32 cur_type = 4;
+}
+
 service AccountMgr {
     rpc CreateAccount(CreateAccountReq) returns (CreateAccountRsp);
     rpc GetUserBalanceInfo(GetUserBalanceInfoReq) returns (GetUserBalanceInfoRsp);
@@ -216,6 +229,7 @@ service AccountMgr {
     rpc C2BAsyncAccount(C2BAsyncAccountReq) returns (C2BAsyncAccountRsp);  // C2B异步入账
     rpc QueryC2BBill(QueryC2BBillReq) returns (QueryC2BBillRsp);  // 查询C2B单据
     rpc CloseC2BBill(CloseC2BBillReq) returns (CloseC2BBillRsp);  // 关闭C2B单据
+    rpc GetMerchantBalanceInfo(GetMerchantBalanceInfoReq) returns (GetMerchantBalanceInfoRsp);  // 查询商户余额
 }
 
 /*

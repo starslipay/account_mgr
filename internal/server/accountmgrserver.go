@@ -87,3 +87,8 @@ func (s *AccountMgrServer) CloseC2BBill(ctx context.Context, in *account_mgr_pb.
 	l := logic.NewCloseC2BBillLogic(ctx, s.svcCtx)
 	return l.CloseC2BBill(in)
 }
+
+func (s *AccountMgrServer) GetMerchantBalanceInfo(ctx context.Context, in *account_mgr_pb.GetMerchantBalanceInfoReq) (*account_mgr_pb.GetMerchantBalanceInfoRsp, error) {
+	l := logic.NewGetMerchantBalanceInfoLogic(ctx, s.svcCtx)
+	return l.GetMerchantBalanceInfo(in)
+}

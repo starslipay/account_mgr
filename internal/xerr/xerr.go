@@ -23,4 +23,5 @@ var (
 	ErrCodeC2BBillStateAlreadyClose   = int64(455905108) // C2B单据状态已关闭
 	ErrCodeC2BBillNotFound            = int64(455905109) // C2B单据不存在
 	ErrCodeC2BBillConflict            = int64(455905110) // C2B单据已存在,插入冲突
+	ErrCodeMerchantNotFound           = int64(455905118) // 商户账户不存在
 )
